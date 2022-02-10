@@ -75,6 +75,31 @@ class Client:
             "exposures", {"job_id": job_id, "name": name, "run_id": run_id}, fields
         )
 
+    def macro(
+        self,
+        job_id: int,
+        unique_id: str,
+        *,
+        run_id: int = None,
+        fields: List[Union[str, Tuple[str, Dict]]] = None
+    ) -> Dict:
+        return self._make_request(
+            "macro",
+            {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
+            fields,
+        )
+
+    def macros(
+        self,
+        job_id: int,
+        *,
+        run_id: int = None,
+        fields: List[Union[str, Tuple[str, Dict]]] = None
+    ) -> Dict:
+        return self._make_request(
+            "macros", {"job_id": job_id, "run_id": run_id}, fields
+        )
+
     def metric(
         self,
         job_id: int,
