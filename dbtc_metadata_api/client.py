@@ -47,7 +47,7 @@ class Client:
                 if isinstance(field, str):
                     operator.attrgetter(field)(instance)()
                 else:
-                    operator.attrgetter(field)(instance)(**field[1])()
+                    operator.attrgetter(field[0])(instance)(**field[1])()
         data = self._endpoint(op)
         return data
 
