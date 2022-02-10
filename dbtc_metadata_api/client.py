@@ -253,8 +253,3 @@ class Client:
             },
             fields,
         )
-
-
-if __name__ == "__main__":
-    c = Client()
-    data = c.model(job_id=12389, unique_id="model.tpch.dim_customers", fields=["name"])
