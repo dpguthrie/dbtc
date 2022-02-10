@@ -21,15 +21,15 @@ class Client:
             )
 
     @property
-    def url(self):
+    def url(self) -> str:
         return "https://metadata.cloud.getdbt.com/graphql"
 
     @property
-    def headers(self):
+    def headers(self) -> Dict[str, str]:
         return {"Authorization": "Bearer {}".format(self.service_token)}
 
     @property
-    def _endpoint(self):
+    def _endpoint(self) -> HTTPEndpoint:
         return HTTPEndpoint(self.url, self.headers)
 
     def _make_request(
@@ -37,7 +37,7 @@ class Client:
         resource: str,
         arguments: Dict = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None,
-    ):
+    ) -> Dict:
         op = Operation(schema.Query)
         instance = getattr(op, resource)(
             **{k: v for k, v in arguments.items() if v is not None}
@@ -58,7 +58,7 @@ class Client:
         *,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "exposure", {"job_id": job_id, "name": name, "run_id": run_id}, fields
         )
@@ -70,7 +70,7 @@ class Client:
         *,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "exposures", {"job_id": job_id, "name": name, "run_id": run_id}, fields
         )
@@ -82,7 +82,7 @@ class Client:
         *,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "metric",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
@@ -95,7 +95,7 @@ class Client:
         *,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "metric", {"job_id": job_id, "run_id": run_id}, fields
         )
@@ -107,7 +107,7 @@ class Client:
         *,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "model",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
@@ -123,7 +123,7 @@ class Client:
         identifier: str = None,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "models",
             {
@@ -143,7 +143,7 @@ class Client:
         *,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "seed", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}, fields
         )
@@ -155,7 +155,7 @@ class Client:
         *,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "seeds",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
@@ -171,7 +171,7 @@ class Client:
         identifier: str = None,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "snapshots",
             {
@@ -191,7 +191,7 @@ class Client:
         *,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "source",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
@@ -207,7 +207,7 @@ class Client:
         identifier: str = None,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "sources",
             {
@@ -227,7 +227,7 @@ class Client:
         *,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "test", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}, fields
         )
@@ -241,7 +241,7 @@ class Client:
         identifier: str = None,
         run_id: int = None,
         fields: List[Union[str, Tuple[str, Dict]]] = None
-    ):
+    ) -> Dict:
         return self._make_request(
             "tests",
             {
