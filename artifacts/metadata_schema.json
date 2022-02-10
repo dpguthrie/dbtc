@@ -1,0 +1,4684 @@
+{
+  "data": {
+    "__schema": {
+      "directives": [
+        {
+          "args": [
+            {
+              "defaultValue": null,
+              "description": "Included when true.",
+              "name": "if",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            }
+          ],
+          "description": "Directs the executor to include this field or fragment only when the `if` argument is true.",
+          "locations": [
+            "FIELD",
+            "FRAGMENT_SPREAD",
+            "INLINE_FRAGMENT"
+          ],
+          "name": "include"
+        },
+        {
+          "args": [
+            {
+              "defaultValue": null,
+              "description": "Skipped when true.",
+              "name": "if",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            }
+          ],
+          "description": "Directs the executor to skip this field or fragment when the `if` argument is true.",
+          "locations": [
+            "FIELD",
+            "FRAGMENT_SPREAD",
+            "INLINE_FRAGMENT"
+          ],
+          "name": "skip"
+        },
+        {
+          "args": [
+            {
+              "defaultValue": "\"No longer supported\"",
+              "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax, as specified by [CommonMark](https://commonmark.org/).",
+              "name": "reason",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ],
+          "description": "Marks an element of a GraphQL schema as no longer supported.",
+          "locations": [
+            "FIELD_DEFINITION",
+            "ARGUMENT_DEFINITION",
+            "INPUT_FIELD_DEFINITION",
+            "ENUM_VALUE"
+          ],
+          "name": "deprecated"
+        },
+        {
+          "args": [
+            {
+              "defaultValue": null,
+              "description": "The URL that specifies the behaviour of this scalar.",
+              "name": "url",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            }
+          ],
+          "description": "Exposes a URL that specifies the behaviour of this scalar.",
+          "locations": [
+            "SCALAR"
+          ],
+          "name": "specifiedBy"
+        }
+      ],
+      "mutationType": null,
+      "queryType": {
+        "name": "Query"
+      },
+      "subscriptionType": null,
+      "types": [
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that this exposure was generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": null,
+                  "description": "The name of this exposure",
+                  "name": "name",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that this exposure was generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "exposure",
+              "type": {
+                "kind": "OBJECT",
+                "name": "ExposureNode",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that this model was generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of this particular model\n\nExample: model.jaffle_shop.dim_user",
+                  "name": "uniqueId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that this model was generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "model",
+              "type": {
+                "kind": "OBJECT",
+                "name": "ModelNode",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that this source was generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of this particular source\n\nExample: source.jaffle_shop.snowplow.event",
+                  "name": "uniqueId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that this source was generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "source",
+              "type": {
+                "kind": "OBJECT",
+                "name": "SourceNode",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that this test was generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of this particular test\n\nExample: test.jaffle_shop.not_null_metrics_id",
+                  "name": "uniqueId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that this test was generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "test",
+              "type": {
+                "kind": "OBJECT",
+                "name": "TestNode",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that this snapshot was generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of this particular snapshot\n\nExample: snapshot.jaffle_shop.customers_snapshot",
+                  "name": "uniqueId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that this snapshot was generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "snapshot",
+              "type": {
+                "kind": "OBJECT",
+                "name": "SnapshotNode",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that this macro was generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of this particular macro\n\nExample: macro.jaffle_shop.customers_metric",
+                  "name": "uniqueId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that this macro was generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "macro",
+              "type": {
+                "kind": "OBJECT",
+                "name": "MacroNode",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that this metric was generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of this particular metric\n\nExample: metric.jaffle_shop.customers_metric",
+                  "name": "uniqueId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that this metric was generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "metric",
+              "type": {
+                "kind": "OBJECT",
+                "name": "MetricNode",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that this seed was generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of this particular seed\n\nExample: seed.jaffle_shop.dim_user",
+                  "name": "uniqueId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that this seed was generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "seed",
+              "type": {
+                "kind": "OBJECT",
+                "name": "SeedNode",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that these exposures were generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The database where this table/view lives",
+                  "name": "database",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The schema where this table/view lives",
+                  "name": "schema",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The identifier of this table/view",
+                  "name": "identifier",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that these exposures were generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "exposures",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ExposureNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that these models were generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The database where this table/view lives",
+                  "name": "database",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The schema where this table/view lives",
+                  "name": "schema",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The identifier of this table/view",
+                  "name": "identifier",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that these models were generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "models",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ModelNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that these sources were generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The database where this table/view lives",
+                  "name": "database",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The schema where this table/view lives",
+                  "name": "schema",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The identifier of this table/view",
+                  "name": "identifier",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that these sources were generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "sources",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "SourceNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that these macros were generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that these macros were generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "macros",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "MacroNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that these metrics were generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that these metrics were generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "metrics",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "MetricNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that these seeds were generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The database where this table/view lives",
+                  "name": "database",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The schema where this table/view lives",
+                  "name": "schema",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The identifier of this table/view",
+                  "name": "identifier",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that these seeds were generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "seeds",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "SeedNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that these snapshots were generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The database where this table/view lives",
+                  "name": "database",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The schema where this table/view lives",
+                  "name": "schema",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The identifier of this table/view",
+                  "name": "identifier",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that these snapshots were generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "snapshots",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "SnapshotNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": "The unique ID of the job in dbt Cloud that these tests were generated for",
+                  "name": "jobId",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The database where this table/view lives",
+                  "name": "database",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The schema where this table/view lives",
+                  "name": "schema",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The identifier of this table/view",
+                  "name": "identifier",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                {
+                  "defaultValue": "null",
+                  "description": "The run ID of the run in dbt Cloud that these tests were generated for",
+                  "name": "runId",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "tests",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "TestNode",
+                  "ofType": null
+                }
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "Query",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The unique ID of the run in dbt Cloud that generated this node",
+              "name": "runId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the account in dbt Cloud that this node was generated for",
+              "name": "accountId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the project in dbt Cloud that this node was generated for",
+              "name": "projectId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the environment in dbt Cloud that this node was generated for",
+              "name": "environmentId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the job in dbt Cloud that this node was generated for",
+              "name": "jobId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The name of this node",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of this particular node\n\nExample: source.jaffle_shop.stripe.subscriptions",
+              "name": "uniqueId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The resource type of this node",
+              "name": "resourceType",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO time when the manifest for this exposure was generated",
+              "name": "manifestGeneratedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The package name of this exposure",
+              "name": "packageName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The email of the owner of this exposure",
+              "name": "ownerEmail",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The name of the owner of this exposure",
+              "name": "ownerName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The type of this exposure",
+              "name": "exposureType",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The url of this exposure",
+              "name": "url",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The maturity of this exposure",
+              "name": "maturity",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The description of this exposure",
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of nodes this exposure depends on",
+              "name": "dependsOn",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of resources that are parents of this exposure",
+              "name": "parents",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "UNION",
+                  "name": "ResourceNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of sources that are parents of this exposure",
+              "name": "parentsSources",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "SourceNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of models that are parents of this exposure",
+              "name": "parentsModels",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ModelNode",
+                  "ofType": null
+                }
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "CloudArtifactInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "NodeInterface",
+              "ofType": null
+            }
+          ],
+          "kind": "OBJECT",
+          "name": "ExposureNode",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The unique ID of the run in dbt Cloud that generated this node",
+              "name": "runId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the account in dbt Cloud that this node was generated for",
+              "name": "accountId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the project in dbt Cloud that this node was generated for",
+              "name": "projectId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the environment in dbt Cloud that this node was generated for",
+              "name": "environmentId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the job in dbt Cloud that this node was generated for",
+              "name": "jobId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "INTERFACE",
+          "name": "CloudArtifactInterface",
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "ExposureNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "MacroNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "MetricNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "ModelNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "SourceNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "TestNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "SeedNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "SnapshotNode",
+              "ofType": null
+            }
+          ]
+        },
+        {
+          "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
+          "enumValues": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "SCALAR",
+          "name": "Int",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The name of this node",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of this particular node\n\nExample: source.jaffle_shop.stripe.subscriptions",
+              "name": "uniqueId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The resource type of this node",
+              "name": "resourceType",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "INTERFACE",
+          "name": "NodeInterface",
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "ExposureNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "MacroNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "MetricNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "ModelNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "SourceNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "TestNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "SeedNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "SnapshotNode",
+              "ofType": null
+            }
+          ]
+        },
+        {
+          "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+          "enumValues": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "SCALAR",
+          "name": "String",
+          "possibleTypes": null
+        },
+        {
+          "description": "The `DateTime` scalar type represents a DateTime\nvalue as specified by\n[iso8601](https://en.wikipedia.org/wiki/ISO_8601).",
+          "enumValues": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "SCALAR",
+          "name": "DateTime",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "UNION",
+          "name": "ResourceNode",
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "ExposureNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "MacroNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "MetricNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "ModelNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "SeedNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "SnapshotNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "SourceNode",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "TestNode",
+              "ofType": null
+            }
+          ]
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The unique ID of the run in dbt Cloud that generated this node",
+              "name": "runId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the account in dbt Cloud that this node was generated for",
+              "name": "accountId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the project in dbt Cloud that this node was generated for",
+              "name": "projectId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the environment in dbt Cloud that this node was generated for",
+              "name": "environmentId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the job in dbt Cloud that this node was generated for",
+              "name": "jobId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The name of this macro",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of this particular node\n\nExample: source.jaffle_shop.stripe.subscriptions",
+              "name": "uniqueId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The resource type of this node",
+              "name": "resourceType",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The package name of this macro",
+              "name": "packageName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The tags associated to this macro",
+              "name": "tags",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The label associated with this macro",
+              "name": "rootPath",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The label associated with this macro",
+              "name": "path",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The label associated with this macro",
+              "name": "originalFilePath",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of nodes this macro depends on",
+              "name": "dependsOn",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The user-supplied description for this macro",
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The sql that defines this macro",
+              "name": "macroSql",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "An arbitrary key-value store",
+              "name": "meta",
+              "type": {
+                "kind": "SCALAR",
+                "name": "JSONString",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "CloudArtifactInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "NodeInterface",
+              "ofType": null
+            }
+          ],
+          "kind": "OBJECT",
+          "name": "MacroNode",
+          "possibleTypes": null
+        },
+        {
+          "description": "Allows use of a JSON String for input / output from the GraphQL schema.\n\nUse of this type is *not recommended* as you lose the benefits of having a defined, static\nschema (one of the key benefits of GraphQL).",
+          "enumValues": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "SCALAR",
+          "name": "JSONString",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The unique ID of the run in dbt Cloud that generated this node",
+              "name": "runId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the account in dbt Cloud that this node was generated for",
+              "name": "accountId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the project in dbt Cloud that this node was generated for",
+              "name": "projectId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the environment in dbt Cloud that this node was generated for",
+              "name": "environmentId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the job in dbt Cloud that this node was generated for",
+              "name": "jobId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The name of this metric",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of this particular node\n\nExample: source.jaffle_shop.stripe.subscriptions",
+              "name": "uniqueId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The resource type of this node",
+              "name": "resourceType",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The package name of this metric",
+              "name": "packageName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The tags associated to this metric",
+              "name": "tags",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The label associated with this metric",
+              "name": "label",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The user-supplied description for this metric",
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The type of this metric",
+              "name": "type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The expression to aggregate or calculate over",
+              "name": "sql",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The time-based component of the metric",
+              "name": "timestamp",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "A list of filters to apply before calculating the metric",
+              "name": "filters",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "MetricFilter",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "One or more grains at which the metric can be evaluated",
+              "name": "timeGrains",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "A list of dimensions to group or filter the metric by",
+              "name": "dimensions",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "An arbitrary key-value store",
+              "name": "meta",
+              "type": {
+                "kind": "SCALAR",
+                "name": "JSONString",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The model associated with this metric",
+              "name": "model",
+              "type": {
+                "kind": "OBJECT",
+                "name": "ModelNode",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of nodes this metric depends on",
+              "name": "dependsOn",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "CloudArtifactInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "NodeInterface",
+              "ofType": null
+            }
+          ],
+          "kind": "OBJECT",
+          "name": "MetricNode",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The field this filter applies to",
+              "name": "field",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The filter operator",
+              "name": "operator",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The value of this filter",
+              "name": "value",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "MetricFilter",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The unique ID of the run in dbt Cloud that generated this node",
+              "name": "runId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the account in dbt Cloud that this node was generated for",
+              "name": "accountId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the project in dbt Cloud that this node was generated for",
+              "name": "projectId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the environment in dbt Cloud that this node was generated for",
+              "name": "environmentId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the job in dbt Cloud that this node was generated for",
+              "name": "jobId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The name of this model",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of this particular node\n\nExample: source.jaffle_shop.stripe.subscriptions",
+              "name": "uniqueId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The resource type of this node",
+              "name": "resourceType",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The package name of this model",
+              "name": "packageName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The database where this table/view lives",
+              "name": "database",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The schema where this table/view lives",
+              "name": "schema",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The identifier of this table/view",
+              "name": "alias",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The identifier of the run step that generated this model",
+              "name": "invocationId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The args passed to the dbt step which generated this model",
+              "name": "args",
+              "type": {
+                "kind": "SCALAR",
+                "name": "JSONString",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The user-supplied description for this model",
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The error message if there was an error, else null",
+              "name": "error",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The database-reported status of this model",
+              "name": "status",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "True if this model was skipped, otherwise false",
+              "name": "skip",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of models that are parents of this model",
+              "name": "parentsModels",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ModelNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of sources that are parents of this model",
+              "name": "parentsSources",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "SourceNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of nodes this model depends on",
+              "name": "dependsOn",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this model began compilation",
+              "name": "compileStartedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this model completed compilation",
+              "name": "compileCompletedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this model began running",
+              "name": "executeStartedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this model finished running",
+              "name": "executeCompletedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The total time elapsed during the execution of this model",
+              "name": "executionTime",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The thread that ran the execution of this model",
+              "name": "threadId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The timestamp when the run step (dbt run) was completed, ISO formatted timestamp",
+              "name": "runGeneratedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The elapsed time of the specific run step (dbt run) that generated this model node",
+              "name": "runElapsedTime",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The columns for this model",
+              "name": "columns",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogColumn",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The type of this model",
+              "name": "type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The owner of this model",
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The comment on this model",
+              "name": "comment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The tests that depend on this model",
+              "name": "tests",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "TestNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The stats for this model",
+              "name": "stats",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogStat",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "the raw sql for this model",
+              "name": "rawSql",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "the compiled sql for this model",
+              "name": "compiledSql",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "CloudArtifactInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "NodeInterface",
+              "ofType": null
+            }
+          ],
+          "kind": "OBJECT",
+          "name": "ModelNode",
+          "possibleTypes": null
+        },
+        {
+          "description": "The `Boolean` scalar type represents `true` or `false`.",
+          "enumValues": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "SCALAR",
+          "name": "Boolean",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The unique ID of the run in dbt Cloud that generated this node",
+              "name": "runId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the account in dbt Cloud that this node was generated for",
+              "name": "accountId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the project in dbt Cloud that this node was generated for",
+              "name": "projectId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the environment in dbt Cloud that this node was generated for",
+              "name": "environmentId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the job in dbt Cloud that this node was generated for",
+              "name": "jobId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The logical name of this particular source table",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of this particular node\n\nExample: source.jaffle_shop.stripe.subscriptions",
+              "name": "uniqueId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The resource type of this node",
+              "name": "resourceType",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The database where this table/view lives",
+              "name": "database",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The schema where this table/view lives",
+              "name": "schema",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The identifier of this table/view",
+              "name": "identifier",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The logical name of this source",
+              "name": "sourceName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The user-supplied description for this source",
+              "name": "sourceDescription",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The user-supplied description for this source table",
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The max value in the designated \"loaded_at\" column for this source table. ISO formatted timestamp",
+              "name": "maxLoadedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The time when this source was checked for freshnesses by dbt. ISO formatted timestamp",
+              "name": "snapshottedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The delta (in seconds) between max_loaded_at and snapshotted_at",
+              "name": "maxLoadedAtTimeAgoInS",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The timestamp when the run step (dbt source snapshot-freshness) was completed, ISO formatted timestamp",
+              "name": "runGeneratedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The elapsed time of the specific run step (dbt source snapshot-freshness) that generated this source node",
+              "name": "runElapsedTime",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The state of the freshness check for this source. Can be one of null, \"pass\", \"fail\", or \"error\". A value of null indicates that there was no freshness check.",
+              "name": "state",
+              "type": {
+                "kind": "ENUM",
+                "name": "FreshnessStatus",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "Whether or not the freshness was checked",
+              "name": "freshnessChecked",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The freshness SLA specified for this source table",
+              "name": "criteria",
+              "type": {
+                "kind": "OBJECT",
+                "name": "Criteria",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The tests that depend on this source",
+              "name": "tests",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "TestNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The columns for this model",
+              "name": "columns",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogColumn",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The loader of this source",
+              "name": "loader",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The type of this model",
+              "name": "type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The owner of this model",
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The comment on this model",
+              "name": "comment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The stats for this model",
+              "name": "stats",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogStat",
+                  "ofType": null
+                }
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "CloudArtifactInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "NodeInterface",
+              "ofType": null
+            }
+          ],
+          "kind": "OBJECT",
+          "name": "SourceNode",
+          "possibleTypes": null
+        },
+        {
+          "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).",
+          "enumValues": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "SCALAR",
+          "name": "Float",
+          "possibleTypes": null
+        },
+        {
+          "description": "An enumeration.",
+          "enumValues": [
+            {
+              "description": null,
+              "name": "Pass"
+            },
+            {
+              "description": null,
+              "name": "Warn"
+            },
+            {
+              "description": null,
+              "name": "Error"
+            }
+          ],
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "ENUM",
+          "name": "FreshnessStatus",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The freshness SLA that determines a warning state for this source table",
+              "name": "warnAfter",
+              "type": {
+                "kind": "OBJECT",
+                "name": "CriteriaInfo",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The freshness SLA that determines an error state for this source table",
+              "name": "errorAfter",
+              "type": {
+                "kind": "OBJECT",
+                "name": "CriteriaInfo",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "Criteria",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The number of periods in the freshness error SLA. Can be any positive number",
+              "name": "count",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The period component of the freshness error SLA. Can be one of \"minute\", \"hour\", \"day\"",
+              "name": "period",
+              "type": {
+                "kind": "ENUM",
+                "name": "TimePeriod",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "CriteriaInfo",
+          "possibleTypes": null
+        },
+        {
+          "description": "An enumeration.",
+          "enumValues": [
+            {
+              "description": null,
+              "name": "minute"
+            },
+            {
+              "description": null,
+              "name": "hour"
+            },
+            {
+              "description": null,
+              "name": "day"
+            }
+          ],
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "ENUM",
+          "name": "TimePeriod",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The unique ID of the run in dbt Cloud that generated this node",
+              "name": "runId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the account in dbt Cloud that this node was generated for",
+              "name": "accountId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the project in dbt Cloud that this node was generated for",
+              "name": "projectId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the environment in dbt Cloud that this node was generated for",
+              "name": "environmentId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the job in dbt Cloud that this node was generated for",
+              "name": "jobId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The name of this test",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of this particular node\n\nExample: source.jaffle_shop.stripe.subscriptions",
+              "name": "uniqueId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The resource type of this node",
+              "name": "resourceType",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The test results. Can be one of, in order of severity, \"error\", \"fail\", \"warn\", \"pass\"",
+              "name": "state",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The name of the column that the test pertains to",
+              "name": "columnName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "Status details the results of a test. For errors, it reads \"ERROR\". For other test results, it represents the number of rows that contribute to the test results",
+              "name": "status",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The error message in the case of state being \"error\"",
+              "name": "error",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The failure result",
+              "name": "fail",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The warning result",
+              "name": "warn",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "the raw sql for this model",
+              "name": "rawSql",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "the compiled sql for this model",
+              "name": "compiledSql",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "CloudArtifactInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "NodeInterface",
+              "ofType": null
+            }
+          ],
+          "kind": "OBJECT",
+          "name": "TestNode",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The name of this column",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The index of this column",
+              "name": "index",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The type of this column",
+              "name": "type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The comment of this column",
+              "name": "comment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The description of this column",
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The tags associated to this column",
+              "name": "tags",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "CatalogColumn",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The id of this stat",
+              "name": "id",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The label of this stat",
+              "name": "label",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The description of this stat",
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "If this stat is included",
+              "name": "include",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The value of this stat",
+              "name": "value",
+              "type": {
+                "kind": "SCALAR",
+                "name": "AnyScalar",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "CatalogStat",
+          "possibleTypes": null
+        },
+        {
+          "description": "This type can represent any scalar type such as int, float, string or boolean",
+          "enumValues": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "SCALAR",
+          "name": "AnyScalar",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The unique ID of the run in dbt Cloud that generated this node",
+              "name": "runId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the account in dbt Cloud that this node was generated for",
+              "name": "accountId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the project in dbt Cloud that this node was generated for",
+              "name": "projectId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the environment in dbt Cloud that this node was generated for",
+              "name": "environmentId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the job in dbt Cloud that this node was generated for",
+              "name": "jobId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The name of this seed",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of this particular node\n\nExample: source.jaffle_shop.stripe.subscriptions",
+              "name": "uniqueId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The resource type of this node",
+              "name": "resourceType",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The package name of this seed",
+              "name": "packageName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The database where this table/view lives",
+              "name": "database",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The schema where this table/view lives",
+              "name": "schema",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The identifier of this table/view",
+              "name": "alias",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The user-supplied description for this seed",
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The error message if there was an error, else null",
+              "name": "error",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The database-reported status of this seed",
+              "name": "status",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "True if this seed was skipped, otherwise false",
+              "name": "skip",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this seed began compilation",
+              "name": "compileStartedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this seed completed compilation",
+              "name": "compileCompletedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this seed began running",
+              "name": "executeStartedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this seed finished running",
+              "name": "executeCompletedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The total time elapsed during the execution of this seed",
+              "name": "executionTime",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The thread that ran the execution of this seed",
+              "name": "threadId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The timestamp when the run step (dbt run) was completed, ISO formatted timestamp",
+              "name": "runGeneratedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The elapsed time of the specific run step (dbt run) that generated this seed node",
+              "name": "runElapsedTime",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The columns for this model",
+              "name": "columns",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogColumn",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The type of this model",
+              "name": "type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The owner of this model",
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The comment on this model",
+              "name": "comment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The stats for this model",
+              "name": "stats",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogStat",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "the raw sql for this model",
+              "name": "rawSql",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "the compiled sql for this model",
+              "name": "compiledSql",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "CloudArtifactInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "NodeInterface",
+              "ofType": null
+            }
+          ],
+          "kind": "OBJECT",
+          "name": "SeedNode",
+          "possibleTypes": null
+        },
+        {
+          "description": null,
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": "The unique ID of the run in dbt Cloud that generated this node",
+              "name": "runId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the account in dbt Cloud that this node was generated for",
+              "name": "accountId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the project in dbt Cloud that this node was generated for",
+              "name": "projectId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the environment in dbt Cloud that this node was generated for",
+              "name": "environmentId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of the job in dbt Cloud that this node was generated for",
+              "name": "jobId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The name of this snapshot",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The unique ID of this particular node\n\nExample: source.jaffle_shop.stripe.subscriptions",
+              "name": "uniqueId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The resource type of this node",
+              "name": "resourceType",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The package name of this snapshot",
+              "name": "packageName",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The database where this table/view lives",
+              "name": "database",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The schema where this table/view lives",
+              "name": "schema",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The identifier of this table/view",
+              "name": "alias",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The user-supplied description for this snapshot",
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The error message if there was an error, else null",
+              "name": "error",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The database-reported status of this snapshot",
+              "name": "status",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "True if this snapshot was skipped, otherwise false",
+              "name": "skip",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of models that are parents of this snapshot",
+              "name": "parentsModels",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ModelNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The list of sources that are parents of this snapshot",
+              "name": "parentsSources",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "SourceNode",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this snapshot began compilation",
+              "name": "compileStartedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this snapshot completed compilation",
+              "name": "compileCompletedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this snapshot began running",
+              "name": "executeStartedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The ISO timestamp when this snapshot finished running",
+              "name": "executeCompletedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The total time elapsed during the execution of this snapshot",
+              "name": "executionTime",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The thread that ran the execution of this snapshot",
+              "name": "threadId",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The timestamp when the run step (dbt run) was completed, ISO formatted timestamp",
+              "name": "runGeneratedAt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The elapsed time of the specific run step (dbt run) that generated this snapshot node",
+              "name": "runElapsedTime",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The columns for this model",
+              "name": "columns",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogColumn",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The type of this model",
+              "name": "type",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The owner of this model",
+              "name": "owner",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The comment on this model",
+              "name": "comment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "The stats for this model",
+              "name": "stats",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogStat",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "the raw sql for this model",
+              "name": "rawSql",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "the compiled sql for this model",
+              "name": "compiledSql",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "CloudArtifactInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "NodeInterface",
+              "ofType": null
+            }
+          ],
+          "kind": "OBJECT",
+          "name": "SnapshotNode",
+          "possibleTypes": null
+        },
+        {
+          "description": "A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.",
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": null,
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "A list of all types supported by this server.",
+              "name": "types",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "__Type",
+                      "ofType": null
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "The type that query operations will be rooted at.",
+              "name": "queryType",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "__Type",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "If this server supports mutation, the type that mutation operations will be rooted at.",
+              "name": "mutationType",
+              "type": {
+                "kind": "OBJECT",
+                "name": "__Type",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "If this server support subscription, the type that subscription operations will be rooted at.",
+              "name": "subscriptionType",
+              "type": {
+                "kind": "OBJECT",
+                "name": "__Type",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": "A list of all directives supported by this server.",
+              "name": "directives",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "__Directive",
+                      "ofType": null
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "__Schema",
+          "possibleTypes": null
+        },
+        {
+          "description": "The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.\n\nDepending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name, description and optional `specifiedByUrl`, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.",
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": null,
+              "name": "kind",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "__TypeKind",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "specifiedByUrl",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": "false",
+                  "description": null,
+                  "name": "includeDeprecated",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "fields",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "__Field",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "interfaces",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "__Type",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "possibleTypes",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "__Type",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": "false",
+                  "description": null,
+                  "name": "includeDeprecated",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "enumValues",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "__EnumValue",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": "false",
+                  "description": null,
+                  "name": "includeDeprecated",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "inputFields",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "__InputValue",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "ofType",
+              "type": {
+                "kind": "OBJECT",
+                "name": "__Type",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "__Type",
+          "possibleTypes": null
+        },
+        {
+          "description": "An enum describing what kind of type a given `__Type` is.",
+          "enumValues": [
+            {
+              "description": "Indicates this type is a scalar.",
+              "name": "SCALAR"
+            },
+            {
+              "description": "Indicates this type is an object. `fields` and `interfaces` are valid fields.",
+              "name": "OBJECT"
+            },
+            {
+              "description": "Indicates this type is an interface. `fields`, `interfaces`, and `possibleTypes` are valid fields.",
+              "name": "INTERFACE"
+            },
+            {
+              "description": "Indicates this type is a union. `possibleTypes` is a valid field.",
+              "name": "UNION"
+            },
+            {
+              "description": "Indicates this type is an enum. `enumValues` is a valid field.",
+              "name": "ENUM"
+            },
+            {
+              "description": "Indicates this type is an input object. `inputFields` is a valid field.",
+              "name": "INPUT_OBJECT"
+            },
+            {
+              "description": "Indicates this type is a list. `ofType` is a valid field.",
+              "name": "LIST"
+            },
+            {
+              "description": "Indicates this type is a non-null. `ofType` is a valid field.",
+              "name": "NON_NULL"
+            }
+          ],
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "ENUM",
+          "name": "__TypeKind",
+          "possibleTypes": null
+        },
+        {
+          "description": "Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.",
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": null,
+              "name": "name",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": "false",
+                  "description": null,
+                  "name": "includeDeprecated",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "args",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "__InputValue",
+                      "ofType": null
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "type",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "__Type",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "isDeprecated",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "deprecationReason",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "__Field",
+          "possibleTypes": null
+        },
+        {
+          "description": "Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.",
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": null,
+              "name": "name",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "type",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "__Type",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": "A GraphQL-formatted string representing the default value for this input value.",
+              "name": "defaultValue",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "isDeprecated",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "deprecationReason",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "__InputValue",
+          "possibleTypes": null
+        },
+        {
+          "description": "One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.",
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": null,
+              "name": "name",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "isDeprecated",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "deprecationReason",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "__EnumValue",
+          "possibleTypes": null
+        },
+        {
+          "description": "A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.\n\nIn some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.",
+          "enumValues": null,
+          "fields": [
+            {
+              "args": [],
+              "description": null,
+              "name": "name",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "description",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "isRepeatable",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "description": null,
+              "name": "locations",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "__DirectiveLocation",
+                      "ofType": null
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "args": [
+                {
+                  "defaultValue": "false",
+                  "description": null,
+                  "name": "includeDeprecated",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              ],
+              "description": null,
+              "name": "args",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "__InputValue",
+                      "ofType": null
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "kind": "OBJECT",
+          "name": "__Directive",
+          "possibleTypes": null
+        },
+        {
+          "description": "A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.",
+          "enumValues": [
+            {
+              "description": "Location adjacent to a query operation.",
+              "name": "QUERY"
+            },
+            {
+              "description": "Location adjacent to a mutation operation.",
+              "name": "MUTATION"
+            },
+            {
+              "description": "Location adjacent to a subscription operation.",
+              "name": "SUBSCRIPTION"
+            },
+            {
+              "description": "Location adjacent to a field.",
+              "name": "FIELD"
+            },
+            {
+              "description": "Location adjacent to a fragment definition.",
+              "name": "FRAGMENT_DEFINITION"
+            },
+            {
+              "description": "Location adjacent to a fragment spread.",
+              "name": "FRAGMENT_SPREAD"
+            },
+            {
+              "description": "Location adjacent to an inline fragment.",
+              "name": "INLINE_FRAGMENT"
+            },
+            {
+              "description": "Location adjacent to a variable definition.",
+              "name": "VARIABLE_DEFINITION"
+            },
+            {
+              "description": "Location adjacent to a schema definition.",
+              "name": "SCHEMA"
+            },
+            {
+              "description": "Location adjacent to a scalar definition.",
+              "name": "SCALAR"
+            },
+            {
+              "description": "Location adjacent to an object type definition.",
+              "name": "OBJECT"
+            },
+            {
+              "description": "Location adjacent to a field definition.",
+              "name": "FIELD_DEFINITION"
+            },
+            {
+              "description": "Location adjacent to an argument definition.",
+              "name": "ARGUMENT_DEFINITION"
+            },
+            {
+              "description": "Location adjacent to an interface definition.",
+              "name": "INTERFACE"
+            },
+            {
+              "description": "Location adjacent to a union definition.",
+              "name": "UNION"
+            },
+            {
+              "description": "Location adjacent to an enum definition.",
+              "name": "ENUM"
+            },
+            {
+              "description": "Location adjacent to an enum value definition.",
+              "name": "ENUM_VALUE"
+            },
+            {
+              "description": "Location adjacent to an input object type definition.",
+              "name": "INPUT_OBJECT"
+            },
+            {
+              "description": "Location adjacent to an input object field definition.",
+              "name": "INPUT_FIELD_DEFINITION"
+            }
+          ],
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "kind": "ENUM",
+          "name": "__DirectiveLocation",
+          "possibleTypes": null
+        }
+      ]
+    }
+  }
+}
