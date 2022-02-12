@@ -36,7 +36,7 @@ class Client:
         self,
         resource: str,
         arguments: Dict = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None,
+        fields: List[str] = None,
     ) -> Dict:
         op = Operation(schema.Query)
         instance = getattr(op, resource)(
@@ -52,24 +52,14 @@ class Client:
         return data
 
     def exposure(
-        self,
-        job_id: int,
-        name: str,
-        *,
-        run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        self, job_id: int, name: str, *, run_id: int = None, fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "exposure", {"job_id": job_id, "name": name, "run_id": run_id}, fields
         )
 
     def exposures(
-        self,
-        job_id: int,
-        name: str,
-        *,
-        run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        self, job_id: int, name: str, *, run_id: int = None, fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "exposures", {"job_id": job_id, "name": name, "run_id": run_id}, fields
@@ -81,7 +71,7 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "macro",
@@ -90,11 +80,7 @@ class Client:
         )
 
     def macros(
-        self,
-        job_id: int,
-        *,
-        run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        self, job_id: int, *, run_id: int = None, fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "macros", {"job_id": job_id, "run_id": run_id}, fields
@@ -106,7 +92,7 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "metric",
@@ -115,11 +101,7 @@ class Client:
         )
 
     def metrics(
-        self,
-        job_id: int,
-        *,
-        run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        self, job_id: int, *, run_id: int = None, fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "metric", {"job_id": job_id, "run_id": run_id}, fields
@@ -131,7 +113,7 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "model",
@@ -147,7 +129,7 @@ class Client:
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "models",
@@ -167,7 +149,7 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "seed", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}, fields
@@ -179,7 +161,7 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "seeds",
@@ -195,7 +177,7 @@ class Client:
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "snapshots",
@@ -215,7 +197,7 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "source",
@@ -231,7 +213,7 @@ class Client:
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "sources",
@@ -251,7 +233,7 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "test", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}, fields
@@ -265,7 +247,7 @@ class Client:
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
-        fields: List[Union[str, Tuple[str, Dict]]] = None
+        fields: List[str] = None
     ) -> Dict:
         return self._make_request(
             "tests",
