@@ -1,6 +1,6 @@
+# third party
 import sgqlc.types
 import sgqlc.types.datetime
-
 
 schema = sgqlc.types.Schema()
 
@@ -518,7 +518,7 @@ class ExposureNode(sgqlc.types.Type, CloudArtifactInterface, NodeInterface):
         "parents",
         "parents_sources",
         "parents_models",
-    )
+    )  # type: ignore
     manifest_generated_at = sgqlc.types.Field(
         DateTime, graphql_name="manifestGeneratedAt"
     )
@@ -555,7 +555,7 @@ class MacroNode(sgqlc.types.Type, CloudArtifactInterface, NodeInterface):
         "description",
         "macro_sql",
         "meta",
-    )
+    )  # type: ignore
     package_name = sgqlc.types.Field(String, graphql_name="packageName")
     tags = sgqlc.types.Field(sgqlc.types.list_of(String), graphql_name="tags")
     root_path = sgqlc.types.Field(String, graphql_name="rootPath")
@@ -585,7 +585,7 @@ class MetricNode(sgqlc.types.Type, CloudArtifactInterface, NodeInterface):
         "meta",
         "model",
         "depends_on",
-    )
+    )  # type: ignore
     package_name = sgqlc.types.Field(String, graphql_name="packageName")
     tags = sgqlc.types.Field(sgqlc.types.list_of(String), graphql_name="tags")
     label = sgqlc.types.Field(String, graphql_name="label")
@@ -641,7 +641,7 @@ class ModelNode(sgqlc.types.Type, CloudArtifactInterface, NodeInterface):
         "stats",
         "raw_sql",
         "compiled_sql",
-    )
+    )  # type: ignore
     package_name = sgqlc.types.Field(String, graphql_name="packageName")
     database = sgqlc.types.Field(String, graphql_name="database")
     schema = sgqlc.types.Field(String, graphql_name="schema")
@@ -711,7 +711,7 @@ class SeedNode(sgqlc.types.Type, CloudArtifactInterface, NodeInterface):
         "stats",
         "raw_sql",
         "compiled_sql",
-    )
+    )  # type: ignore
     package_name = sgqlc.types.Field(String, graphql_name="packageName")
     database = sgqlc.types.Field(String, graphql_name="database")
     schema = sgqlc.types.Field(String, graphql_name="schema")
@@ -771,7 +771,7 @@ class SnapshotNode(sgqlc.types.Type, CloudArtifactInterface, NodeInterface):
         "stats",
         "raw_sql",
         "compiled_sql",
-    )
+    )  # type: ignore
     package_name = sgqlc.types.Field(String, graphql_name="packageName")
     database = sgqlc.types.Field(String, graphql_name="database")
     schema = sgqlc.types.Field(String, graphql_name="schema")
@@ -833,7 +833,7 @@ class SourceNode(sgqlc.types.Type, CloudArtifactInterface, NodeInterface):
         "owner",
         "comment",
         "stats",
-    )
+    )  # type: ignore
     database = sgqlc.types.Field(String, graphql_name="database")
     schema = sgqlc.types.Field(String, graphql_name="schema")
     identifier = sgqlc.types.Field(String, graphql_name="identifier")
@@ -872,7 +872,7 @@ class TestNode(sgqlc.types.Type, CloudArtifactInterface, NodeInterface):
         "warn",
         "raw_sql",
         "compiled_sql",
-    )
+    )  # type: ignore
     state = sgqlc.types.Field(String, graphql_name="state")
     column_name = sgqlc.types.Field(String, graphql_name="columnName")
     status = sgqlc.types.Field(String, graphql_name="status")
