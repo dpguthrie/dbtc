@@ -1,13 +1,12 @@
 # stdlib
-from typing import Dict, List, Tuple, Union
 import operator
 import os
+from typing import Dict, List
 
 # third party
-from sgqlc.operation import Operation
 from sgqlc.endpoint.http import HTTPEndpoint
+from sgqlc.operation import Operation
 
-# first party
 from . import schema
 
 
@@ -40,7 +39,7 @@ class Client:
     ) -> Dict:
         op = Operation(schema.Query)
         instance = getattr(op, resource)(
-            **{k: v for k, v in arguments.items() if v is not None}
+            **{k: v for k, v in arguments.items() if v is not None}  # type: ignore
         )
         if fields is not None:
             for field in fields:
