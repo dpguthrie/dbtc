@@ -1,5 +1,4 @@
 # stdlib
-import operator
 import os
 from typing import Dict, List
 
@@ -31,37 +30,60 @@ class Client:
     def _endpoint(self) -> HTTPEndpoint:
         return HTTPEndpoint(self.url, self.headers)
 
+    def _get_python_field_names(self, obj: str, fields: List[str]):
+        node = getattr(schema.Query, obj)
+        return tuple((node._to_python_name(field)) for field in fields)
+
     def _make_request(
         self,
-        resource: str,
+        obj: str,
         arguments: Dict = None,
         fields: List[str] = None,
+        exclude: bool = False,
     ) -> Dict:
         op = Operation(schema.Query)
-        instance = getattr(op, resource)(
+        instance = getattr(op, obj)(
             **{k: v for k, v in arguments.items() if v is not None}  # type: ignore
         )
         if fields is not None:
-            for field in fields:
-                if isinstance(field, str):
-                    operator.attrgetter(field)(instance)()
-                else:
-                    operator.attrgetter(field[0])(instance)(**field[1])()
+            fields = self._get_python_field_names(obj, fields)
+            if exclude:
+                instance.__fields__(__exclude__=fields)
+            else:
+                instance.__fields__(*fields)
         data = self._endpoint(op)
         return data
 
     def exposure(
-        self, job_id: int, name: str, *, run_id: int = None, fields: List[str] = None
+        self,
+        job_id: int,
+        name: str,
+        *,
+        run_id: int = None,
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
-            "exposure", {"job_id": job_id, "name": name, "run_id": run_id}, fields
+            "exposure",
+            {"job_id": job_id, "name": name, "run_id": run_id},
+            fields,
+            exclude,
         )
 
     def exposures(
-        self, job_id: int, name: str, *, run_id: int = None, fields: List[str] = None
+        self,
+        job_id: int,
+        name: str,
+        *,
+        run_id: int = None,
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
-            "exposures", {"job_id": job_id, "name": name, "run_id": run_id}, fields
+            "exposures",
+            {"job_id": job_id, "name": name, "run_id": run_id},
+            fields,
+            exclude,
         )
 
     def macro(
@@ -70,19 +92,26 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
             "macro",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
             fields,
+            exclude,
         )
 
     def macros(
-        self, job_id: int, *, run_id: int = None, fields: List[str] = None
+        self,
+        job_id: int,
+        *,
+        run_id: int = None,
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
-            "macros", {"job_id": job_id, "run_id": run_id}, fields
+            "macros", {"job_id": job_id, "run_id": run_id}, fields, exclude
         )
 
     def metric(
@@ -91,19 +120,26 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
             "metric",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
             fields,
+            exclude,
         )
 
     def metrics(
-        self, job_id: int, *, run_id: int = None, fields: List[str] = None
+        self,
+        job_id: int,
+        *,
+        run_id: int = None,
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
-            "metric", {"job_id": job_id, "run_id": run_id}, fields
+            "metric", {"job_id": job_id, "run_id": run_id}, fields, exclude
         )
 
     def model(
@@ -112,12 +148,14 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
             "model",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
             fields,
+            exclude,
         )
 
     def models(
@@ -128,7 +166,8 @@ class Client:
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
             "models",
@@ -140,6 +179,7 @@ class Client:
                 "run_id": run_id,
             },
             fields,
+            exclude,
         )
 
     def seed(
@@ -148,10 +188,14 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
-            "seed", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}, fields
+            "seed",
+            {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
+            fields,
+            exclude,
         )
 
     def seeds(
@@ -160,12 +204,14 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
             "seeds",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
             fields,
+            exclude,
         )
 
     def snapshots(
@@ -176,7 +222,8 @@ class Client:
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
             "snapshots",
@@ -188,6 +235,7 @@ class Client:
                 "run_id": run_id,
             },
             fields,
+            exclude,
         )
 
     def source(
@@ -196,12 +244,14 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
             "source",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
             fields,
+            exclude,
         )
 
     def sources(
@@ -212,7 +262,8 @@ class Client:
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
             "sources",
@@ -224,6 +275,7 @@ class Client:
                 "run_id": run_id,
             },
             fields,
+            exclude,
         )
 
     def test(
@@ -232,7 +284,8 @@ class Client:
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
             "test", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}, fields
@@ -246,7 +299,8 @@ class Client:
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
-        fields: List[str] = None
+        fields: List[str] = None,
+        exclude: bool = False
     ) -> Dict:
         return self._make_request(
             "tests",
@@ -258,4 +312,5 @@ class Client:
                 "run_id": run_id,
             },
             fields,
+            exclude,
         )
