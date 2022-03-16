@@ -3,7 +3,9 @@ from typing import Dict
 
 # third party
 import requests
-from dbtc_metadata_api.client.base import _Client
+
+# first party
+from dbtc_api.client.base import _Client
 
 
 class _CloudClient(_Client):
