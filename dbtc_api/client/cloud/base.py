@@ -3,8 +3,6 @@ from typing import Dict
 
 # third party
 import requests
-
-# first party
 from dbtc_metadata_api.client.base import _Client
 
 

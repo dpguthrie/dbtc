@@ -2,12 +2,10 @@
 from typing import Dict, List
 
 # third party
-from sgqlc.endpoint.http import HTTPEndpoint
-from sgqlc.operation import Operation
-
-# first party
 from dbtc_metadata_api.client.base import _Client
 from dbtc_metadata_api.client.metadata.schema import Query
+from sgqlc.endpoint.http import HTTPEndpoint
+from sgqlc.operation import Operation
 
 
 class _MetadataClient(_Client):
