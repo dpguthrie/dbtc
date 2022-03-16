@@ -1,4 +1,4 @@
-# first party
+# third party
 from dbtc_metadata_api.client.cloud import _CloudClientV2
 from dbtc_metadata_api.client.metadata import _MetadataClient
 
