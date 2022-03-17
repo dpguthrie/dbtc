@@ -3,7 +3,7 @@ import pytest
 
 
 def _test_cloud_method(dbtc_client, method: str, **kwargs):
-    "Assert that 'data' exists within response dictionary"
+    "Assert that response status code is 200"
     response = getattr(dbtc_client.cloud, method)(
         account_id=pytest.account_id, **kwargs
     )
