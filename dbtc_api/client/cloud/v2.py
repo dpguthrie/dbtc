@@ -78,7 +78,9 @@ class _CloudClientV2(_CloudClient):
             },
         )
 
-    def get_run(self, account_id: int, run_id: int, *, include_related: List[str]):
+    def get_run(
+        self, account_id: int, run_id: int, *, include_related: List[str] = None
+    ):
         return self._make_request(
             f'accounts/{account_id}/runs/{run_id}',
             params={'include_related': include_related},
