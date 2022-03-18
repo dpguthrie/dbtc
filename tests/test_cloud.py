@@ -7,10 +7,7 @@ def _test_cloud_method(dbtc_client, method: str, **kwargs):
     response = getattr(dbtc_client.cloud, method)(
         account_id=pytest.account_id, **kwargs
     )
-    if response['status']['code'] == 200:
-        assert True
-    else:
-        assert False
+    assert response['status']['code'] == 200
 
 
 def _test_and_set(dbtc_client, method: str, variable: str, **kwargs):
@@ -37,7 +34,6 @@ def test_list_projects(dbtc_client):
     _test_and_set(
         dbtc_client, 'list_projects', 'project_id', account_id=pytest.account_id
     )
-    _test_cloud_method(dbtc_client, 'list_projects')
 
 
 @pytest.mark.dependency(depends=['test_list_projects'])
@@ -52,7 +48,6 @@ def test_list_jobs(dbtc_client):
         'list_jobs',
         'job_id',
         account_id=pytest.account_id,
-        project_id=pytest.project_id,
     )
 
 
@@ -79,21 +74,16 @@ def test_get_run(dbtc_client):
 
 @pytest.mark.dependency(depends=['test_list_runs'])
 def test_list_run_artifacts(dbtc_client):
-    _test_and_set(
+    _test_cloud_method(
         dbtc_client,
         'list_run_artifacts',
-        'path',
-        account_id=pytest.account_id,
         run_id=pytest.run_id,
     )
 
 
 @pytest.mark.dependency(depends=['test_list_run_artifacts'])
 def test_get_run_artifact(dbtc_client):
-    _test_cloud_method(
-        dbtc_client,
-        'get_run_artifact',
-        account_id=pytest.account_id,
-        run_id=pytest.run_id,
-        path=pytest.path,
+    data = dbtc_client.cloud.get_run_artifact(
+        account_id=pytest.account_id, run_id=pytest.run_id, path='run_results.json'
     )
+    assert 'results' in data.keys()
