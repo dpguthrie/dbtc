@@ -22,3 +22,6 @@ jobs:
         make install_dev
     - name: Run tests
       run: make test
+      env:
+        DBT_CLOUD_SERVICE_TOKEN: ${{ secrets.DBT_CLOUD_SERVICE_TOKEN }}
+        DBT_CLOUD_API_KEY: ${{ secrets.DBT_CLOUD_API_KEY }}
