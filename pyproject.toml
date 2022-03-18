@@ -9,6 +9,9 @@ license = "MIT"
 python = "^3.8"
 sgqlc = "^15.0"
 click = "^8.0.3"
+requests = "^2.27.1"
+types-requests = "^2.27.13"
+pytest-dependency = "^0.5.1"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
@@ -17,6 +20,7 @@ isort = "^5.10.1"
 mypy = "^0.931"
 flake8 = "^4.0.1"
 pytest = "^7.0.1"
+pytest-vcr = "^1.0.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

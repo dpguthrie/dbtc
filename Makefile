@@ -1,4 +1,4 @@
-PYTEST=poetry run pytest -vrf -n 4
+PYTEST=poetry run pytest -vrf
 
 install_dev:
 	poetry install
@@ -8,7 +8,7 @@ install:
 
 lint:
 	poetry run black -S --check --diff .
-	poetry run isort --recursive --check-only --diff .
+	poetry run isort --check-only --diff .
 	poetry run flake8 .
 	poetry run mypy . --ignore-missing-imports
 
