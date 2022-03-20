@@ -11,11 +11,12 @@ from dbtc_api.client.metadata.schema import Query
 
 
 class _MetadataClient(_Client):
-    def __init__(self, service_token: str = None):
-        super().__init__(service_token=service_token)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     _header_property = 'service_token'
-    _base_url = 'https://metadata.cloud.getdbt.com/graphql'
+    _default_domain = 'metadata.cloud.getdbt.com'
+    _path = '/graphql'
 
     @property
     def _endpoint(self) -> HTTPEndpoint:
