@@ -20,6 +20,7 @@ flake8 = "^4.0.1"
 pytest = "^7.0.1"
 pytest-dependency = "^0.5.1"
 types-requests = "^2.27.13"
+ipython = "^8.2.0"
 
 [tool.poetry.scripts]
 dbtc = "dbtc_api.cli:main"

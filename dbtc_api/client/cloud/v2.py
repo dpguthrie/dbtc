@@ -35,6 +35,9 @@ class _CloudClientV2(_CloudClient):
         """
         return self._make_request(f'accounts/{account_id}')
 
+    def get_account_licenses(self, account_id: int):
+        return self._make_request(f'accounts/{account_id}/licenses')
+
     def list_projects(self, account_id: int):
         """List projects for a specified account
 
@@ -104,12 +107,12 @@ class _CloudClientV2(_CloudClient):
         )
 
     @staticmethod
-    def _run_status_formatted(run_id: int, status: str, time: float):
+    def _run_status_formatted(run_id: int, status: str, time: float) -> str:
         return f'Run {run_id} - {status.capitalize()}, Elapsed time: {round(time, 0)}s'
 
     def trigger_job_and_poll(
-        self, account_id: int, job_id: int, payload: Dict, poll_interval: int = 5
-    ):
+        self, account_id: int, job_id: int, payload: Dict, poll_interval: int = 10
+    ) -> int:
         run_id = self.trigger_job(account_id, job_id, payload)['data']['id']
         print('Job Triggered!')
         start = time.time()
@@ -123,7 +126,7 @@ class _CloudClientV2(_CloudClient):
                 print(
                     self._run_status_formatted(run_id, status_name, time.time() - start)
                 )
-                break
+                return run_id
             if status in [JobRunStatus.CANCELLED, JobRunStatus.ERROR]:
                 raise Exception(run['data']['status_message'])
             print(self._run_status_formatted(run_id, status_name, time.time() - start))
@@ -187,3 +190,22 @@ class _CloudClientV2(_CloudClient):
             f'accounts/{account_id}/runs/{run_id}/cancel',
             method='post',
         )
+
+    def list_users(
+        self,
+        account_id: int,
+        *,
+        limit: int = None,
+        offset: int = None,
+        order_by: str = 'email',
+    ):
+        return self._make_request(
+            f'accounts/{account_id}/users/',
+            params={'limit': limit, 'offset': offset, 'order_by': order_by},
+        )
+
+    def list_invited_users(self, account_id: int):
+        return self._make_request(f'accounts/{account_id}/invites/')
+
+    def get_user(self, account_id: int, user_id: int):
+        return self._make_request(f'accounts/{account_id}/users/{user_id}/')
