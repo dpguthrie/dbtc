@@ -144,7 +144,7 @@ class _CloudClientV2(_CloudClient):
         return self._make_request(
             f'accounts/{account_id}/runs',
             params={
-                'include_related': include_related,
+                'include_related': ','.join(include_related or []),
                 'job_definition_id': job_definition_id,
                 'order_by': order_by,
                 'offset': offset,
@@ -157,7 +157,7 @@ class _CloudClientV2(_CloudClient):
     ):
         return self._make_request(
             f'accounts/{account_id}/runs/{run_id}',
-            params={'include_related': include_related},
+            params={'include_related': ','.join(include_related or [])},
         )
 
     def list_run_artifacts(
