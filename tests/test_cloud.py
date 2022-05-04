@@ -12,11 +12,17 @@ def _test_cloud_method(dbtc_client, method: str, **kwargs):
 
 def _test_and_set(dbtc_client, method: str, variable: str, **kwargs):
     response = getattr(dbtc_client.cloud, method)(**kwargs)
+    setattr(pytest, variable, response['data'][0]['id'])
+    assert True
+
+
+def test_no_access(dbtc_client):
     try:
-        setattr(pytest, variable, response['data'][0]['id'])
-        assert True
-    except (TypeError, IndexError):
+        response = dbtc_client.cloud.list_projects(account_id=0)
+        response['data'][0]['id']
         assert False
+    except TypeError:
+        assert response['status']['code'] == 404
 
 
 @pytest.mark.dependency()
