@@ -77,11 +77,12 @@ class _CloudClientV2(_CloudClient):
         )
 
     def create_job(self, account_id: int, payload: Dict):
-        """Return job details for a job on an account.
+        """Create job in a given account
 
         Args:
             account_id (int): Numeric ID of the account containing the job
             job_id (int): Numeric ID of the job to retrieve
+            payload (dict): Payload required for post request
         """
         return self._make_request(
             f'accounts/{account_id}/jobs/',
@@ -109,6 +110,7 @@ class _CloudClientV2(_CloudClient):
         Args:
             account_id (int): Numeric ID of the account to retrieve
             job_id (int): Numeric ID of the job to retrieve
+            payload (dict): Payload required for post request
         """
         return self._make_request(
             f'accounts/{account_id}/jobs/{job_id}/',
