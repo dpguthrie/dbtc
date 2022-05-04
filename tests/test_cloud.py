@@ -12,11 +12,17 @@ def _test_cloud_method(dbtc_client, method: str, **kwargs):
 
 def _test_and_set(dbtc_client, method: str, variable: str, **kwargs):
     response = getattr(dbtc_client.cloud, method)(**kwargs)
+    setattr(pytest, variable, response['data'][0]['id'])
+    assert True
+
+
+def test_no_access(dbtc_client):
     try:
-        setattr(pytest, variable, response['data'][0]['id'])
-        assert True
-    except (TypeError, IndexError):
+        response = dbtc_client.cloud.list_projects(account_id=0)
+        response['data'][0]['id']
         assert False
+    except TypeError:
+        assert response['status']['code'] == 404
 
 
 @pytest.mark.dependency()
@@ -30,6 +36,16 @@ def test_get_account(dbtc_client):
 
 
 @pytest.mark.dependency(depends=['test_list_accounts'])
+def test_get_account_licenses(dbtc_client):
+    _test_cloud_method(dbtc_client, 'get_account_licenses')
+
+
+@pytest.mark.dependency(depends=['test_list_accounts'])
+def test_list_invited_users(dbtc_client):
+    _test_cloud_method(dbtc_client, 'list_invited_users')
+
+
+@pytest.mark.dependency(depends=['test_list_accounts'])
 def test_list_projects(dbtc_client):
     _test_and_set(
         dbtc_client, 'list_projects', 'project_id', account_id=pytest.account_id
@@ -37,8 +53,18 @@ def test_list_projects(dbtc_client):
 
 
 @pytest.mark.dependency(depends=['test_list_projects'])
+def test_list_users(dbtc_client):
+    _test_and_set(dbtc_client, 'list_users', 'user_id', account_id=pytest.account_id)
+
+
+@pytest.mark.dependency(depends=['test_list_projects'])
 def test_get_project(dbtc_client):
     _test_cloud_method(dbtc_client, 'get_project', project_id=pytest.project_id)
+
+
+@pytest.mark.dependency(depends=['test_list_users'])
+def test_get_user(dbtc_client):
+    _test_cloud_method(dbtc_client, 'get_user', user_id=pytest.user_id)
 
 
 @pytest.mark.dependency(depends=['test_list_projects'])

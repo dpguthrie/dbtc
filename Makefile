@@ -1,4 +1,4 @@
-PYTEST=poetry run pytest -vrf
+PYTEST=poetry run pytest
 
 install_dev:
 	poetry install
@@ -16,9 +16,9 @@ test: lint
 	$(PYTEST)
 
 test_cov:
-	# Run tests, and prepare coverage report
-	$(PYTEST) --cov ds_packages --cov v12 --cov baml --cov-report=html:htmlcov
+	# Run tests and prepare coverage report
+	$(PYTEST) --cov=./ --cov-report=xml
 
 test_with_warnings:
-	# Run tests, and show warnings
+	# Run tests and show warnings
 	$(PYTEST) -W all
