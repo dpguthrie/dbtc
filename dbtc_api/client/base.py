@@ -18,17 +18,17 @@ class _Client(abc.ABC):
     @property
     @abc.abstractmethod
     def _default_domain(self):
-        ...
+        """Default used when host is not provided by a user"""
 
     @property
     @abc.abstractmethod
     def _path(self):
-        ...
+        """Path where specific resource is located"""
 
     @property
     @abc.abstractmethod
     def _header_property(self):
-        ...
+        """Define what property to use within the headers passed with a request"""
 
     @property
     def _base_url(self):
