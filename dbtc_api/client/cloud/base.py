@@ -19,5 +19,4 @@ class _CloudClient(_Client):
     def _make_request(self, path: str, *, method: str = 'get', **kwargs) -> Dict:
         full_url = self.full_url(path)
         response = self.session.request(method, full_url, **kwargs)
-        response.raise_for_status()
         return response.json()
