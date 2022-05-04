@@ -21,6 +21,7 @@ pytest = "^7.0.1"
 pytest-dependency = "^0.5.1"
 types-requests = "^2.27.13"
 ipython = "^8.2.0"
+coverage = "^6.3.2"
 
 [tool.poetry.scripts]
 dbtc = "dbtc_api.cli:main"
