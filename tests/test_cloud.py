@@ -93,9 +93,23 @@ def test_list_runs(dbtc_client):
     )
 
 
+@pytest.mark.dependency(depends=['test_list_jobs'])
+def test_list_runs_v4(dbtc_client):
+    _test_cloud_method(
+        dbtc_client, 'list_runs_v4', account_id=pytest.account_id, limit=5
+    )
+
+
 @pytest.mark.dependency(depends=['test_list_runs'])
 def test_get_run(dbtc_client):
     _test_cloud_method(dbtc_client, 'get_run', run_id=pytest.run_id)
+
+
+@pytest.mark.dependency(depends=['test_list_runs'])
+def test_get_run_v4(dbtc_client):
+    _test_cloud_method(
+        dbtc_client, 'get_run_v4', account_id=pytest.account_id, run_id=pytest.run_id
+    )
 
 
 @pytest.mark.dependency(depends=['test_list_runs'])
