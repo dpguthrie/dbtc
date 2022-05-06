@@ -95,7 +95,10 @@ def test_list_runs(dbtc_client):
 
 @pytest.mark.dependency(depends=['test_list_jobs'])
 def test_list_runs_v4(dbtc_client):
-    _test_cloud_method(dbtc_client, 'list_runs_v4')
+    data = dbtc_client.cloud.list_runs_v4(
+        account_id=pytest.account_id, status='CANCELED'
+    )
+    assert isinstance(data, list)
 
 
 @pytest.mark.dependency(depends=['test_list_runs'])
