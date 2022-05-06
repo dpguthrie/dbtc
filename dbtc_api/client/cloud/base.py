@@ -68,10 +68,8 @@ class _CloudClient(_Client):
         response = self._make_request(path, method=method, **kwargs)
         data = []
         while True:
-            response_data = response.json()['data']
-            data.extend(response_data) if isinstance(
-                response_data, list
-            ) else data.extend([response_data])
+            response_data = response.json().get('data', [])
+            data.extend(response_data)
             next_page_token = self._get_pagination_token(response)
             if next_page_token is not None:
                 response = self._make_request(
