@@ -1,2 +1,2 @@
 # first party
-from dbtc_api.client.cloud.v2 import _CloudClientV2  # noqa: F401
+from dbtc_api.client.cloud.base import _CloudClient  # noqa: F401
