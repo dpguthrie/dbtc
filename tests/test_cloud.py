@@ -4,10 +4,16 @@ import pytest
 
 def _test_cloud_method(dbtc_client, method: str, **kwargs):
     "Assert that response status code is 200"
-    response = getattr(dbtc_client.cloud, method)(
-        account_id=pytest.account_id, **kwargs
-    )
-    assert response['status']['code'] == 200
+    data = getattr(dbtc_client.cloud, method)(account_id=pytest.account_id, **kwargs)
+    assert data['status']['code'] == 200
+
+
+def _test_cloud_v4_method(dbtc_client, method: str, multiple: bool = True, **kwargs):
+    data = getattr(dbtc_client.cloud, method)(account_id=pytest.account_id, **kwargs)
+    if multiple:
+        assert isinstance(data, list)
+    else:
+        assert 'data' in data.keys()
 
 
 def _test_and_set(dbtc_client, method: str, variable: str, **kwargs):
@@ -95,10 +101,7 @@ def test_list_runs(dbtc_client):
 
 @pytest.mark.dependency(depends=['test_list_jobs'])
 def test_list_runs_v4(dbtc_client):
-    data = dbtc_client.cloud.list_runs_v4(
-        account_id=pytest.account_id, status='CANCELED'
-    )
-    assert isinstance(data, list)
+    _test_cloud_v4_method(dbtc_client, 'list_runs_v4', status='CANCELED')
 
 
 @pytest.mark.dependency(depends=['test_list_runs'])
@@ -108,7 +111,9 @@ def test_get_run(dbtc_client):
 
 @pytest.mark.dependency(depends=['test_list_runs'])
 def test_get_run_v4(dbtc_client):
-    _test_cloud_method(dbtc_client, 'get_run_v4', run_id=pytest.run_id)
+    _test_cloud_v4_method(
+        dbtc_client, 'get_run_v4', multiple=False, run_id=pytest.run_id
+    )
 
 
 @pytest.mark.dependency(depends=['test_list_runs'])
