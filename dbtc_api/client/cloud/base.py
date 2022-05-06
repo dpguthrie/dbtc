@@ -455,7 +455,7 @@ class _CloudClient(_Client):
         return self._paginated_request(
             f'accounts/{account_id}/runs',
             params={
-                'limit': limit or self.limit,
+                'limit': limit,
                 'environment': environment,
                 'project': project,
                 'job': job,
