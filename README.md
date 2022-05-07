@@ -2,8 +2,8 @@
     <em>An unaffiliated python interface for dbt Cloud APIs</em>
 </p>
 <p align="center">
-    <a href="https://codecov.io/gh/dpguthrie/dbtc-api" target="_blank">
-        <img src="https://img.shields.io/codecov/c/github/dpguthrie/dbtc-api" alt="Coverage">
+    <a href="https://codecov.io/gh/dpguthrie/dbtc" target="_blank">
+        <img src="https://img.shields.io/codecov/c/github/dpguthrie/dbtc" alt="Coverage">
     </a>
 </p>
 
@@ -11,7 +11,7 @@
 
 **Documentation**: <a target="_blank" href="https://dbtc.dpguthrie.com">https://dbtc.dpguthrie.com</a>
 
-**Source Code**: <a target="_blank" href="https://github.com/dpguthrie/dbtc-api">https://github.com/dpguthrie/dbtc-api</a>
+**Source Code**: <a target="_blank" href="https://github.com/dpguthrie/dbtc">https://github.com/dpguthrie/dbtc</a>
 
 **V2 Docs**: <a target="_blank" href="https://docs.getdbt.com/dbt-cloud/api-v2">https://docs.getdbt.com/dbt-cloud/api-v2</a>
 
@@ -23,7 +23,7 @@
 
 ## Overview
 
-dbtc-api is an unaffiliated python interface to various dbt Cloud API endpoints.
+dbtc is an unaffiliated python interface to various dbt Cloud API endpoints.
 
 ## Requirements
 

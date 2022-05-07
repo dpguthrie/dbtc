@@ -1,12 +1,9 @@
 <p align="center">
-    <a href="#"><img src="docs/docs/img/full.png"></a>
+    <em>An unaffiliated python interface for dbt Cloud APIs</em>
 </p>
 <p align="center">
-    <em>An unaffiliated python wrapper for dbt Cloud APIs</em>
-</p>
-<p align="center">
-    <a href="https://codecov.io/gh/dpguthrie/dbtc-api" target="_blank">
-        <img src="https://img.shields.io/codecov/c/github/dpguthrie/dbtc-api" alt="Coverage">
+    <a href="https://codecov.io/gh/dpguthrie/dbtc" target="_blank">
+        <img src="https://img.shields.io/codecov/c/github/dpguthrie/dbtc" alt="Coverage">
     </a>
 </p>
 
@@ -14,7 +11,7 @@
 
 **Documentation**: <a target="_blank" href="https://dbtc.dpguthrie.com">https://dbtc.dpguthrie.com</a>
 
-**Source Code**: <a target="_blank" href="https://github.com/dpguthrie/dbtc-api">https://github.com/dpguthrie/dbtc-api</a>
+**Source Code**: <a target="_blank" href="https://github.com/dpguthrie/dbtc">https://github.com/dpguthrie/dbtc</a>
 
 **V2 Docs**: <a target="_blank" href="https://docs.getdbt.com/dbt-cloud/api-v2">https://docs.getdbt.com/dbt-cloud/api-v2</a>
 
@@ -26,7 +23,7 @@
 
 ## Overview
 
-dbtc-api is an unaffiliated python interface to various dbt Cloud API endpoints.
+dbtc is an unaffiliated python interface to various dbt Cloud API endpoints.
 
 ## Requirements
 
@@ -45,7 +42,7 @@ pip install dbtc
 
 There are two sets of APIs that dbt Cloud offers:
 
-- Cloud -
+- Cloud
 - Metadata
 
 ```python
@@ -55,23 +52,6 @@ client = dbtCloudClient()
 
 accounts = client.cloud.list_accounts()
 account_id = accounts['data'][0]['id']
-
-projects = client.cloud.list_projects(account_id)
-
-```
-
-## Multiple Symbol Example
-
-The `Ticker` class also makes it easy to retrieve data for a list of symbols with the same API. Simply pass a list of symbols as the argument to the `Ticker` class.
-
-```python
-from yahooquery import Ticker
-
-symbols = ['fb', 'aapl', 'amzn', 'nflx', 'goog']
-
-faang = Ticker(symbols)
-
-faang.summary_detail
 ```
 
 ## License
