@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "dbtc_api"
+name = "dbtc"
 version = "0.1.0"
-description = "Python interface to the dbt Cloud metadata API"
+description = "An unaffiliated python wrapper for dbt Cloud APIs"
 authors = ["Doug Guthrie <douglas.p.guthrie@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 sgqlc = "^15.0"
 requests = "^2.27.1"
 typer = "^0.4.0"
@@ -23,9 +23,10 @@ types-requests = "^2.27.13"
 ipython = "^8.2.0"
 coverage = "^6.3.2"
 pytest-cov = "^3.0.0"
+mkdocs-material = "^8.2.13"
 
 [tool.poetry.scripts]
-dbtc = "dbtc_api.cli:main"
+dbtc = "dbtc.cli:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
