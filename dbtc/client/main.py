@@ -1,6 +1,6 @@
 # first party
-from dbtc_api.client.cloud import _CloudClient
-from dbtc_api.client.metadata import _MetadataClient
+from dbtc.client.cloud import _CloudClient
+from dbtc.client.metadata import _MetadataClient
 
 
 class dbtCloudClient:

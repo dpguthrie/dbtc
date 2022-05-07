@@ -5,7 +5,7 @@ import os
 import pytest
 
 # first party
-from dbtc_api import dbtCloudClient
+from dbtc import dbtCloudClient
 
 
 @pytest.fixture(scope='session')

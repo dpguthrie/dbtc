@@ -8,7 +8,7 @@ from typing import Dict, List
 import requests
 
 # first party
-from dbtc_api.client.base import _Client
+from dbtc.client.base import _Client
 
 
 def _version_decorator(func, version):

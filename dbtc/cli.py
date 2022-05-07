@@ -6,7 +6,7 @@ from typing import List, Optional
 import typer
 
 # first party
-from dbtc_api import dbtCloudClient as dbtc
+from dbtc import dbtCloudClient as dbtc
 
 app = typer.Typer()
 
