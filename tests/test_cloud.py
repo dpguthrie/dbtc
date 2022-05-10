@@ -1,3 +1,6 @@
+# stdlib
+import os
+
 # third party
 import pytest
 
@@ -42,6 +45,18 @@ def test_get_account(dbtc_client):
 
 
 @pytest.mark.dependency(depends=['test_list_accounts'])
+def test_get_account_by_name(dbtc_client):
+    data = dbtc_client.cloud.get_account_by_name(os.getenv('DBT_CLOUD_ACCOUNT_NAME'))
+    assert data['status']['code'] == 200
+
+
+@pytest.mark.dependency(depends=['test_list_accounts'])
+def test_bad_get_account_by_name(dbtc_client):
+    with pytest.raises(Exception):
+        dbtc_client.cloud.get_account_by_name('Bad Account Name')
+
+
+@pytest.mark.dependency(depends=['test_list_accounts'])
 def test_get_account_licenses(dbtc_client):
     _test_cloud_method(dbtc_client, 'get_account_licenses')
 
@@ -66,6 +81,29 @@ def test_list_users(dbtc_client):
 @pytest.mark.dependency(depends=['test_list_projects'])
 def test_get_project(dbtc_client):
     _test_cloud_method(dbtc_client, 'get_project', project_id=pytest.project_id)
+
+
+@pytest.mark.dependency(depends=['test_list_projects'])
+def test_get_project_by_name(dbtc_client):
+    data = dbtc_client.cloud.get_project_by_name(os.getenv('DBT_CLOUD_PROJECT_NAME'))
+    assert data['status']['code'] == 200
+
+
+@pytest.mark.dependency(depends=['test_list_projects'])
+def test_get_bad_project_by_name(dbtc_client):
+    with pytest.raises(Exception):
+        dbtc_client.cloud.get_project_by_name(
+            'Bad Project Name', account_id=pytest.account_id
+        )
+
+
+@pytest.mark.dependency(depends=['test_list_projects'])
+def test_get_bad_project_by_name_2(dbtc_client):
+    with pytest.raises(Exception):
+        dbtc_client.cloud.get_project_by_name(
+            'Bad Project Name',
+            account_name=os.getenv('DBT_CLOUD_ACCOUNT_NAME'),
+        )
 
 
 @pytest.mark.dependency(depends=['test_list_users'])

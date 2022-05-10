@@ -89,13 +89,20 @@ class _CloudClient(_Client):
         """
         return response.headers.get('x-dbt-continuation-token', None)
 
+    def _get_by_name(self, items: List, item_name: str, value: str = 'name'):
+        try:
+            obj = [item for item in items if item[value] == item_name][0]
+        except IndexError:
+            obj = None
+        return obj
+
     @v2
-    def list_accounts(self):
+    def list_accounts(self) -> Dict:
         """List of accounts that your API Token is authorized to access."""
         return self._simple_request('accounts/')
 
     @v2
-    def get_account(self, account_id: int):
+    def get_account(self, account_id: int) -> Dict:
         """Get an account by its ID.
 
         Args:
@@ -104,7 +111,21 @@ class _CloudClient(_Client):
         return self._simple_request(f'accounts/{account_id}')
 
     @v2
-    def get_account_licenses(self, account_id: int):
+    def get_account_by_name(self, account_name: str) -> Dict:
+        """Get an account by its name.
+
+        Args:
+            account_name (str): Name of an account
+        """
+        accounts = self.list_accounts()
+        account = self._get_by_name(accounts['data'], account_name)
+        if account is not None:
+            return self.get_account(account['id'])
+
+        raise Exception(f'"{account_name}" was not found')
+
+    @v2
+    def get_account_licenses(self, account_id: int) -> Dict:
         """List account licenses for a specified account.
 
         Args:
@@ -113,7 +134,7 @@ class _CloudClient(_Client):
         return self._simple_request(f'accounts/{account_id}/licenses')
 
     @v2
-    def list_projects(self, account_id: int):
+    def list_projects(self, account_id: int) -> Dict:
         """List projects for a specified account.
 
         Args:
@@ -122,7 +143,7 @@ class _CloudClient(_Client):
         return self._simple_request(f'accounts/{account_id}/projects')
 
     @v2
-    def get_project(self, account_id: int, project_id: int):
+    def get_project(self, account_id: int, project_id: int) -> Dict:
         """Get a project by its ID.
 
         Args:
@@ -132,9 +153,41 @@ class _CloudClient(_Client):
         return self._simple_request(f'accounts/{account_id}/projects/{project_id}')
 
     @v2
+    def get_project_by_name(
+        self, project_name: str, account_id: int = None, account_name: str = None
+    ) -> Dict:
+        """Get a project by its name.
+
+        Args:
+            project_name (str): Name of project to retrieve
+            account_id (int, optional): Numeric ID of the account to retrieve
+            account_name (str, optional): Name of account to retrieve
+        """
+        if account_id is None and account_name is None:
+            accounts = self.list_accounts()
+            for account in accounts['data']:
+                projects = self.list_projects(account['id'])
+                project = self._get_by_name(projects['data'], project_name)
+                if project is not None:
+                    break
+
+        else:
+            if account_id is not None:
+                account = self.get_account(account_id)
+            else:
+                account = self.get_account_by_name(account_name)
+            projects = self.list_projects(account['id'])
+            project = self._get_by_name(projects['data'], project_name)
+
+        if project is not None:
+            return self.get_project(project['account_id'], project['id'])
+
+        raise Exception(f'"{project_name}" was not found.')
+
+    @v2
     def list_jobs(
         self, account_id: int, *, order_by: str = None, project_id: int = None
-    ):
+    ) -> Dict:
         """List jobs in an account or specific project.
 
         Args:
@@ -149,7 +202,7 @@ class _CloudClient(_Client):
         )
 
     @v2
-    def create_job(self, account_id: int, payload: Dict):
+    def create_job(self, account_id: int, payload: Dict) -> Dict:
         """Create job in a given account.
 
         Args:
@@ -164,7 +217,7 @@ class _CloudClient(_Client):
         )
 
     @v2
-    def get_job(self, account_id: int, job_id: int, *, order_by: str = None):
+    def get_job(self, account_id: int, job_id: int, *, order_by: str = None) -> Dict:
         """Get a job by its ID.
 
         Args:
@@ -179,7 +232,7 @@ class _CloudClient(_Client):
         )
 
     @v2
-    def update_job(self, account_id: int, job_id: int, payload: Dict):
+    def update_job(self, account_id: int, job_id: int, payload: Dict) -> Dict:
         """Update a job by its ID.
 
         Args:
@@ -208,17 +261,6 @@ class _CloudClient(_Client):
             json=payload,
         )
 
-    @staticmethod
-    def _run_status_formatted(run_id: int, status: str, time: float) -> str:
-        """Format a string indicating status of job.
-
-        Args:
-            run_id (int): Numeric ID of the run to retrieve
-            status (str): Status of job
-            time (float): Elapsed time since job triggered
-        """
-        return f'Run {run_id} - {status.capitalize()}, Elapsed time: {round(time, 0)}s'
-
     @v2
     def trigger_job_and_poll(
         self, account_id: int, job_id: int, payload: Dict, poll_interval: int = 10
@@ -232,6 +274,19 @@ class _CloudClient(_Client):
             payload (dict): Payload required for post request
             poll_interval (int, optional): Number of seconds to wait in between polling
         """
+
+        def _run_status_formatted(run_id: int, status: str, time: float) -> str:
+            """Format a string indicating status of job.
+
+            Args:
+                run_id (int): Numeric ID of the run to retrieve
+                status (str): Status of job
+                time (float): Elapsed time since job triggered
+            """
+            return (
+                f'Run {run_id} - {status.capitalize()}, Elapsed time: {round(time, 0)}s'
+            )
+
         run_id = self.trigger_job(account_id, job_id, payload)['data']['id']
         print('Job Triggered!')
         start = time.time()
@@ -242,9 +297,7 @@ class _CloudClient(_Client):
             status = run['data']['status']
             status_name = JobRunStatus(status).name
             if status == JobRunStatus.SUCCESS:
-                print(
-                    self._run_status_formatted(run_id, status_name, time.time() - start)
-                )
+                print(_run_status_formatted(run_id, status_name, time.time() - start))
                 return run_id
             if status in [JobRunStatus.CANCELLED, JobRunStatus.ERROR]:
                 raise Exception(run['data']['status_message'])
@@ -260,7 +313,7 @@ class _CloudClient(_Client):
         order_by: str = None,
         offset: int = None,
         limit: int = None,
-    ):
+    ) -> Dict:
         """List runs in an account.
 
         Args:
@@ -291,7 +344,7 @@ class _CloudClient(_Client):
     @v2
     def get_run(
         self, account_id: int, run_id: int, *, include_related: List[str] = None
-    ):
+    ) -> Dict:
         """Get a run by its ID.
 
         Args:
@@ -313,7 +366,7 @@ class _CloudClient(_Client):
         run_id: int,
         *,
         step: int = None,
-    ):
+    ) -> Dict:
         """Fetch a list of artifact files generated for a completed run.
 
         Args:
@@ -337,7 +390,7 @@ class _CloudClient(_Client):
         path: str,
         *,
         step: int = None,
-    ):
+    ) -> Dict:
         """Fetch artifacts from a completed run.
 
         Once a run has completed, you can use this endpoint to download the
@@ -387,7 +440,7 @@ class _CloudClient(_Client):
         limit: int = None,
         offset: int = None,
         order_by: str = 'email',
-    ):
+    ) -> Dict:
         """List users in an account.
 
         Args:
@@ -405,7 +458,7 @@ class _CloudClient(_Client):
         )
 
     @v2
-    def list_invited_users(self, account_id: int):
+    def list_invited_users(self, account_id: int) -> Dict:
         """List invited users in an account.
 
         Args:
@@ -414,7 +467,7 @@ class _CloudClient(_Client):
         return self._simple_request(f'accounts/{account_id}/invites/')
 
     @v2
-    def get_user(self, account_id: int, user_id: int):
+    def get_user(self, account_id: int, user_id: int) -> Dict:
         """List invited users in an account.
 
         Args:
