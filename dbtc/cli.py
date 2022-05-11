@@ -10,21 +10,72 @@ from dbtc import dbtCloudClient as dbtc
 
 app = typer.Typer()
 
+
+valid_inclusions = ['trigger', 'environment', 'run_steps', 'job', 'repository']
+
+
+def complete_inclusion(ctx, param, incomplete):
+    for inclusion in valid_inclusions:
+        if inclusion.startswith(incomplete):
+            yield inclusion
+
+
 API_KEY_OPTION = typer.Option(
-    None, envvar='DBT_CLOUD_API_KEY', help="User's dbt Cloud API Key"
+    None, '--api-key', envvar='DBT_CLOUD_API_KEY', help="User's dbt Cloud API Key"
 )
 TOKEN_OPTION = typer.Option(
-    None, envvar='DBT_CLOUD_SERVICE_TOKEN', help='Service token for dbt Cloud Account'
+    None,
+    '--token',
+    envvar='DBT_CLOUD_SERVICE_TOKEN',
+    help='Service token for dbt Cloud Account.',
 )
 HOST_OPTION = typer.Option(
-    None, envvar='DBT_CLOUD_HOST', help='Only used for single tenant instances'
+    None,
+    '--host',
+    envvar='DBT_CLOUD_HOST',
+    help='Only used for single tenant instances.',
 )
-ACCOUNT_ID = typer.Option(..., '--account-id', envvar='DBT_CLOUD_ACCOUNT_ID')
+ACCOUNT_ID = typer.Option(
+    ...,
+    '--account-id',
+    '-a',
+    envvar='DBT_CLOUD_ACCOUNT_ID',
+    help='Numeric ID of account to retrieve.',
+)
+RUN_ID = typer.Option(..., '--run-id', '-r', help='Numeric ID of run to retrieve.')
+JOB_ID = typer.Option(..., '--job-id', '-j', help='Numeric ID of job to retrieve.')
+PAYLOAD = typer.Option(
+    ...,
+    '--payload',
+    '-d',
+    help='String representation of dictionary needed to create or update resource.',
+)
+ORDER_BY = typer.Option(
+    None,
+    '--order-by',
+    '-o',
+    help='Field to order the result by.  Use `-` to indicate reverse order.',
+)
+INCLUDE_RELATED = typer.Option(
+    None,
+    '--include-related',
+    '-i',
+    help='List of related fields to pull with run',
+    shell_complete=complete_inclusion,
+)
+OFFSET = typer.Option(
+    None,
+    help='Offset to apply when listing runs.  Use with `limit` to paginate results.',
+)
+LIMIT = typer.Option(
+    None,
+    help='Limit to apply when listing runs.  Use with `offset` to paginate results.',
+)
 
 
 def _dbt_cloud_request(ctx: typer.Context, method: str, **kwargs):
     data = getattr(dbtc(**ctx.obj).cloud, method)(**kwargs)
-    typer.echo(data)
+    typer.echo(json.dumps(data))
     return data
 
 
@@ -47,11 +98,7 @@ def list_accounts(ctx: typer.Context):
 
 @app.command()
 def get_account(ctx: typer.Context, account_id: int = ACCOUNT_ID):
-    """Get an account by its ID
-
-    Args:
-        account_id (int): Numeric ID of the account to retrieve
-    """
+    """Get an account by its ID."""
     _dbt_cloud_request(ctx, 'get_account', account_id=account_id)
 
 
@@ -66,7 +113,13 @@ def list_projects(ctx: typer.Context, account_id: int = ACCOUNT_ID):
 
 
 @app.command()
-def get_project(ctx: typer.Context, project_id: int, account_id: int = ACCOUNT_ID):
+def get_project(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    project_id: int = typer.Option(
+        ..., '--project-id', '-p', help='Numeric ID of the project to retrieve.'
+    ),
+):
     """Get a project by its ID
 
     Args:
@@ -80,8 +133,10 @@ def get_project(ctx: typer.Context, project_id: int, account_id: int = ACCOUNT_I
 def list_jobs(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    order_by: str = None,
-    project_id: int = None,
+    project_id: int = typer.Option(
+        None, '--project-id', '-p', help='Numeric ID of the project to retrieve.'
+    ),
+    order_by: str = ORDER_BY,
 ):
     """List jobs in an account or specific project
 
@@ -101,45 +156,10 @@ def list_jobs(
 
 
 @app.command()
-def create_job(ctx: typer.Context, payload: str, account_id: int = ACCOUNT_ID):
-    """Create a job in a project.
-
-    Args:
-        account_id (int): Numerc ID of the account to retrieve
-        payload: (dict):
-            account_id: int, required
-            project_id: int, required
-            environment_id: int, required
-            name: str, required
-                Name for the job
-            execute_steps, List[str], required
-                Array of commands to execute
-            dbt_version, str, optional
-                Overrides dbt_version specified on the attached Environment if provided
-            triggers: Dict, optional, one of:
-                github_webhook: bool
-                schedule: bool
-                custom_branch_only: bool
-            settings: Dict, optional
-                threads: int
-                    Maximum number of models to runi n parallel in a single dbt run
-                target_name: str
-                    Informational field that can be consumed in dbt project code with
-                    {{ target.name }}
-            state: int, optional
-                1 = active
-                2 = deleted
-            generate_docs:  bool, optional
-                When true, run a `dbt docs generate` step at the end of runs
-                triggered from this job
-            schedule: Dict, optional
-                cron: str
-                    Cron-syntax schedule for the job
-                date: str, one of:
-                    every_day, days_of_week, custom_cron
-                tyoe: str, one of:
-                    every_hour, at_exact_hours
-    """
+def create_job(
+    ctx: typer.Context, account_id: int = ACCOUNT_ID, payload: str = PAYLOAD
+):
+    """Create a job in a project."""
     _dbt_cloud_request(
         ctx, 'create_job', account_id=account_id, payload=json.loads(payload)
     )
@@ -148,9 +168,9 @@ def create_job(ctx: typer.Context, payload: str, account_id: int = ACCOUNT_ID):
 @app.command()
 def get_job(
     ctx: typer.Context,
-    job_id: int,
     account_id: int = ACCOUNT_ID,
-    order_by: str = None,
+    job_id: int = JOB_ID,
+    order_by: str = ORDER_BY,
 ):
     """Return job details for a job on an account.
 
@@ -171,14 +191,12 @@ def get_job(
 
 @app.command()
 def update_job(
-    ctx: typer.Context, job_id: int, payload: str, account_id: int = ACCOUNT_ID
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    job_id: int = JOB_ID,
+    payload: str = PAYLOAD,
 ):
-    """Update the definition of an existing job.
-
-    Args:
-        account_id (int): Numerc ID of the account that the Job belongs to
-        job_id (:obj:`int`, optional): Numeric ID of the job to update
-    """
+    """Update the definition of an existing job."""
     _dbt_cloud_request(
         ctx,
         'update_job',
@@ -190,20 +208,12 @@ def update_job(
 
 @app.command()
 def trigger_job(
-    ctx: typer.Context, job_id: int, payload: str, account_id: int = ACCOUNT_ID
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    job_id: int = JOB_ID,
+    payload: str = PAYLOAD,
 ):
-    """Trigger job to run
-
-    Use this endpoint to kick off a run for a job.  When this endpoint returns a
-    successful response, a new run will be enqueued for the account.  Users can poll
-    the Get Run endpoint to poll the run until it completes.  After the run has
-    completed, users can use the get run artifact endpoint to download artifacts
-    generated by the run.
-
-    Args:
-        account_id (int): Numerc ID of the account that the Job belongs to
-        job_id (:obj:`int`, optional): Numeric ID of the job to run
-    """
+    """Trigger job to run."""
     _dbt_cloud_request(
         ctx,
         'update_job',
@@ -217,11 +227,13 @@ def trigger_job(
 def list_runs(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    include_related: List[str] = None,
-    job_definition_id: int = None,
-    order_by: str = None,
-    offset: int = None,
-    limit: int = None,
+    include_related: List[str] = INCLUDE_RELATED,
+    job_id: int = typer.Option(
+        None, '--job-id', '-j', help='Numeric ID of job to retrieve'
+    ),
+    order_by: str = ORDER_BY,
+    offset: int = OFFSET,
+    limit: int = LIMIT,
 ):
     """List runs for a specific account.
 
@@ -237,7 +249,7 @@ def list_runs(
         'list_runs',
         account_id=account_id,
         include_related=include_related,
-        job_definition_id=job_definition_id,
+        job_definition_id=job_id,
         order_by=order_by,
         offset=offset,
         limit=limit,
@@ -247,9 +259,9 @@ def list_runs(
 @app.command()
 def get_run(
     ctx: typer.Context,
-    run_id: int,
     account_id: int = ACCOUNT_ID,
-    include_related: List[str] = None,
+    run_id: int = RUN_ID,
+    include_related: List[str] = INCLUDE_RELATED,
 ):
     """Get run by ID for a specific account."""
     _dbt_cloud_request(
@@ -263,7 +275,10 @@ def get_run(
 
 @app.command()
 def list_run_artifacts(
-    ctx: typer.Context, run_id: int, account_id: int = ACCOUNT_ID, step: int = None
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    run_id: int = RUN_ID,
+    step: int = typer.Option(None, '--step', '-s'),
 ):
     """List run artifacts
 
@@ -280,10 +295,10 @@ def list_run_artifacts(
 @app.command()
 def get_run_artifact(
     ctx: typer.Context,
-    run_id: int,
-    path: str,
     account_id: int = ACCOUNT_ID,
-    step: int = None,
+    run_id: int = RUN_ID,
+    path: str = typer.Option(..., '--path', '-t'),
+    step: int = typer.Option(None, '--step', '-s'),
 ):
     """Get a specific run artifact by path
 
