@@ -25,6 +25,12 @@
 
 dbtc is an unaffiliated python interface to various dbt Cloud API endpoints.
 
+This library acts as a convenient interface to two different APIs that dbt Cloud offers:
+
+- Cloud API:  This is a REST API that exposes endpoints that allow users to programatically create, read, update, and delete
+resources within their dbt Cloud Account.
+- Metadata API:  This is a GraphQL API that exposes metadata generated from a job run within dbt Cloud.
+
 ## Requirements
 
 Python 3.7+
@@ -38,20 +44,23 @@ Python 3.7+
 ```bash
 pip install dbtc
 ```
-## Example
+## Basic Usage
 
-There are two sets of APIs that dbt Cloud offers:
+### Python
 
-- Cloud
-- Metadata
+The interface to both APIs are located in the `dbtCloudClient` class.
+
+The example below shows how you use the `cloud` property on an instance of the `dbtCloudClient` class to access methods that allow for programmatic control over dbt Cloud resources.
 
 ```python
 from dbtc import dbtCloudClient
 
 client = dbtCloudClient()
 
-accounts = client.cloud.list_accounts()
-account_id = accounts['data'][0]['id']
+account = client.cloud.get_account_by_name('My Account')
+project = client.cloud.get_project_by_name(account['id'], 'My Project')
+
+run_id = client.cloud.trigger_job_and_poll()
 ```
 
 ## License

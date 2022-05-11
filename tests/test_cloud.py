@@ -29,7 +29,6 @@ def test_no_access(dbtc_client):
     try:
         response = dbtc_client.cloud.list_projects(account_id=0)
         response['data'][0]['id']
-        assert False
     except TypeError:
         assert response['status']['code'] == 404
 
