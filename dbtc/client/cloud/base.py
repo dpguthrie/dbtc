@@ -301,7 +301,7 @@ class _CloudClient(_Client):
                 return run_id
             if status in [JobRunStatus.CANCELLED, JobRunStatus.ERROR]:
                 raise Exception(run['data']['status_message'])
-            print(self._run_status_formatted(run_id, status_name, time.time() - start))
+            print(_run_status_formatted(run_id, status_name, time.time() - start))
 
     @v2
     def list_runs(
