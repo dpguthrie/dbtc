@@ -39,7 +39,7 @@ Python 3.7+
 - [sgqlc]() - Simple GraphQL Client
 - [Typer](https://github.com/ross/requests-futures) - Library for building CLI applications
 
-## Installation (Coming Soon)
+## Installation
 
 ```bash
 pip install dbtc
