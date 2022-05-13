@@ -1,5 +1,5 @@
 # stdlib
-from typing import Dict, List
+from typing import Dict
 
 # third party
 from sgqlc.endpoint.http import HTTPEndpoint
@@ -22,46 +22,29 @@ class _MetadataClient(_Client):
     def _endpoint(self) -> HTTPEndpoint:
         return HTTPEndpoint(self.full_url(), self.headers)
 
-    def _make_request(
-        self,
-        obj: str,
-        arguments: Dict = None,
-        fields: List[str] = None,
-    ) -> Dict:
+    def _make_request(self, obj: str, arguments: Dict = None) -> Dict:
         op = Operation(Query)
-        instance = getattr(op, obj)(  # noqa: F841
+        getattr(op, obj)(  # noqa: F841
             **{k: v for k, v in arguments.items() if v is not None}  # type: ignore
-        )
+        ).__fields__()
         data = self._endpoint(op)
         return data
 
-    def get_exposure(
-        self,
-        job_id: int,
-        name: str,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-        exclude: bool = False,
-    ) -> Dict:
+    def get_exposure(self, job_id: int, name: str, *, run_id: int = None) -> Dict:
         return self._make_request(
             "exposure",
             {"job_id": job_id, "name": name, "run_id": run_id},
-            fields,
         )
 
     def get_exposures(
         self,
         job_id: int,
-        name: str,
         *,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "exposures",
-            {"job_id": job_id, "name": name, "run_id": run_id},
-            fields,
+            {"job_id": job_id, "run_id": run_id},
         )
 
     def get_macro(
@@ -70,12 +53,10 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "macro",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
         )
 
     def get_macros(
@@ -83,11 +64,8 @@ class _MetadataClient(_Client):
         job_id: int,
         *,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
-        return self._make_request(
-            "macros", {"job_id": job_id, "run_id": run_id}, fields
-        )
+        return self._make_request("macros", {"job_id": job_id, "run_id": run_id})
 
     def get_metric(
         self,
@@ -95,12 +73,10 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "metric",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
         )
 
     def get_metrics(
@@ -108,11 +84,8 @@ class _MetadataClient(_Client):
         job_id: int,
         *,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
-        return self._make_request(
-            "metric", {"job_id": job_id, "run_id": run_id}, fields
-        )
+        return self._make_request("metrics", {"job_id": job_id, "run_id": run_id})
 
     def get_model(
         self,
@@ -120,12 +93,10 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "model",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
         )
 
     def get_models(
@@ -136,7 +107,6 @@ class _MetadataClient(_Client):
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "models",
@@ -147,7 +117,6 @@ class _MetadataClient(_Client):
                 "identifier": identifier,
                 "run_id": run_id,
             },
-            fields,
         )
 
     def get_seed(
@@ -156,48 +125,47 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "seed",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
         )
 
     def get_seeds(
         self,
         job_id: int,
-        unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "seeds",
+            {"job_id": job_id, "run_id": run_id},
+        )
+
+    def get_snapshot(
+        self,
+        job_id: int,
+        unique_id: str,
+        *,
+        run_id: int = None,
+    ) -> Dict:
+        return self._make_request(
+            "snapshot",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
         )
 
     def get_snapshots(
         self,
         job_id: int,
         *,
-        database: str = None,
-        schema: str = None,
-        identifier: str = None,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "snapshots",
             {
                 "job_id": job_id,
-                "database": database,
-                "schema": schema,
-                "identifier": identifier,
                 "run_id": run_id,
             },
-            fields,
         )
 
     def get_source(
@@ -206,12 +174,10 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "source",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
         )
 
     def get_sources(
@@ -222,7 +188,6 @@ class _MetadataClient(_Client):
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "sources",
@@ -233,7 +198,6 @@ class _MetadataClient(_Client):
                 "identifier": identifier,
                 "run_id": run_id,
             },
-            fields,
         )
 
     def get_test(
@@ -242,30 +206,21 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
-            "test", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}, fields
+            "test", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}
         )
 
     def get_tests(
         self,
         job_id: int,
         *,
-        database: str = None,
-        schema: str = None,
-        identifier: str = None,
         run_id: int = None,
-        fields: List[str] = None,
     ) -> Dict:
         return self._make_request(
             "tests",
             {
                 "job_id": job_id,
-                "database": database,
-                "schema": schema,
-                "identifier": identifier,
                 "run_id": run_id,
             },
-            fields,
         )
