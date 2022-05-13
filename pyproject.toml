@@ -3,7 +3,10 @@ name = "dbtc"
 version = "0.1.0"
 description = "An unaffiliated python wrapper for dbt Cloud APIs"
 authors = ["Doug Guthrie <douglas.p.guthrie@gmail.com>"]
+documentation = "https://dbtc.dpguthrie.com"
+keywords=["dbt", "requests", "API", "dbt Cloud"]
 license = "MIT"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.7"
