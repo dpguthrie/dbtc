@@ -42,7 +42,6 @@ repos:
   - id: check-vcs-permalinks
   - id: check-xml
   - id: check-yaml
-    exclude: ^chart/ds-packages/templates/
   - id: debug-statements
   - id: detect-private-key
   - id: flake8
