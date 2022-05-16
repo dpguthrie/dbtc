@@ -1,6 +1,3 @@
-# stdlib
-import os
-
 # third party
 import pytest
 
@@ -45,7 +42,9 @@ def test_get_account(dbtc_client):
 
 @pytest.mark.dependency(depends=['test_list_accounts'])
 def test_get_account_by_name(dbtc_client):
-    data = dbtc_client.cloud.get_account_by_name(os.getenv('DBT_CLOUD_ACCOUNT_NAME'))
+    accounts = dbtc_client.cloud.list_accounts()
+    account_name = accounts['data'][0]['name']
+    data = dbtc_client.cloud.get_account_by_name(account_name)
     assert data['status']['code'] == 200
 
 
@@ -84,7 +83,9 @@ def test_get_project(dbtc_client):
 
 @pytest.mark.dependency(depends=['test_list_projects'])
 def test_get_project_by_name(dbtc_client):
-    data = dbtc_client.cloud.get_project_by_name(os.getenv('DBT_CLOUD_PROJECT_NAME'))
+    projects = dbtc_client.cloud.list_projects(pytest.account_id)
+    project_name = projects['data'][0]['name']
+    data = dbtc_client.cloud.get_project_by_name(project_name)
     assert data['status']['code'] == 200
 
 
@@ -100,8 +101,7 @@ def test_get_bad_project_by_name(dbtc_client):
 def test_get_bad_project_by_name_2(dbtc_client):
     with pytest.raises(Exception):
         dbtc_client.cloud.get_project_by_name(
-            'Bad Project Name',
-            account_name=os.getenv('DBT_CLOUD_ACCOUNT_NAME'),
+            'Bad Project Name', account_id=pytest.account_id
         )
 
 
@@ -144,6 +144,16 @@ def test_list_runs_v4(dbtc_client):
 @pytest.mark.dependency(depends=['test_list_runs'])
 def test_get_run(dbtc_client):
     _test_cloud_method(dbtc_client, 'get_run', run_id=pytest.run_id)
+
+
+@pytest.mark.dependency(dpeends=['test_list_runs'])
+def test_get_run_timing_details(dbtc_client):
+    _test_cloud_method(
+        dbtc_client,
+        'get_run_timing_details',
+        project_id=pytest.project_id,
+        run_id=pytest.run_id,
+    )
 
 
 @pytest.mark.dependency(depends=['test_list_runs'])
