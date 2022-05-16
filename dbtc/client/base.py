@@ -11,8 +11,8 @@ class _Client(abc.ABC):
         service_token: str = None,
         host: str = None,
     ):
-        self.api_key = api_key or os.getenv('DBT_CLOUD_API_KEY')
-        self.service_token = service_token or os.getenv('DBT_CLOUD_SERVICE_TOKEN')
+        self.api_key = api_key or os.getenv('DBT_CLOUD_API_KEY', None)
+        self.service_token = service_token or os.getenv('DBT_CLOUD_SERVICE_TOKEN', None)
         self._host = host or os.getenv('DBT_CLOUD_HOST', self._default_domain)
 
     @property
@@ -36,7 +36,10 @@ class _Client(abc.ABC):
 
     @property
     def headers(self):
-        return {'Authorization': f'Token {getattr(self, self._header_property)}'}
+        return {
+            'Authorization': f'Token {getattr(self, self._header_property)}',
+            'Content-Type': 'application/json',
+        }
 
     def full_url(self, path: str = None):
         if path is not None:

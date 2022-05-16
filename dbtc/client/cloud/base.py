@@ -42,8 +42,14 @@ class _CloudClient(_Client):
         self.session.headers = self.headers
 
     _default_domain = 'cloud.getdbt.com'
-    _header_property = 'api_key'
     _path = None
+
+    @property
+    def _header_property(self):
+        if self.api_key is None:
+            return 'service_token'
+
+        return 'api_key'
 
     def _make_request(
         self, path: str, *, method: str = 'get', **kwargs
@@ -96,10 +102,339 @@ class _CloudClient(_Client):
             obj = None
         return obj
 
+    @v3
+    def assign_group_permissions(
+        self, account_id: int, group_id: int, payload: Dict
+    ) -> Dict:
+        """Assign group permissions
+
+        Args:
+            account_id (int): Numeric ID of the account
+            group_id (int): Numeric ID of the group
+            payload (dict): Dictionary representing the group to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/group-permissions/{group_id}/',
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def assign_service_token_permissions(
+        self, account_id: int, service_token_id: int, payload: List[Dict]
+    ) -> Dict:
+        """Assign permissions to a service token.
+
+        Args:
+            account_id (int): Numeric ID of the account
+            service_token_id (int): Numeric ID of the service token
+            payload (list): List of dictionaries representing the permissions to assign
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/service-tokens/{service_token_id}/permissions/',
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def assign_user_to_group(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
+        """Assign a user to a group
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the user to assign
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/assign-groups/',
+            method='post',
+            json=payload,
+        )
+
     @v2
-    def list_accounts(self) -> Dict:
-        """List of accounts that your API Token is authorized to access."""
-        return self._simple_request('accounts/')
+    def cancel_run(self, account_id: int, run_id: int):
+        """Cancel a run.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            run_id (int): Numeric ID of the run to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/runs/{run_id}/cancel',
+            method='post',
+        )
+
+    @v3
+    def create_adapter(self, account_id: int, project_id: int, payload: Dict) -> Dict:
+        """Create an adapter
+
+        Note:  This is a prerequisite for creating a Databricks connection
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the adapter to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/adapters/',
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def create_connection(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
+        """Create a connection
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the connection to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/connections/',
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def create_credentials(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
+        """Create credentials
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the credentials to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/credentials/',
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def create_environment(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
+        """Create an environment
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the environment to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/environments/',
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def create_environment_variables(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
+        """Create environment variabless
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the environment variables to create
+        """
+        url = f'accounts/{account_id}/projects/{project_id}/environment-variables/'
+        if len(payload.keys()) > 1:
+            url += 'bulk/'
+        return self._simple_request(url, method='post', json=payload)
+
+    @v3
+    def create_job(self, account_id: int, project_id: int, payload: Dict) -> Dict:
+        """Create a job
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the job to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/jobs/',
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def create_project(self, account_id: int, payload: Dict) -> Dict:
+        """Create a project
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the project to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/', method='post', json=payload
+        )
+
+    @v3
+    def create_repository(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
+        """Create a repository
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the repository to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/repositories/',
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def create_service_token(self, account_id: int, payload: Dict) -> Dict:
+        """Create a service token
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the service token to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/service-tokens/', method='post', json=payload
+        )
+
+    @v3
+    def create_user_group(self, account_id: int, payload: Dict) -> Dict:
+        """Create a user group
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the group to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/groups/', method='post', json=payload
+        )
+
+    @v3
+    def deactivate_user_license(
+        self, account_id: int, permission_id: int, payload: Dict
+    ) -> Dict:
+        """Deactivate user license
+
+        Args:
+            account_id (int): Numeric ID of the account
+            permission_id (int): Numeric ID of the permission that contains
+                user you'd like to deactivate
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/permissions/{permission_id}',
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def delete_connection(
+        self, account_id: int, project_id: int, connection_id: int
+    ) -> Dict:
+        """Delete a connection
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            connection_id (int): Numeric ID of the connection to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/connections/{connection_id}',
+            method='delete',
+        )
+
+    @v3
+    def delete_environment(self, account_id: int, environment_id: int) -> Dict:
+        """Delete job for a specified account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            environment_id (int): Numeric ID of the environment to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/environments/{environment_id}/',
+            method='delete',
+        )
+
+    @v3
+    def delete_environment_variables(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
+        """Delete environment variables for a specified account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (Dict): Dictionary representing environment variables to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/environment-variables/bulk/',
+            method='delete',
+            json=payload,
+        )
+
+    @v3
+    def delete_job(self, account_id: int, job_id: int) -> Dict:
+        """Delete job for a specified account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            job_id (int): Numeric ID of the project to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/jobs/{job_id}/',
+            method='delete',
+        )
+
+    @v3
+    def delete_project(self, account_id: int, project_id: int) -> Dict:
+        """Delete project for a specified account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/',
+            method='delete',
+        )
+
+    @v3
+    def delete_repository(
+        self, account_id: int, project_id: int, repository_id: int
+    ) -> Dict:
+        """Delete repository for a specified account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            repository_id (int): Numeric ID of the repository to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/repositories/{repository_id}',
+            method='delete',
+        )
+
+    @v3
+    def delete_user_group(self, account_id: int, group_id: int) -> Dict:
+        """Delete group for a specified account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            group_id (int): Numeric ID of the group to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/groups/{group_id}/',
+            method='post',
+        )
 
     @v2
     def get_account(self, account_id: int) -> Dict:
@@ -134,13 +469,19 @@ class _CloudClient(_Client):
         return self._simple_request(f'accounts/{account_id}/licenses')
 
     @v2
-    def list_projects(self, account_id: int) -> Dict:
-        """List projects for a specified account.
+    def get_job(self, account_id: int, job_id: int, *, order_by: str = None) -> Dict:
+        """Get a job by its ID.
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
+            job_id (int): Numeric ID of the job to retrieve
+            order_by (:obj:`str`, optional): Field to order the result by.
+                Use - to indicate reverse order.
         """
-        return self._simple_request(f'accounts/{account_id}/projects')
+        return self._simple_request(
+            f'accounts/{account_id}/jobs/{job_id}/',
+            params={'order_by': order_by},
+        )
 
     @v2
     def get_project(self, account_id: int, project_id: int) -> Dict:
@@ -160,8 +501,8 @@ class _CloudClient(_Client):
 
         Args:
             project_name (str): Name of project to retrieve
-            account_id (int, optional): Numeric ID of the account to retrieve
-            account_name (str, optional): Name of account to retrieve
+            account_id (:obj:`int`, optional): Numeric ID of the account to retrieve
+            account_name (:obj:`str`, optional): Name of account to retrieve
         """
         if account_id is None and account_name is None:
             accounts = self.list_accounts()
@@ -185,6 +526,210 @@ class _CloudClient(_Client):
         raise Exception(f'"{project_name}" was not found.')
 
     @v2
+    def get_run(
+        self, account_id: int, run_id: int, *, include_related: List[str] = None
+    ) -> Dict:
+        """Get a run by its ID.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            run_id (int): Numeric ID of the run to retrieve
+            include_related (:obj:`list` of :obj:`str`, optional): List of related
+                fields to pull with the run. Valid values are "trigger", "job",
+                "repository", "debug_logs", "run_steps", and "environment".
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/runs/{run_id}',
+            params={'include_related': ','.join(include_related or [])},
+        )
+
+    @v2
+    def get_run_artifact(
+        self,
+        account_id: int,
+        run_id: int,
+        path: str,
+        *,
+        step: int = None,
+    ) -> Dict:
+        """Fetch artifacts from a completed run.
+
+        Once a run has completed, you can use this endpoint to download the
+        manifest.json, run_results.json or catalog.json files from dbt Cloud. These
+        artifacts contain information about the models in your dbt project, timing
+        information around their execution, and a status message indicating the result
+        of the model build.
+
+        Note: By default, this endpoint returns artifacts from the last step in the
+        run. To list artifacts from other steps in the run, use the step query
+        parameter described below.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            run_id (int): Numeric ID of the run to retrieve
+            path (str): Paths are rooted at the target/ directory. Use manifest.json,
+                catalog.json, or run_results.json to download dbt-generated artifacts
+                for the run.
+            step (:obj:`str`, optional): The index of the Step in the Run to query for
+                artifacts. The first step in the run has the index 1. If the step
+                parameter is omitted, then this endpoint will return the artifacts
+                compiled for the last step in the run.
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/runs/{run_id}/artifacts/{path}',
+            params={'step': step},
+        )
+
+    @v3
+    def get_run_timing_details(
+        self, account_id: int, project_id: int, run_id: int
+    ) -> Dict:
+        """Retrieves the timing details related to a run
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            run_id (int): Numeric ID of the run to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/runs/{run_id}/timing/'
+        )
+
+    @v4
+    def get_run_v4(self, account_id: int, run_id: int) -> Dict:
+        """Retrieves the details of an existing run with the given run_id.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            run_id (int): Numeric ID of the run to retrieve
+        """
+        return self._simple_request(f'accounts/{account_id}/runs/{run_id}')
+
+    @v3
+    def get_service_token(self, account_id: int, service_token_id: int) -> Dict:
+        """Retrieves a service token.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            service_token_id (int): Numeric ID of the service token to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/service-tokens/{service_token_id}'
+        )
+
+    @v2
+    def get_user(self, account_id: int, user_id: int) -> Dict:
+        """List invited users in an account.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            user_id (int): Numeric ID of the user to retrieve
+        """
+        return self._simple_request(f'accounts/{account_id}/users/{user_id}/')
+
+    @v2
+    def list_accounts(self) -> Dict:
+        """List of accounts that your API Token is authorized to access."""
+        return self._simple_request('accounts/')
+
+    @v3
+    def list_audit_logs(
+        self,
+        account_id: int,
+        *,
+        logged_at_start: str = None,
+        logged_at_end: str = None,
+        offset: int = None,
+        limit: int = None,
+    ) -> Dict:
+        """List audit logs for a specific account
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            logged_at_start (:obj:`str`, optional):  Date to begin retrieving audit
+                logs
+                Format is yyyy-mm-dd
+            logged_at_end (:obj:`str`, optional): Date to stop retrieving audit logs.
+                Format is yyyy-mm-dd
+            offset (:obj:`int`, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (:obj:`int`, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/audit-logs',
+            params={
+                'logged_at_start': logged_at_start,
+                'logged_at_end': logged_at_end,
+                'offset': offset,
+                'limit': limit,
+            },
+        )
+
+    @v3
+    def list_connections(self, account_id: int, project_id: int) -> Dict:
+        """List connections for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/connections'
+        )
+
+    @v3
+    def list_credentials(self, account_id: int, project_id: int) -> Dict:
+        """List credentials for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/credentials'
+        )
+
+    @v3
+    def list_environments(self, account_id: int, project_id: int) -> Dict:
+        """List environments for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/environments/'
+        )
+
+    @v3
+    def list_feature_flags(self, account_id: int) -> Dict:
+        """List feature flags for a specific account
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+        """
+        return self._simple_request(f'accounts/{account_id}/feature-flag/')
+
+    @v3
+    def list_groups(self, account_id: int) -> Dict:
+        """List groups for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+        """
+        return self._simple_request(f'accounts/{account_id}/groups/')
+
+    @v2
+    def list_invited_users(self, account_id: int) -> Dict:
+        """List invited users in an account.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+        """
+        return self._simple_request(f'accounts/{account_id}/invites/')
+
+    @v2
     def list_jobs(
         self, account_id: int, *, order_by: str = None, project_id: int = None
     ) -> Dict:
@@ -192,58 +737,195 @@ class _CloudClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            order_by (str, optional): Field to order the result by.
+            order_by (:obj:`str`, optional): Field to order the result by.
                 Use - to indicate reverse order.
-            project_id (int, optional): Numeric ID of the project containing jobs
+            project_id (:obj:`int`, optional): Numeric ID of the project containing jobs
         """
         return self._simple_request(
             f'accounts/{account_id}/jobs/',
             params={'order_by': order_by, 'project_id': project_id},
         )
 
-    @v2
-    def create_job(self, account_id: int, payload: Dict) -> Dict:
-        """Create job in a given account.
-
-        Args:
-            account_id (int): Numeric ID of the account containing the job
-            job_id (int): Numeric ID of the job to retrieve
-            payload (dict): Payload required for post request
-        """
-        return self._simple_request(
-            f'accounts/{account_id}/jobs/',
-            method='post',
-            json=payload,
-        )
-
-    @v2
-    def get_job(self, account_id: int, job_id: int, *, order_by: str = None) -> Dict:
-        """Get a job by its ID.
+    @v3
+    def list_projects(self, account_id: int) -> Dict:
+        """List projects for a specified account.
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            job_id (int): Numeric ID of the job to retrieve
-            order_by (str, optional): Field to order the result by.
+        """
+        return self._simple_request(f'accounts/{account_id}/projects')
+
+    @v3
+    def list_repositories(self, account_id: int, project_id: int) -> Dict:
+        """List repositories for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/repositories/'
+        )
+
+    @v2
+    def list_run_artifacts(
+        self,
+        account_id: int,
+        run_id: int,
+        *,
+        step: int = None,
+    ) -> Dict:
+        """Fetch a list of artifact files generated for a completed run.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            run_id (int): Numeric ID of the run to retrieve
+            step (:obj:`str`, optional): The index of the Step in the Run to query for
+                artifacts. The first step in the run has the index 1. If the step
+                parameter is omitted, then this endpoint will return the artifacts
+                compiled for the last step in the run.
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/runs/{run_id}/artifacts',
+            params={'step': step},
+        )
+
+    @v2
+    def list_runs(
+        self,
+        account_id: int,
+        *,
+        include_related: List[str] = None,
+        job_definition_id: int = None,
+        order_by: str = None,
+        offset: int = None,
+        limit: int = None,
+    ) -> Dict:
+        """List runs in an account.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            include_related (:obj:`list` of :obj:`str`, optional): List of related
+                fields to pull with the run. Valid values are "trigger", "job",
+                "repository", "debug_logs", "run_steps", and "environment".
+            job_definition_id (:obj:`int`, optional): Applies a filter to only return
+                runs
+                from the specified Job.
+            order_by (:obj:`str`, optional): Field to order the result by.
+                Use - to indicate reverse order.
+            offset (:obj:`int`, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (:obj:`int`, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/runs',
+            params={
+                'include_related': ','.join(include_related or []),
+                'job_definition_id': job_definition_id,
+                'order_by': order_by,
+                'offset': offset,
+                'limit': limit,
+            },
+        )
+
+    @v4
+    def list_runs_v4(
+        self,
+        account_id: int,
+        *,
+        limit: int = None,
+        environment: str = None,
+        project: str = None,
+        job: str = None,
+        status: str = None,
+    ) -> List[Dict]:
+        """Returns a list of runs in the account.
+
+        The runs are returned sorted by creation date, with the most recent run
+        appearing first.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            limit (:obj:`int`, optional): A limit on the number of objects to be
+                returned, between 1 and 100.
+            environment (str): A filter on the list based on the object's
+                environment_id field.
+            project (str): A filter on the list based on the object's project_id field.
+            job (str): A filter on the list based on the object's job_id field.
+            status: A filter on the list based on the object's status field.
+                Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"
+        """
+        return self._paginated_request(
+            f'accounts/{account_id}/runs',
+            params={
+                'limit': limit,
+                'environment': environment,
+                'project': project,
+                'job': job,
+                'status': status,
+            },
+        )
+
+    @v3
+    def list_service_token_permissions(
+        self, account_id: int, service_token_id: int
+    ) -> Dict:
+        """List service token permissions for a specific account.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            service_token_id (int): Numeric ID of the service token to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/service-tokens/{service_token_id}/permissions'
+        )
+
+    @v3
+    def list_service_tokens(self, account_id: int) -> Dict:
+        """List service tokens for a specific account.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+        """
+        return self._simple_request(f'accounts/{account_id}/service-tokens/')
+
+    @v2
+    def list_users(
+        self,
+        account_id: int,
+        *,
+        limit: int = None,
+        offset: int = None,
+        order_by: str = 'email',
+    ) -> Dict:
+        """List users in an account.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            limit (:obj:`int`, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+            offset (:obj:`int`, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            order_by (:obj:`str`, optional): Field to order the result by.
                 Use - to indicate reverse order.
         """
         return self._simple_request(
-            f'accounts/{account_id}/jobs/{job_id}/',
-            params={'order_by': order_by},
+            f'accounts/{account_id}/users/',
+            params={'limit': limit, 'offset': offset, 'order_by': order_by},
         )
 
-    @v2
-    def update_job(self, account_id: int, job_id: int, payload: Dict) -> Dict:
-        """Update a job by its ID.
+    @v3
+    def test_connection(self, account_id: int, payload: Dict) -> Dict:
+        """Test a connection
 
         Args:
-            account_id (int): Numeric ID of the account to retrieve
-            job_id (int): Numeric ID of the job to retrieve
-            payload (dict): Payload required for post request
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the connection to test
         """
         return self._simple_request(
-            f'accounts/{account_id}/jobs/{job_id}/',
-            method='post',
-            json=payload,
+            f'accounts/{account_id}/connections/test/', method='post', json=payload
         )
 
     @v2
@@ -272,7 +954,8 @@ class _CloudClient(_Client):
             account_id (int): Numeric ID of the account to retrieve
             job_id (int): Numeric ID of the job to trigger
             payload (dict): Payload required for post request
-            poll_interval (int, optional): Number of seconds to wait in between polling
+            poll_interval (:obj:`int`, optional): Number of seconds to wait in between
+                polling
         """
 
         def _run_status_formatted(run_id: int, status: str, time: float) -> str:
@@ -303,223 +986,102 @@ class _CloudClient(_Client):
                 raise Exception(run['data']['status_message'])
             print(_run_status_formatted(run_id, status_name, time.time() - start))
 
-    @v2
-    def list_runs(
-        self,
-        account_id: int,
-        *,
-        include_related: List[str] = None,
-        job_definition_id: int = None,
-        order_by: str = None,
-        offset: int = None,
-        limit: int = None,
+    @v3
+    def update_connection(
+        self, account_id: int, project_id: int, connection_id: int, payload: Dict
     ) -> Dict:
-        """List runs in an account.
+        """Update a connection
 
         Args:
-            account_id (int): Numeric ID of the account to retrieve
-            include_related (List[str], optional): List of related fields to pull with
-                the run. Valid values are "trigger", "job", "repository", "debug_logs",
-                "run_steps", and "environment".
-            job_definition_id (int, optional): Applies a filter to only return runs
-                from the specified Job.
-            order_by (str, optional): Field to order the result by.
-                Use - to indicate reverse order.
-            offset (int, optional): The offset to apply when listing runs.
-                Use with limit to paginate results.
-            limit (int, optional): The limit to apply when listing runs.
-                Use with offset to paginate results.
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            connection_id (int): Numeric ID of the connection to update
+            payload (dict): Dictionary representing the connection to update
         """
         return self._simple_request(
-            f'accounts/{account_id}/runs',
-            params={
-                'include_related': ','.join(include_related or []),
-                'job_definition_id': job_definition_id,
-                'order_by': order_by,
-                'offset': offset,
-                'limit': limit,
-            },
-        )
-
-    @v2
-    def get_run(
-        self, account_id: int, run_id: int, *, include_related: List[str] = None
-    ) -> Dict:
-        """Get a run by its ID.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            run_id (int): Numeric ID of the run to retrieve
-            include_related (List[str], optional): List of related fields to pull with
-                the run. Valid values are "trigger", "job", "repository", "debug_logs",
-                "run_steps", and "environment".
-        """
-        return self._simple_request(
-            f'accounts/{account_id}/runs/{run_id}',
-            params={'include_related': ','.join(include_related or [])},
-        )
-
-    @v2
-    def list_run_artifacts(
-        self,
-        account_id: int,
-        run_id: int,
-        *,
-        step: int = None,
-    ) -> Dict:
-        """Fetch a list of artifact files generated for a completed run.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            run_id (int): Numeric ID of the run to retrieve
-            step (str, optional): The index of the Step in the Run to query for
-                artifacts. The first step in the run has the index 1. If the step
-                parameter is omitted, then this endpoint will return the artifacts
-                compiled for the last step in the run.
-        """
-        return self._simple_request(
-            f'accounts/{account_id}/runs/{run_id}/artifacts',
-            params={'step': step},
-        )
-
-    @v2
-    def get_run_artifact(
-        self,
-        account_id: int,
-        run_id: int,
-        path: str,
-        *,
-        step: int = None,
-    ) -> Dict:
-        """Fetch artifacts from a completed run.
-
-        Once a run has completed, you can use this endpoint to download the
-        manifest.json, run_results.json or catalog.json files from dbt Cloud. These
-        artifacts contain information about the models in your dbt project, timing
-        information around their execution, and a status message indicating the result
-        of the model build.
-
-        Note: By default, this endpoint returns artifacts from the last step in the
-        run. To list artifacts from other steps in the run, use the step query
-        parameter described below.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            run_id (int): Numeric ID of the run to retrieve
-            path (str): Paths are rooted at the target/ directory. Use manifest.json,
-                catalog.json, or run_results.json to download dbt-generated artifacts
-                for the run.
-            step (str, optional): The index of the Step in the Run to query for
-                artifacts. The first step in the run has the index 1. If the step
-                parameter is omitted, then this endpoint will return the artifacts
-                compiled for the last step in the run.
-        """
-        return self._simple_request(
-            f'accounts/{account_id}/runs/{run_id}/artifacts/{path}',
-            params={'step': step},
-        )
-
-    @v2
-    def cancel_run(self, account_id: int, run_id: int):
-        """Cancel a run.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            run_id (int): Numeric ID of the run to retrieve
-        """
-        return self._simple_request(
-            f'accounts/{account_id}/runs/{run_id}/cancel',
+            f'accounts/{account_id}/projects/{project_id}/connections/{connection_id}/',
             method='post',
+            json=payload,
         )
 
-    @v2
-    def list_users(
-        self,
-        account_id: int,
-        *,
-        limit: int = None,
-        offset: int = None,
-        order_by: str = 'email',
+    @v3
+    def update_credentials(
+        self, account_id: int, project_id: int, credentials_id: int, payload: Dict
     ) -> Dict:
-        """List users in an account.
+        """Update credentials
 
         Args:
-            account_id (int): Numeric ID of the account to retrieve
-            limit (int, optional): The limit to apply when listing runs.
-                Use with offset to paginate results.
-            offset (int, optional): The offset to apply when listing runs.
-                Use with limit to paginate results.
-            order_by (str, optional): Field to order the result by.
-                Use - to indicate reverse order.
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            credentials_id (int): Numeric ID of the credentials to update
+            payload (dict): Dictionary representing the credentials to update
         """
         return self._simple_request(
-            f'accounts/{account_id}/users/',
-            params={'limit': limit, 'offset': offset, 'order_by': order_by},
+            f'accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/',  # noqa: E50
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def update_environment(
+        self, account_id: int, project_id: int, environment_id: int, payload: Dict
+    ) -> Dict:
+        """Update a connection
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            environment_id (int): Numeric ID of the environment to update
+            payload (dict): Dictionary representing the environment to update
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/environments/{environment_id}/',  # noqa: E501
+            method='post',
+            json=payload,
         )
 
     @v2
-    def list_invited_users(self, account_id: int) -> Dict:
-        """List invited users in an account.
+    def update_job(self, account_id: int, job_id: int, payload: Dict) -> Dict:
+        """Update a job by its ID.
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
+            job_id (int): Numeric ID of the job to retrieve
+            payload (dict): Payload required for post request
         """
-        return self._simple_request(f'accounts/{account_id}/invites/')
-
-    @v2
-    def get_user(self, account_id: int, user_id: int) -> Dict:
-        """List invited users in an account.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            user_id (int): Numeric ID of the user to retrieve
-        """
-        return self._simple_request(f'accounts/{account_id}/users/{user_id}/')
-
-    @v4
-    def list_runs_v4(
-        self,
-        account_id: int,
-        *,
-        limit: int = None,
-        environment: str = None,
-        project: str = None,
-        job: str = None,
-        status: str = None,
-    ) -> List[Dict]:
-        """Returns a list of runs in the account.
-
-        The runs are returned sorted by creation date, with the most recent run
-        appearing first.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            limit (int, optional): A limit on the number of objects to be returned,
-                between 1 and 100.
-            environment (str): A filter on the list based on the object's
-                environment_id field.
-            project (str): A filter on the list based on the object's project_id field.
-            job (str): A filter on the list based on the object's job_id field.
-            status: A filter on the list based on the object's status field.
-                Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"
-        """
-        return self._paginated_request(
-            f'accounts/{account_id}/runs',
-            params={
-                'limit': limit,
-                'environment': environment,
-                'project': project,
-                'job': job,
-                'status': status,
-            },
+        return self._simple_request(
+            f'accounts/{account_id}/jobs/{job_id}/',
+            method='post',
+            json=payload,
         )
 
-    @v4
-    def get_run_v4(self, account_id: int, run_id: int) -> Dict:
-        """Retrieves the details of an existing run with the given run_id.
+    @v3
+    def update_project(self, account_id: int, project_id: int, payload: Dict) -> Dict:
+        """Update project for a specified account
 
         Args:
-            account_id (int): Numeric ID of the account to retrieve
-            run_id (int): Numeric ID of the run to retrieve
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project to update
+            payload (dict): Dictionary representing the project to update
         """
-        return self._simple_request(f'accounts/{account_id}/runs/{run_id}')
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/', method='POST', json=payload
+        )
+
+    @v3
+    def update_repository(
+        self, account_id: int, project_id: int, repository_id: int, payload: Dict
+    ) -> Dict:
+        """Update a connection
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            repository_id (int): Numeric ID of the repository to update
+            payload (dict): Dictionary representing the repository to update
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/repositories/{repository_id}/',  # noqa: E501
+            method='post',
+            json=payload,
+        )
