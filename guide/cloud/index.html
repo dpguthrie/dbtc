@@ -1692,9 +1692,6 @@
       </tr>
   </tbody>
 </table>
-<p><strong>Examples:</strong></p>
-    
-
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -1703,8 +1700,6 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
-
-<span class="sd">    Examples:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -3017,33 +3012,6 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
-<p><strong>Examples:</strong></p>
-    <details class="example">
-<summary>Example Payload</summary>
-<div class="highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s1">&#39;account_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;created_by_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;project_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;adapter_version&#39;</span><span class="p">:</span> <span class="s1">&#39;databricks_spark_v0&#39;</span><span class="p">,</span>
-<span class="p">}</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>Python</summary>
-<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
-<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
-</code></pre></div>
-</details>
-<details class="example">
-<summary>CLI</summary>
-<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
-environment variables have been set.</p>
-<div class="highlight"><pre><span></span><code>dbtc create-adapter --payload<span class="o">=</span><span class="s1">&#39;{&quot;id&quot;: null, &quot;account_id&quot;: 1, &quot;created_by_id&quot;: 1, &quot;project_id&quot;: 1, &quot;state&quot;: 1, &quot;adapter_version&quot;: &quot;databricks_spark_v0&quot;}&#39;</span>  <span class="c1"># noqa: E501</span>
-</code></pre></div>
-</details>
-
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -3056,37 +3024,6 @@ environment variables have been set.</p>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        project_id (int): Numeric ID of the project</span>
 <span class="sd">        payload (dict): Dictionary representing the environment to create</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        ??? example &quot;Example Payload&quot;</span>
-
-<span class="sd">            ```py</span>
-<span class="sd">            payload = {</span>
-<span class="sd">                &#39;id&#39;: None,</span>
-<span class="sd">                &#39;account_id&#39;: 1,</span>
-<span class="sd">                &#39;created_by_id&#39;: 1,</span>
-<span class="sd">                &#39;project_id&#39;: 1,</span>
-<span class="sd">                &#39;state&#39;: 1,</span>
-<span class="sd">                &#39;adapter_version&#39;: &#39;databricks_spark_v0&#39;,</span>
-<span class="sd">            }</span>
-<span class="sd">            ```</span>
-
-<span class="sd">        ??? example &quot;Python&quot;</span>
-
-<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
-
-<span class="sd">            ```py</span>
-<span class="sd">            client.cloud.create_environment(account_id, project_id, payload)</span>
-<span class="sd">            ```</span>
-
-<span class="sd">        ??? example &quot;CLI&quot;</span>
-
-<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
-<span class="sd">            environment variables have been set.</span>
-
-<span class="sd">            ```bash</span>
-<span class="sd">            dbtc create-adapter --payload=&#39;{&quot;id&quot;: null, &quot;account_id&quot;: 1, &quot;created_by_id&quot;: 1, &quot;project_id&quot;: 1, &quot;state&quot;: 1, &quot;adapter_version&quot;: &quot;databricks_spark_v0&quot;}&#39;  # noqa: E501</span>
-<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/environments/&#39;</span><span class="p">,</span>
@@ -3540,6 +3477,7 @@ environment variables have been set.</p>
 <span class="sd">        payload (dict): Dictionary representing the group to create</span>
 
 <span class="sd">    Examples:</span>
+
 <span class="sd">        ??? example &quot;Example Payload&quot;</span>
 
 <span class="sd">            ```py</span>
@@ -3660,6 +3598,7 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
 <span class="sd">        payload (dict): Dictionary representing the user to assign</span>
 
 <span class="sd">    Examples:</span>
+
 <span class="sd">        ??? example &quot;Example Payload&quot;</span>
 
 <span class="sd">            ```py</span>
