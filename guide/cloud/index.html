@@ -55,8 +55,8 @@
   
 
 
-  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-174219875-1","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
-  <script async src="https://www.google-analytics.com/analytics.js"></script>
+  <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-FBR4YZVM7P"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&gtag("event","search",{search_term:this.value})}),"undefined"!=typeof location$&&location$.subscribe(function(e){gtag("config","G-FBR4YZVM7P",{page_path:e.pathname})})})</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FBR4YZVM7P"></script>
 
 
     
@@ -4115,10 +4115,10 @@ dbtc cancel-run --account-id=1 --run-id=1</p>
       </tr>
       <tr>
         <td><code>include_related</code></td>
-        <td></td>
-        <td><p>obj:<code>list</code> of str, optional): List of related
-fields to pull with the run. Valid values are "trigger", "job",
-"repository", "debug_logs", "run_steps", and "environment".</p></td>
+        <td><code>list</code></td>
+        <td><p>List of related
+fields to pull with the run. Valid values are <code>trigger</code>, <code>job</code>,
+<code>repository</code>, <code>debug_logs</code>, <code>run_steps</code>, and <code>environment</code>.</p></td>
         <td><code>None</code></td>
       </tr>
   </tbody>
@@ -4280,10 +4280,10 @@ environment variables have been set.
       </tr>
       <tr>
         <td><code>include_related</code></td>
-        <td></td>
-        <td><p>obj:<code>list</code> of str, optional): List of related
-fields to pull with the run. Valid values are "trigger", "job",
-"repository", "debug_logs", "run_steps", and "environment".</p></td>
+        <td><code>list</code></td>
+        <td><p>List of related
+fields to pull with the run. Valid values are <code>trigger</code>, <code>job</code>,
+<code>repository</code>, <code>debug_logs</code>, <code>run_steps</code>, and <code>environment</code>.</p></td>
         <td><code>None</code></td>
       </tr>
       <tr>
