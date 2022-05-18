@@ -1692,6 +1692,20 @@
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_account</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc get-account
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -1700,6 +1714,24 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_account(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get-account</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -1737,6 +1769,19 @@
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_account_by_name</span><span class="p">(</span><span class="n">account_name</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<div class="highlight"><pre><span></span><code>dbtc get-account-by-name --account-name<span class="o">=</span>name
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -1745,6 +1790,22 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        account_name (str): Name of an account</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_account_by_name(account_name)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get-account-by-name --account-name=name</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">accounts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_accounts</span><span class="p">()</span>
     <span class="n">account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_by_name</span><span class="p">(</span><span class="n">accounts</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span> <span class="n">account_name</span><span class="p">)</span>
@@ -1787,6 +1848,20 @@
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_account_licenses</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc get-account-licenses
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -1795,6 +1870,24 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_account_licenses(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get-account-licenses</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/licenses&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -1813,11 +1906,41 @@
 
       <p>List of accounts that your API Token is authorized to access.</p>
 
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_accounts</span><span class="p">()</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<div class="highlight"><pre><span></span><code>dbtc list-accounts
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
 <span class="k">def</span> <span class="nf">list_accounts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;List of accounts that your API Token is authorized to access.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;List of accounts that your API Token is authorized to access.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_accounts()</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-accounts</span>
+<span class="sd">            ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="s1">&#39;accounts/&#39;</span><span class="p">)</span>
 </code></pre></div>
         </details>
@@ -1889,6 +2012,20 @@ compiled for the last step in the run.</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_run_artifact</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc get-run-artifact --run-id<span class="o">=</span><span class="m">1</span> --path<span class="o">=</span>manifest.json
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -1923,6 +2060,24 @@ compiled for the last step in the run.</p></td>
 <span class="sd">            artifacts. The first step in the run has the index 1. If the step</span>
 <span class="sd">            parameter is omitted, then this endpoint will return the artifacts</span>
 <span class="sd">            compiled for the last step in the run.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_run_artifact(account_id, run_id, path)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get-run-artifact --run-id=1 --path=manifest.json</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s1">/artifacts/</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
@@ -1978,6 +2133,20 @@ compiled for the last step in the run.</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_run_artifacts</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-environments --run-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -1997,6 +2166,24 @@ compiled for the last step in the run.</p></td>
 <span class="sd">            artifacts. The first step in the run has the index 1. If the step</span>
 <span class="sd">            parameter is omitted, then this endpoint will return the artifacts</span>
 <span class="sd">            compiled for the last step in the run.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_run_artifacts(account_id, run_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-environments --run-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s1">/artifacts&#39;</span><span class="p">,</span>
@@ -2067,6 +2254,20 @@ Use with offset to paginate results.</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_audit_logs</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<p>```bash
+dbtc list-audit-logs</p>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -2092,6 +2293,23 @@ Use with offset to paginate results.</p></td>
 <span class="sd">            Use with limit to paginate results.</span>
 <span class="sd">        limit (int, optional): The limit to apply when listing runs.</span>
 <span class="sd">            Use with offset to paginate results.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_audit_logs(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-audit-logs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/audit-logs&#39;</span><span class="p">,</span>
@@ -2510,6 +2728,21 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">delete_connection</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">connection_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc delete-connection --connection-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -2522,6 +2755,25 @@ environment variables have been set.</p>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        project_id (int): Numeric ID of the project</span>
 <span class="sd">        connection_id (int): Numeric ID of the connection to delete</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.delete_connection(account_id, project_id, connection_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc delete-connection --connection-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/connections/</span><span class="si">{</span><span class="n">connection_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
@@ -2568,6 +2820,21 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_connections</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-connections
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -2577,6 +2844,25 @@ environment variables have been set.</p>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
 <span class="sd">        project_id (int): Numeric ID of the project to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_connections(account_id, project_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-connections</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/connections&#39;</span>
@@ -2785,7 +3071,7 @@ environment variables have been set.</p>
 <summary>CLI</summary>
 <p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
 environment variables have been set.</p>
-<div class="highlight"><pre><span></span><code>dbtc create-adapter --payload<span class="o">=</span><span class="s1">&#39;{&quot;id&quot;: null, &quot;account_id&quot;: 1, &quot;created_by_id&quot;: 1, &quot;project_id&quot;: 1, &quot;state&quot;: 1, &quot;adapter_version&quot;: &quot;databricks_spark_v0&quot;}&#39;</span>  <span class="c1"># noqa: E501</span>
+<div class="highlight"><pre><span></span><code>dbtc create-credentials --payload<span class="o">=</span><span class="s1">&#39;{&quot;id&quot;: null, &quot;account_id&quot;: 1, &quot;created_by_id&quot;: 1, &quot;project_id&quot;: 1, &quot;state&quot;: 1, &quot;adapter_version&quot;: &quot;databricks_spark_v0&quot;}&#39;</span>  <span class="c1"># noqa: E501</span>
 </code></pre></div>
 </details>
 
@@ -2830,7 +3116,7 @@ environment variables have been set.</p>
 <span class="sd">            environment variables have been set.</span>
 
 <span class="sd">            ```bash</span>
-<span class="sd">            dbtc create-adapter --payload=&#39;{&quot;id&quot;: null, &quot;account_id&quot;: 1, &quot;created_by_id&quot;: 1, &quot;project_id&quot;: 1, &quot;state&quot;: 1, &quot;adapter_version&quot;: &quot;databricks_spark_v0&quot;}&#39;  # noqa: E501</span>
+<span class="sd">            dbtc create-credentials --payload=&#39;{&quot;id&quot;: null, &quot;account_id&quot;: 1, &quot;created_by_id&quot;: 1, &quot;project_id&quot;: 1, &quot;state&quot;: 1, &quot;adapter_version&quot;: &quot;databricks_spark_v0&quot;}&#39;  # noqa: E501</span>
 <span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
@@ -2879,6 +3165,21 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_credentials</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-credentials
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -2888,6 +3189,25 @@ environment variables have been set.</p>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
 <span class="sd">        project_id (int): Numeric ID of the project to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_credentials(account_id, project_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-credentials</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/credentials&#39;</span>
@@ -3071,6 +3391,21 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">delete_environment</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc delete-environment --environment-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -3080,6 +3415,25 @@ environment variables have been set.</p>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        environment_id (int): Numeric ID of the environment to delete</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.delete_environment(account_id, project_id, environment_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc delete-environment --environment-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/environments/</span><span class="si">{</span><span class="n">environment_id</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">,</span>
@@ -3126,6 +3480,21 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_environments</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-environments
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -3135,6 +3504,25 @@ environment variables have been set.</p>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
 <span class="sd">        project_id (int): Numeric ID of the project to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_environments(account_id, project_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-environments</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/environments/&#39;</span>
@@ -3259,6 +3647,35 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Example Payload</summary>
+<div class="highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;env_var&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;DBT_ENV_TEST&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ids&#39;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s1">&#39;new_name&#39;</span><span class="p">:</span> <span class="s1">&#39;DBT_ENV_TEST&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;{{development_environment_name}}&#39;</span><span class="p">:</span> <span class="s1">&#39;dev_value&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;{{deployment_environment_name}}&#39;</span><span class="p">:</span> <span class="s1">&#39;deploy_value&#39;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">create_environment_variables</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc create-credentials --payload<span class="o">=</span><span class="s1">&#39;{&quot;env_var&quot;: {&quot;name&quot;: &quot;DBT_ENV_TEST&quot;, &quot;ids&quot;: [], &quot;new_name&quot;: &quot;DBT_ENV_TEST&quot;, &quot;project&quot;: &quot;foo&quot;, &quot;{{development_environment_name}}&quot;: &quot;dev_value&quot;, &quot;{{deployment_environment_name}}&quot;: &quot;deploy_value&quot;}}&#39;</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -3271,6 +3688,39 @@ environment variables have been set.</p>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        project_id (int): Numeric ID of the project</span>
 <span class="sd">        payload (dict): Dictionary representing the environment variables to create</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        ??? example &quot;Example Payload&quot;</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            payload = {</span>
+<span class="sd">                &#39;env_var&#39;: {</span>
+<span class="sd">                    &#39;name&#39;: &#39;DBT_ENV_TEST&#39;,</span>
+<span class="sd">                    &#39;ids&#39;: [],</span>
+<span class="sd">                    &#39;new_name&#39;: &#39;DBT_ENV_TEST&#39;,</span>
+<span class="sd">                    &#39;project&#39;: &#39;foo&#39;,</span>
+<span class="sd">                    &#39;{{development_environment_name}}&#39;: &#39;dev_value&#39;,</span>
+<span class="sd">                    &#39;{{deployment_environment_name}}&#39;: &#39;deploy_value&#39;</span>
+<span class="sd">                }</span>
+<span class="sd">            }</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.create_environment_variables(account_id, project_id, payload)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc create-credentials --payload=&#39;{&quot;env_var&quot;: {&quot;name&quot;: &quot;DBT_ENV_TEST&quot;, &quot;ids&quot;: [], &quot;new_name&quot;: &quot;DBT_ENV_TEST&quot;, &quot;project&quot;: &quot;foo&quot;, &quot;{{development_environment_name}}&quot;: &quot;dev_value&quot;, &quot;{{deployment_environment_name}}&quot;: &quot;deploy_value&quot;}}&#39;</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/environment-variables/&#39;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -3323,6 +3773,28 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Example Payload</summary>
+<div class="highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;DBT_MY_AWESOME_VARIABLE&#39;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">delete_environment_variables</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc delete-environment --payload<span class="o">=</span><span class="s1">&#39;{&quot;name&quot;: &quot;DBT_MY_AWESOME_VARIABLE&quot;}&#39;</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -3335,6 +3807,32 @@ environment variables have been set.</p>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        project_id (int): Numeric ID of the project</span>
 <span class="sd">        payload (Dict): Dictionary representing environment variables to delete</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        ??? example &quot;Example Payload&quot;</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            payload = {</span>
+<span class="sd">                &#39;name&#39;: &#39;DBT_MY_AWESOME_VARIABLE&#39;</span>
+<span class="sd">            }</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.delete_environment_variables(account_id, project_id, environment_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc delete-environment --payload=&#39;{&quot;name&quot;: &quot;DBT_MY_AWESOME_VARIABLE&quot;}&#39;</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/environment-variables/bulk/&#39;</span><span class="p">,</span>
@@ -3377,6 +3875,20 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_feature_flags</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-feature-flags
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -3385,6 +3897,24 @@ environment variables have been set.</p>
 
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_feature_flags(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-feature-flags</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/feature-flag/&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -3452,14 +3982,14 @@ environment variables have been set.</p>
 <details class="example">
 <summary>Python</summary>
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
-<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">assign_service_token_permissions</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">group_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">assign_service_token_permissions</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">group_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>CLI</summary>
 <p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
 environment variables have been set.</p>
-<div class="highlight"><pre><span></span><code>dbtc assign-group-permissions --payload<span class="o">=</span><span class="s1">&#39;[{&quot;group_id&quot;: 1, &quot;account_id&quot;: 1, &quot;permission_set&quot;: &quot;analyst&quot;, &quot;project_id&quot;: 1, &quot;all_projects&quot;: false}]&#39;</span>  <span class="c1"># noqa: E501</span>
+<div class="highlight"><pre><span></span><code>dbtc assign-group-permissions --payload<span class="o">=</span><span class="s1">&#39;[{&quot;group_id&quot;: 1, &quot;account_id&quot;: 1, &quot;permission_set&quot;: &quot;analyst&quot;, &quot;project_id&quot;: 1, &quot;all_projects&quot;: false}]&#39;</span>
 </code></pre></div>
 </details>
 
@@ -3497,7 +4027,7 @@ environment variables have been set.</p>
 <span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
 
 <span class="sd">            ```py</span>
-<span class="sd">            client.cloud.assign_service_token_permissions(account_id, group_id, payload)  # noqa: E501</span>
+<span class="sd">            client.cloud.assign_service_token_permissions(account_id, group_id, payload)</span>
 <span class="sd">            ```</span>
 
 <span class="sd">        ??? example &quot;CLI&quot;</span>
@@ -3506,7 +4036,7 @@ environment variables have been set.</p>
 <span class="sd">            environment variables have been set.</span>
 
 <span class="sd">            ```bash</span>
-<span class="sd">            dbtc assign-group-permissions --payload=&#39;[{&quot;group_id&quot;: 1, &quot;account_id&quot;: 1, &quot;permission_set&quot;: &quot;analyst&quot;, &quot;project_id&quot;: 1, &quot;all_projects&quot;: false}]&#39;  # noqa: E501</span>
+<span class="sd">            dbtc assign-group-permissions --payload=&#39;[{&quot;group_id&quot;: 1, &quot;account_id&quot;: 1, &quot;permission_set&quot;: &quot;analyst&quot;, &quot;project_id&quot;: 1, &quot;all_projects&quot;: false}]&#39;</span>
 <span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
@@ -3669,7 +4199,38 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
         <td><em>required</em></td>
       </tr>
   </tbody>
-</table>
+</table>      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The group_name is the name of the dbt Cloud group. The list of
+sso_mapping_groups are string values that dbt Cloud will attempt to match
+with incoming information from your identity provider at login time, in
+order to assign the group with group_name to the user.</p>
+</div>
+
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Example Payload</summary>
+<div class="highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;account_id&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;{{group_name}}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;assign_by_default&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;sso_mapping_groups&#39;</span><span class="p">:[</span><span class="s1">&#39;mapping_group_1&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">create_user_group</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc create-user-group --payload<span class="o">=</span><span class="s1">&#39;{&quot;account_id&quot;: 1, &quot;name&quot;: &quot;{{group_name}}&quot;, &quot;assign_by_default&quot;: false, &quot;sso_mapping_groups&quot;: [&quot;mapping_group_1&quot;]}&#39;</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -3679,6 +4240,41 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        payload (dict): Dictionary representing the group to create</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The group_name is the name of the dbt Cloud group. The list of</span>
+<span class="sd">        sso_mapping_groups are string values that dbt Cloud will attempt to match</span>
+<span class="sd">        with incoming information from your identity provider at login time, in</span>
+<span class="sd">        order to assign the group with group_name to the user.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Example Payload&quot;</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            payload = {</span>
+<span class="sd">                &#39;account_id&#39;:1,</span>
+<span class="sd">                &#39;name&#39;:&#39;{{group_name}}&#39;,</span>
+<span class="sd">                &#39;assign_by_default&#39;:False,</span>
+<span class="sd">                &#39;sso_mapping_groups&#39;:[&#39;mapping_group_1&#39;]</span>
+<span class="sd">            }</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.create_user_group(account_id, payload)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc create-user-group --payload=&#39;{&quot;account_id&quot;: 1, &quot;name&quot;: &quot;{{group_name}}&quot;, &quot;assign_by_default&quot;: false, &quot;sso_mapping_groups&quot;: [&quot;mapping_group_1&quot;]}&#39;</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/groups/&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span>
@@ -3722,6 +4318,12 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
         <td><p>Numeric ID of the group to delete</p></td>
         <td><em>required</em></td>
       </tr>
+      <tr>
+        <td><code>Examples</code></td>
+        <td></td>
+        <td></td>
+        <td><em>required</em></td>
+      </tr>
   </tbody>
 </table>
         <details class="quote">
@@ -3733,6 +4335,24 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        group_id (int): Numeric ID of the group to delete</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.delete_group(account_id, group_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc delete-environment --group-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/groups/</span><span class="si">{</span><span class="n">group_id</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">,</span>
@@ -3771,14 +4391,22 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
         <td><p>Numeric ID of the account to retrieve</p></td>
         <td><em>required</em></td>
       </tr>
-      <tr>
-        <td><code>project_id</code></td>
-        <td><code>int</code></td>
-        <td><p>Numeric ID of the project to retrieve</p></td>
-        <td><em>required</em></td>
-      </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_groups</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-groups
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -3787,7 +4415,24 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
 
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
-<span class="sd">        project_id (int): Numeric ID of the project to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_groups(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-groups</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/groups/&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -3838,6 +4483,56 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Example Payload</summary>
+<div class="highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;account_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;project_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;environment_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;your-job-name&gt;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;dbt_version&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0.1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;triggers&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;github_webhook&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;schedule&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;custom_branch_only&#39;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;execute_steps&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;dbt build&#39;</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;settings&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;target_name&#39;</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;generate_docs&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;schedule&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;every_day&#39;</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;every_hour&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">create_job</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc create-credentials --payload<span class="o">=</span><span class="s1">&#39;{&quot;account_id&quot;: 1, &quot;project_id&quot;: 1, &quot;id&quot;: null, &quot;environment_id&quot;: 1, &quot;name&quot;: &quot;&lt;your-job-name&gt;&quot;, &quot;dbt_version&quot;: &quot;1.0.1&quot;, &quot;triggers&quot;: {&quot;github_webhook&quot;: false, &quot;schedule&quot;: false, &quot;custom_branch_only&quot;: false}, &quot;execute_steps&quot;: [&quot;dbt build&quot;], &quot;settings&quot;: {&quot;threads&quot;: 1, &quot;target_name&quot;: &quot;default&quot;}, &quot;state&quot;: 1, &quot;generate_docs&quot;: false, &quot;schedule&quot;: {&quot;date&quot;: {&quot;type&quot;: &quot;every_day&quot;}, &quot;time&quot;: {&quot;type&quot;: &quot;every_hour&quot;, &quot;interval&quot;: 1}}}&#39;</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -3848,6 +4543,60 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        project_id (int): Numeric ID of the project</span>
 <span class="sd">        payload (dict): Dictionary representing the job to create</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        ??? example &quot;Example Payload&quot;</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            payload = {</span>
+<span class="sd">                &#39;account_id&#39;: 1,</span>
+<span class="sd">                &#39;project_id&#39;: 1,</span>
+<span class="sd">                &#39;id&#39;: None,</span>
+<span class="sd">                &#39;environment_id&#39;: 1,</span>
+<span class="sd">                &#39;name&#39;: &#39;&lt;your-job-name&gt;&#39;,</span>
+<span class="sd">                &#39;dbt_version&#39;: &#39;1.0.1&#39;,</span>
+<span class="sd">                &#39;triggers&#39;: {</span>
+<span class="sd">                &#39;github_webhook&#39;: False,</span>
+<span class="sd">                &#39;schedule&#39;: False,</span>
+<span class="sd">                &#39;custom_branch_only&#39;: False</span>
+<span class="sd">                },</span>
+<span class="sd">                &#39;execute_steps&#39;: [</span>
+<span class="sd">                    &#39;dbt build&#39;</span>
+<span class="sd">                ],</span>
+<span class="sd">                &#39;settings&#39;: {</span>
+<span class="sd">                &#39;threads&#39;: 1,</span>
+<span class="sd">                    &#39;target_name&#39;: &#39;default&#39;</span>
+<span class="sd">                },</span>
+<span class="sd">                &#39;state&#39;: 1,</span>
+<span class="sd">                &#39;generate_docs&#39;: False,</span>
+<span class="sd">                &#39;schedule&#39;: {</span>
+<span class="sd">                    &#39;date&#39;: {</span>
+<span class="sd">                        &#39;type&#39;: &#39;every_day&#39;</span>
+<span class="sd">                    },</span>
+<span class="sd">                    &#39;time&#39;: {</span>
+<span class="sd">                        &#39;type&#39;: &#39;every_hour&#39;,</span>
+<span class="sd">                        &#39;interval&#39;: 1</span>
+<span class="sd">                    }</span>
+<span class="sd">                }</span>
+<span class="sd">            }</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.create_job(account_id, project_id, payload)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc create-credentials --payload=&#39;{&quot;account_id&quot;: 1, &quot;project_id&quot;: 1, &quot;id&quot;: null, &quot;environment_id&quot;: 1, &quot;name&quot;: &quot;&lt;your-job-name&gt;&quot;, &quot;dbt_version&quot;: &quot;1.0.1&quot;, &quot;triggers&quot;: {&quot;github_webhook&quot;: false, &quot;schedule&quot;: false, &quot;custom_branch_only&quot;: false}, &quot;execute_steps&quot;: [&quot;dbt build&quot;], &quot;settings&quot;: {&quot;threads&quot;: 1, &quot;target_name&quot;: &quot;default&quot;}, &quot;state&quot;: 1, &quot;generate_docs&quot;: false, &quot;schedule&quot;: {&quot;date&quot;: {&quot;type&quot;: &quot;every_day&quot;}, &quot;time&quot;: {&quot;type&quot;: &quot;every_hour&quot;, &quot;interval&quot;: 1}}}&#39;</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/jobs/&#39;</span><span class="p">,</span>
@@ -3895,6 +4644,20 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">delete_job</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">job_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc delete-environment --job-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -3904,6 +4667,24 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        job_id (int): Numeric ID of the project to delete</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.delete_job(account_id, job_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc delete-environment --job-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/jobs/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">,</span>
@@ -3955,6 +4736,12 @@ dbtc assign-user-to-group --payload='{"user_id": 1, "desired_group_ids": [1]}'</
 Use - to indicate reverse order.</p></td>
         <td><code>None</code></td>
       </tr>
+      <tr>
+        <td><code>Examples</code></td>
+        <td></td>
+        <td></td>
+        <td><em>required</em></td>
+      </tr>
   </tbody>
 </table>
         <details class="quote">
@@ -3968,6 +4755,24 @@ Use - to indicate reverse order.</p></td>
 <span class="sd">        job_id (int): Numeric ID of the job to retrieve</span>
 <span class="sd">        order_by (str, optional): Field to order the result by.</span>
 <span class="sd">            Use - to indicate reverse order.</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_job(account_id, job_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get-job --job-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/jobs/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">,</span>
@@ -4021,6 +4826,20 @@ Use - to indicate reverse order.</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_jobs</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-jobs
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -4034,6 +4853,24 @@ Use - to indicate reverse order.</p></td>
 <span class="sd">        order_by (str, optional): Field to order the result by.</span>
 <span class="sd">            Use - to indicate reverse order.</span>
 <span class="sd">        project_id (int, optional): Numeric ID of the project containing jobs</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_jobs(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-jobs</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/jobs/&#39;</span><span class="p">,</span>
@@ -4311,7 +5148,41 @@ polling</p></td>
         <td><em>required</em></td>
       </tr>
   </tbody>
-</table>
+</table>      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>After creating / updating a dbt Cloud repository's SSH key, you will need
+to add the generated key text as a deploy key to the target repository.
+This gives dbt Cloud permissions to read / write in the repository</p>
+<p>You can read more in the <a href="https://docs.getdbt.com/docs/dbt-cloud/cloud-configuring-dbt-cloud/cloud-configuring-repositories">docs</a></p>
+</div>
+
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Example Payload</summary>
+<div class="highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;account_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;project_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;remote_url&#39;</span><span class="p">:</span><span class="s1">&#39;{{git_clone_url}}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;git_clone_strategy&#39;</span><span class="p">:</span> <span class="s1">&#39;deploy_key&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;github_installation_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;token_str&#39;</span><span class="p">:</span> <span class="kc">None</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">create_repository</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc create-repository --payload<span class="o">=</span><span class="s1">&#39;{&quot;account_id&quot;: 1, &quot;project_id&quot;: 1, &quot;remote_url&quot;: &quot;{{git_clone_url}}&quot;, &quot;git_clone_strategy&quot;: &quot;deploy_key&quot;, &quot;github_installation_id&quot;: null, &quot;token_str&quot;: null}&#39;</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -4324,6 +5195,44 @@ polling</p></td>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        project_id (int): Numeric ID of the project</span>
 <span class="sd">        payload (dict): Dictionary representing the repository to create</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        After creating / updating a dbt Cloud repository&#39;s SSH key, you will need</span>
+<span class="sd">        to add the generated key text as a deploy key to the target repository.</span>
+<span class="sd">        This gives dbt Cloud permissions to read / write in the repository</span>
+
+<span class="sd">        You can read more in the [docs](https://docs.getdbt.com/docs/dbt-cloud/cloud-configuring-dbt-cloud/cloud-configuring-repositories)</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        ??? example &quot;Example Payload&quot;</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            payload = {</span>
+<span class="sd">                &#39;account_id&#39;: 1,</span>
+<span class="sd">                &#39;project_id&#39;: 1,</span>
+<span class="sd">                &#39;remote_url&#39;:&#39;{{git_clone_url}}&#39;,</span>
+<span class="sd">                &#39;git_clone_strategy&#39;: &#39;deploy_key&#39;,</span>
+<span class="sd">                &#39;github_installation_id&#39;: None,</span>
+<span class="sd">                &#39;token_str&#39;: None</span>
+<span class="sd">            }</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.create_repository(account_id, project_id, payload)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc create-repository --payload=&#39;{&quot;account_id&quot;: 1, &quot;project_id&quot;: 1, &quot;remote_url&quot;: &quot;{{git_clone_url}}&quot;, &quot;git_clone_strategy&quot;: &quot;deploy_key&quot;, &quot;github_installation_id&quot;: null, &quot;token_str&quot;: null}&#39;</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/repositories/&#39;</span><span class="p">,</span>
@@ -4377,6 +5286,21 @@ polling</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">delete_repository</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">repository_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc delete-repository --repository-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -4389,6 +5313,25 @@ polling</p></td>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        project_id (int): Numeric ID of the project</span>
 <span class="sd">        repository_id (int): Numeric ID of the repository to delete</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.delete_repository(account_id, project_id, repository_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc delete-repository --repository-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/repositories/</span><span class="si">{</span><span class="n">repository_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
@@ -4435,6 +5378,21 @@ polling</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_repositories</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-repositories
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -4444,6 +5402,25 @@ polling</p></td>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
 <span class="sd">        project_id (int): Numeric ID of the project to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_repositories(account_id, project_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-repositories</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/repositories/&#39;</span>
@@ -4580,7 +5557,7 @@ dbtc cancel-run --account-id=1 --run-id=1</p>
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
-<span class="k">def</span> <span class="nf">cancel_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">cancel_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Cancel a run.</span>
 
 <span class="sd">    Args:</span>
@@ -4658,6 +5635,20 @@ fields to pull with the run. Valid values are "trigger", "job",
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc get-run --run-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -4672,6 +5663,24 @@ fields to pull with the run. Valid values are "trigger", "job",
 <span class="sd">        include_related (:obj:`list` of str, optional): List of related</span>
 <span class="sd">            fields to pull with the run. Valid values are &quot;trigger&quot;, &quot;job&quot;,</span>
 <span class="sd">            &quot;repository&quot;, &quot;debug_logs&quot;, &quot;run_steps&quot;, and &quot;environment&quot;.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_run(account_id, run_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get-run --run-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
@@ -4718,6 +5727,21 @@ fields to pull with the run. Valid values are "trigger", "job",
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_run_timing_details</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc get-run-timing-details --run-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -4729,6 +5753,25 @@ fields to pull with the run. Valid values are "trigger", "job",
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
 <span class="sd">        run_id (int): Numeric ID of the run to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_run_timing_details(account_id, project_id, run_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get-run-timing-details --run-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s1">/timing/&#39;</span>
@@ -4774,6 +5817,20 @@ fields to pull with the run. Valid values are "trigger", "job",
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_run_v4</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc delete-environment --run-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v4</span>
@@ -4783,6 +5840,24 @@ fields to pull with the run. Valid values are "trigger", "job",
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
 <span class="sd">        run_id (int): Numeric ID of the run to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_run_v4(account_id, run_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc delete-environment --run-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -4857,6 +5932,39 @@ Use with offset to paginate results.</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>account_id</code></td>
+        <td><code>int</code></td>
+        <td><p>Numeric ID of the account to retrieve</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-runs
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -4886,6 +5994,27 @@ Use with offset to paginate results.</p></td>
 <span class="sd">            Use with limit to paginate results.</span>
 <span class="sd">        limit (int, optional): The limit to apply when listing runs.</span>
 <span class="sd">            Use with offset to paginate results.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_runs(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-runs</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/runs&#39;</span><span class="p">,</span>
@@ -4967,6 +6096,39 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>account_id</code></td>
+        <td><code>int</code></td>
+        <td><p>Numeric ID of the account to retrieve</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_runs_v4</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-runs-v4
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v4</span>
@@ -4995,6 +6157,27 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
 <span class="sd">        job (str): A filter on the list based on the object&#39;s job_id field.</span>
 <span class="sd">        status: A filter on the list based on the object&#39;s status field.</span>
 <span class="sd">            Enum: &quot;Queued&quot; &quot;Starting&quot; &quot;Running&quot; &quot;Succeeded&quot; &quot;Failed&quot; &quot;Canceled&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_runs_v4(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-runs-v4</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paginated_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/runs&#39;</span><span class="p">,</span>
@@ -5048,6 +6231,32 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Example Payload</summary>
+<div class="highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;{{project_name}}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;dbt_project_subdirectory&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;account_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;connection_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;repository_id&#39;</span><span class="p">:</span> <span class="kc">None</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">create_project</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc create-project --payload<span class="o">=</span><span class="s1">&#39;{&quot;id&quot;: null, &quot;name&quot;: &quot;{{project_name}}&quot;, &quot;dbt_project_subdirectory&quot;: null, &quot;account_id&quot;: 1, &quot;connection_id&quot;: null, &quot;repository_id&quot;: null}&#39;</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -5057,6 +6266,36 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        payload (dict): Dictionary representing the project to create</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        ??? example &quot;Example Payload&quot;</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            payload = {</span>
+<span class="sd">                &#39;id&#39;: None,</span>
+<span class="sd">                &#39;name&#39;: &#39;{{project_name}}&#39;,</span>
+<span class="sd">                &#39;dbt_project_subdirectory&#39;: None,</span>
+<span class="sd">                &#39;account_id&#39;: 1,</span>
+<span class="sd">                &#39;connection_id&#39;: None,</span>
+<span class="sd">                &#39;repository_id&#39;: None</span>
+<span class="sd">            }</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.create_project(account_id, payload)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc create-project --payload=&#39;{&quot;id&quot;: null, &quot;name&quot;: &quot;{{project_name}}&quot;, &quot;dbt_project_subdirectory&quot;: null, &quot;account_id&quot;: 1, &quot;connection_id&quot;: null, &quot;repository_id&quot;: null}&#39;</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span>
@@ -5102,6 +6341,21 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">delete_project</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc delete-project
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -5111,6 +6365,25 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        project_id (int): Numeric ID of the project to delete</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.delete_project(account_id, project_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc delete-project</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">,</span>
@@ -5157,6 +6430,21 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_project</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
+environment variables have been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc get-project
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -5166,6 +6454,25 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
 <span class="sd">        project_id (int): Numeric ID of the project to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_project(account_id, project_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`</span>
+<span class="sd">            environment variables have been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get-project</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -5215,6 +6522,20 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_project</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc get-project --project-name<span class="o">=</span>name
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -5227,6 +6548,24 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
 <span class="sd">        project_name (str): Name of project to retrieve</span>
 <span class="sd">        account_id (int, optional): Numeric ID of the account to retrieve</span>
 <span class="sd">        account_name (str, optional): Name of account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_project(&quot;name&quot;)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get-project --project-name=name</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">account_id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">account_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">accounts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_accounts</span><span class="p">()</span>
@@ -5283,6 +6622,20 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_projects</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-projects
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -5291,6 +6644,24 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
 
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_projects(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-projects</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/projects&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -5419,14 +6790,14 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
 <details class="example">
 <summary>Python</summary>
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
-<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">assign_service_token_permissions</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">service_token_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">assign_service_token_permissions</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">service_token_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <details class="example">
 <summary>CLI</summary>
 <p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> and <code>DBT_CLOUD_PROJECT_ID</code>
 environment variables have been set.</p>
-<div class="highlight"><pre><span></span><code>dbtc assign-service-token-permissions --payload<span class="o">=</span><span class="s1">&#39;[{&quot;service_token_id&quot;: 1, &quot;account_id&quot;: 1, &quot;permission_set&quot;: &quot;job_viewer&quot;, &quot;project_id&quot;: 1, &quot;all_projects&quot;: false}]&#39;</span>  <span class="c1"># noqa: E501</span>
+<div class="highlight"><pre><span></span><code>dbtc assign-service-token-permissions --payload<span class="o">=</span><span class="s1">&#39;[{&quot;service_token_id&quot;: 1, &quot;account_id&quot;: 1, &quot;permission_set&quot;: &quot;job_viewer&quot;, &quot;project_id&quot;: 1, &quot;all_projects&quot;: false}]&#39;</span>
 </code></pre></div>
 </details>
 
@@ -5463,7 +6834,7 @@ environment variables have been set.</p>
 <span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
 
 <span class="sd">            ```py</span>
-<span class="sd">            client.cloud.assign_service_token_permissions(account_id, service_token_id, payload)  # noqa: E501</span>
+<span class="sd">            client.cloud.assign_service_token_permissions(account_id, service_token_id, payload)</span>
 <span class="sd">            ```</span>
 
 <span class="sd">        ??? example &quot;CLI&quot;</span>
@@ -5472,7 +6843,7 @@ environment variables have been set.</p>
 <span class="sd">            environment variables have been set.</span>
 
 <span class="sd">            ```bash</span>
-<span class="sd">            dbtc assign-service-token-permissions --payload=&#39;[{&quot;service_token_id&quot;: 1, &quot;account_id&quot;: 1, &quot;permission_set&quot;: &quot;job_viewer&quot;, &quot;project_id&quot;: 1, &quot;all_projects&quot;: false}]&#39;  # noqa: E501</span>
+<span class="sd">            dbtc assign-service-token-permissions --payload=&#39;[{&quot;service_token_id&quot;: 1, &quot;account_id&quot;: 1, &quot;permission_set&quot;: &quot;job_viewer&quot;, &quot;project_id&quot;: 1, &quot;all_projects&quot;: false}]&#39;</span>
 <span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -5521,7 +6892,53 @@ environment variables have been set.</p>
         <td><em>required</em></td>
       </tr>
   </tbody>
-</table>
+</table>      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This request creates a service token, but does not assign permissions to
+it.  Permissions are assigned via the <a href="./#assign_service_token_permissions">assign_service_token_permissions</a></p>
+<p>See the <a href="https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/user-tokens">user tokens</a>
+and <a href="https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/service-tokens">service tokens</a> 
+documentation for more information.</p>
+</div>
+
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Example Payload</summary>
+<div class="highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;api-test&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;account_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;admin&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;permissionSet&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;projects&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">1</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;job_admin&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;permissionSet&#39;</span><span class="p">:</span> <span class="s1">&#39;job_admin&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;projects&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">1</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">create_service_token</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc create-service-token --payload<span class="o">=</span><span class="s1">&#39;{&quot;id&quot;: null, &quot;name&quot;: &quot;api-test&quot;, &quot;state&quot;: 1, &quot;account_id&quot;: 1, &quot;access&quot;: {&quot;admin&quot;: {&quot;permissionSet&quot;: &quot;admin&quot;, &quot;projects&quot;: [1]}, &quot;job_admin&quot;: {&quot;permissionSet&quot;: &quot;job_admin&quot;, &quot;projects&quot;: [1]}}}&#39;</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -5531,6 +6948,56 @@ environment variables have been set.</p>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        payload (dict): Dictionary representing the service token to create</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This request creates a service token, but does not assign permissions to</span>
+<span class="sd">        it.  Permissions are assigned via the [assign_service_token_permissions](cloud.md#assign_service_token_permissions)</span>
+
+<span class="sd">        See the [user tokens](https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/user-tokens)</span>
+<span class="sd">        and [service tokens](https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/service-tokens) </span>
+<span class="sd">        documentation for more information.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        ??? example &quot;Example Payload&quot;</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            payload = {</span>
+<span class="sd">                &#39;id&#39;: None,</span>
+<span class="sd">                &#39;name&#39;: &#39;api-test&#39;,</span>
+<span class="sd">                &#39;state&#39;: 1,</span>
+<span class="sd">                &#39;account_id&#39;: 1,</span>
+<span class="sd">                &#39;access&#39;: {</span>
+<span class="sd">                    &#39;admin&#39;: {</span>
+<span class="sd">                        &#39;permissionSet&#39;: &#39;admin&#39;,</span>
+<span class="sd">                        &#39;projects&#39;: [</span>
+<span class="sd">                            1</span>
+<span class="sd">                        ]</span>
+<span class="sd">                    },</span>
+<span class="sd">                    &#39;job_admin&#39;: {</span>
+<span class="sd">                        &#39;permissionSet&#39;: &#39;job_admin&#39;,</span>
+<span class="sd">                        &#39;projects&#39;: [</span>
+<span class="sd">                            1</span>
+<span class="sd">                        ]</span>
+<span class="sd">                    }</span>
+<span class="sd">                }</span>
+<span class="sd">            }</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.create_service_token(account_id, payload)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc create-service-token --payload=&#39;{&quot;id&quot;: null, &quot;name&quot;: &quot;api-test&quot;, &quot;state&quot;: 1, &quot;account_id&quot;: 1, &quot;access&quot;: {&quot;admin&quot;: {&quot;permissionSet&quot;: &quot;admin&quot;, &quot;projects&quot;: [1]}, &quot;job_admin&quot;: {&quot;permissionSet&quot;: &quot;job_admin&quot;, &quot;projects&quot;: [1]}}}&#39;</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/service-tokens/&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span>
@@ -5576,6 +7043,20 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_service_toke</span> <span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">service_token_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc get-service-token --service-token-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -5585,6 +7066,24 @@ environment variables have been set.</p>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
 <span class="sd">        service_token_id (int): Numeric ID of the service token to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_service_toke (account_id, service_token_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get-service-token --service-token-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/service-tokens/</span><span class="si">{</span><span class="n">service_token_id</span><span class="si">}</span><span class="s1">&#39;</span>
@@ -5624,6 +7123,39 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>account_id</code></td>
+        <td><code>int</code></td>
+        <td><p>Numeric ID of the account to retrieve</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_service_tokens</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-service-tokens
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -5632,6 +7164,27 @@ environment variables have been set.</p>
 
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_service_tokens(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-service-tokens</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/service-tokens/&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -5675,6 +7228,39 @@ environment variables have been set.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>account_id</code></td>
+        <td><code>int</code></td>
+        <td><p>Numeric ID of the account to retrieve</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_service_token_permissions</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">service_token_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-service-token-permissions --service-token-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -5686,6 +7272,27 @@ environment variables have been set.</p>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
 <span class="sd">        service_token_id (int): Numeric ID of the service token to retrieve</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_service_token_permissions(account_id, service_token_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-service-token-permissions --service-token-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/service-tokens/</span><span class="si">{</span><span class="n">service_token_id</span><span class="si">}</span><span class="s1">/permissions&#39;</span>
@@ -5732,7 +7339,123 @@ user you'd like to deactivate</p></td>
         <td><em>required</em></td>
       </tr>
   </tbody>
-</table>
+</table>      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note: Ensure the <code>groups</code> object contains all of a user's assigned group
+permissions. This request will fail if a user has already been deactivated.</p>
+</div>
+
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Example Payload</summary>
+<div class="highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;license_type&#39;</span><span class="p">:</span> <span class="s1">&#39;developer&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;user_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;account_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">&#39;groups&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;account_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;test-group-with-sso-mappings&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;assign_by_default&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;sso_mapping_groups&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s1">&#39;something&#39;</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;group_permissions&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s1">&#39;account_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s1">&#39;group_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s1">&#39;project_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s1">&#39;all_projects&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s1">&#39;permission_set&#39;</span><span class="p">:</span> <span class="s1">&#39;analyst&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;permission_level&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;{{group_permission_id}}&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;permission_statements&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;invitations_read&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;license_read&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;projects_read&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;environments_read&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;jobs_read&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;runs_read&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;metadata_read&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;custom_environment_variables_read&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;projects_develop&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;credentials_write&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;develop_access&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;custom_environment_variables_write&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target_resource&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;all_resources&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">deactivate_user_license</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">permission_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc deactivate-user-license --permission_id<span class="o">=</span><span class="m">1</span> --payload<span class="o">=</span><span class="s1">&#39;{&quot;license_type&quot;: &quot;developer&quot;, &quot;id&quot;: 1, &quot;user_id&quot;: 1, &quot;account_id&quot;: 1, &quot;state&quot;: 2, &quot;groups&quot;: [{&quot;account_id&quot;: 1, &quot;name&quot;: &quot;test-group-with-sso-mappings&quot;, &quot;id&quot;: 1, &quot;state&quot;: 1, &quot;assign_by_default&quot;: false, &quot;sso_mapping_groups&quot;: [&quot;something&quot;], &quot;group_permissions&quot;: [{&quot;account_id&quot;: 1, &quot;group_id&quot;: 1, &quot;project_id&quot;: null, &quot;all_projects&quot;: true, &quot;permission_set&quot;: &quot;analyst&quot;, &quot;permission_level&quot;: null, &quot;id&quot;: &quot;{{group_permission_id}}&quot;, &quot;state&quot;: 1}]}], &quot;permission_statements&quot;: [{&quot;permission&quot;: &quot;invitations_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;license_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;projects_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;environments_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;jobs_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;runs_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;metadata_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;custom_environment_variables_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;projects_develop&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;credentials_write&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;develop_access&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;custom_environment_variables_write&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}]}&#39;</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v3</span>
@@ -5745,6 +7468,125 @@ user you'd like to deactivate</p></td>
 <span class="sd">        account_id (int): Numeric ID of the account</span>
 <span class="sd">        permission_id (int): Numeric ID of the permission that contains</span>
 <span class="sd">            user you&#39;d like to deactivate</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Note: Ensure the `groups` object contains all of a user&#39;s assigned group</span>
+<span class="sd">        permissions. This request will fail if a user has already been deactivated.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        ??? example &quot;Example Payload&quot;</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            payload = {</span>
+<span class="sd">                &#39;license_type&#39;: &#39;developer&#39;,</span>
+<span class="sd">                &#39;id&#39;: 1,</span>
+<span class="sd">                &#39;user_id&#39;: 1,</span>
+<span class="sd">                &#39;account_id&#39;: 1,</span>
+<span class="sd">                &#39;state&#39;: 2,</span>
+<span class="sd">                &#39;groups&#39;: [</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;account_id&#39;: 1,</span>
+<span class="sd">                        &#39;name&#39;: &#39;test-group-with-sso-mappings&#39;,</span>
+<span class="sd">                        &#39;id&#39;: 1,</span>
+<span class="sd">                        &#39;state&#39;: 1,</span>
+<span class="sd">                        &#39;assign_by_default&#39;: False,</span>
+<span class="sd">                        &#39;sso_mapping_groups&#39;: [</span>
+<span class="sd">                            &#39;something&#39;</span>
+<span class="sd">                        ],</span>
+<span class="sd">                        &#39;group_permissions&#39;: [</span>
+<span class="sd">                            {</span>
+<span class="sd">                                &#39;account_id&#39;: 1,</span>
+<span class="sd">                                &#39;group_id&#39;: 1,</span>
+<span class="sd">                                &#39;project_id&#39;: None,</span>
+<span class="sd">                                &#39;all_projects&#39;: True,</span>
+<span class="sd">                                &#39;permission_set&#39;: &#39;analyst&#39;,</span>
+<span class="sd">                                &#39;permission_level&#39;: None,</span>
+<span class="sd">                                &#39;id&#39;: &#39;{{group_permission_id}}&#39;,</span>
+<span class="sd">                                &#39;state&#39;: 1</span>
+<span class="sd">                            }</span>
+<span class="sd">                        ]</span>
+<span class="sd">                    }</span>
+<span class="sd">                ],</span>
+<span class="sd">                &#39;permission_statements&#39;: [</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;invitations_read&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;license_read&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;projects_read&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;environments_read&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;jobs_read&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;runs_read&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;metadata_read&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;custom_environment_variables_read&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;projects_develop&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;credentials_write&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;develop_access&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;permission&#39;: &#39;custom_environment_variables_write&#39;,</span>
+<span class="sd">                        &#39;target_resource&#39;: None,</span>
+<span class="sd">                        &#39;all_resources&#39;: True</span>
+<span class="sd">                    }</span>
+<span class="sd">                ]</span>
+<span class="sd">            }</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.deactivate_user_license(account_id, permission_id, payload)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc deactivate-user-license --permission_id=1 --payload=&#39;{&quot;license_type&quot;: &quot;developer&quot;, &quot;id&quot;: 1, &quot;user_id&quot;: 1, &quot;account_id&quot;: 1, &quot;state&quot;: 2, &quot;groups&quot;: [{&quot;account_id&quot;: 1, &quot;name&quot;: &quot;test-group-with-sso-mappings&quot;, &quot;id&quot;: 1, &quot;state&quot;: 1, &quot;assign_by_default&quot;: false, &quot;sso_mapping_groups&quot;: [&quot;something&quot;], &quot;group_permissions&quot;: [{&quot;account_id&quot;: 1, &quot;group_id&quot;: 1, &quot;project_id&quot;: null, &quot;all_projects&quot;: true, &quot;permission_set&quot;: &quot;analyst&quot;, &quot;permission_level&quot;: null, &quot;id&quot;: &quot;{{group_permission_id}}&quot;, &quot;state&quot;: 1}]}], &quot;permission_statements&quot;: [{&quot;permission&quot;: &quot;invitations_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;license_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;projects_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;environments_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;jobs_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;runs_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;metadata_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;custom_environment_variables_read&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;projects_develop&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;credentials_write&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;develop_access&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}, {&quot;permission&quot;: &quot;custom_environment_variables_write&quot;, &quot;target_resource&quot;: null, &quot;all_resources&quot;: true}]}&#39;</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/permissions/</span><span class="si">{</span><span class="n">permission_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
@@ -5792,6 +7634,20 @@ user you'd like to deactivate</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc get_user --user-id<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -5801,6 +7657,24 @@ user you'd like to deactivate</p></td>
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
 <span class="sd">        user_id (int): Numeric ID of the user to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.get_user(account_id, user_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc get_user --user-id=1</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/users/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -5838,6 +7712,20 @@ user you'd like to deactivate</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_invited_users</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-invited-users
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -5846,6 +7734,24 @@ user you'd like to deactivate</p></td>
 
 <span class="sd">    Args:</span>
 <span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_invited_users(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-invited-users</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/invites/&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -5904,6 +7810,39 @@ Use - to indicate reverse order.</p></td>
       </tr>
   </tbody>
 </table>
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>account_id</code></td>
+        <td><code>int</code></td>
+        <td><p>Numeric ID of the account to retrieve</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <details class="example">
+<summary>Python</summary>
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">list_users</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>CLI</summary>
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.</p>
+<div class="highlight"><pre><span></span><code>dbtc list-users
+</code></pre></div>
+</details>
+
         <details class="quote">
           <summary>Source code in <code>dbtc/client/cloud/base.py</code></summary>
           <div class="codehilite"><pre><span></span><code><span class="nd">@v2</span>
@@ -5925,6 +7864,27 @@ Use - to indicate reverse order.</p></td>
 <span class="sd">            Use with limit to paginate results.</span>
 <span class="sd">        order_by (str, optional): Field to order the result by.</span>
 <span class="sd">            Use - to indicate reverse order.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account_id (int): Numeric ID of the account to retrieve</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        ??? example &quot;Python&quot;</span>
+
+<span class="sd">            Assuming that `client` is an instance of `dbtCloudClient`</span>
+
+<span class="sd">            ```py</span>
+<span class="sd">            client.cloud.list_users(account_id)</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        ??? example &quot;CLI&quot;</span>
+
+<span class="sd">            Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.</span>
+
+<span class="sd">            ```bash</span>
+<span class="sd">            dbtc list-users</span>
+<span class="sd">            ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simple_request</span><span class="p">(</span>
         <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s1">/users/&#39;</span><span class="p">,</span>
