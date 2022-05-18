@@ -1,4 +1,4 @@
-/* :root > * { */
-    /* --md-primary-fg-color:        #FF694A; */
+:root > * {
+    --md-accent-fg-color:        #FF694A;
     /* --md-primary-fg-color:         #262a38; */
-/* } */
+}
