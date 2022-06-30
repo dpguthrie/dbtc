@@ -1,4 +1,7 @@
 <p align="center">
+    <a href="#"><img src="img/dbt.png"></a>
+</p>
+<p align="center">
     <em>An unaffiliated python interface for dbt Cloud APIs</em>
 </p>
 <p align="center">
