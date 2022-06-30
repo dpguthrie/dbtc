@@ -99,7 +99,6 @@ USER_ID = typer.Option(..., '--user-id', '-u', help='Numeric ID of the user.')
 def _dbt_cloud_request(ctx: typer.Context, method: str, *args, **kwargs):
     data = getattr(dbtc(**ctx.obj).cloud, method)(*args, **kwargs)
     typer.echo(json.dumps(data))
-    return data
 
 
 @app.callback()
@@ -761,7 +760,7 @@ def trigger_job_and_poll(
     job_id: int = JOB_ID,
     payload: str = PAYLOAD,
     poll_interval: int = typer.Option(
-        None, '--poll-interval', help='Number of seconds to wait in between polling.'
+        10, '--poll-interval', help='Number of seconds to wait in between polling.'
     ),
 ):
     """Trigger job and poll until completion (success or failure)."""

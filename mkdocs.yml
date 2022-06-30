@@ -10,12 +10,32 @@ repo_url: https://github.com/dpguthrie/dbtc
 # Configuration
 theme:
   name: material
+  custom_dir: docs/overrides
+  font:
+    code: Roboto Mono
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - search.share
   palette:
-    primary: deep orange
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      primary: white
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
   icon:
-    repo: fontawesome/brands/github-alt
-  logo: img/logo-white.png
-  favicon: img/logo-white.png
+    repo: fontawesome/brands/github
+  logo: img/dbt-standalone.png
+  favicon: img/dbt-standalone.png
   language: en
 
 # Extras
@@ -29,9 +49,27 @@ extra:
       link: https://medium.com/@douglas.p.guthrie
     - icon: fontawesome/solid/globe
       link: https://dpguthrie.com
+  analytics:
+    provider: google
+    property: G-FBR4YZVM7P
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/emoticon-happy-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/emoticon-sad-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback! Help us improve this page by
+            using our <a href="https://github.com/dpguthrie/dbtc/issues/new/?title=[Feedback]+{title}+-+{url}" target=_blank>feedback form</a>.
 
 extra_css:
   - css/termynal.css
+  - css/extra.css
 
 extra_javascript:
   - js/termynal.js
@@ -45,21 +83,26 @@ markdown_extensions:
   - toc:
       permalink: true
   - pymdownx.superfences
-  - pymdownx.tabbed
   - pymdownx.details
-  - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tabbed:
+      alternate_style: true
 
 # Navigation
 nav:
   - index.md
-
-# Google Analytics
-google_analytics:
-  - UA-174219875-1
-  - auto
+  - User Guide:
+    - guide/intro.md
+    - guide/cloud.md
+    - guide/metadata.md
+  - changelog.md
 
 # Plugins
 plugins:
   - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_root_toc_entry: false
+            show_source: false

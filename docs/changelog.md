@@ -1,13 +1,5 @@
 # Changelog
 
-## [0.1.2] - 2022-06-30
-
-### Fixed
-- The `_dbt_cloud_request` private method, which is used in the CLI, now only uses `typer.echo` to return data from a request.
-
-### Changed
-- The `trigger_job_and_poll` method now returns the `Run`, represented as a `dict`.  It will no longer raise an exception if the result of the run is cancelled or error.
-
 ## [0.1.1] - 2022-05-16
 
 ### Added

@@ -69,7 +69,8 @@ class _CloudClient(_Client):
     ) -> List[Dict]:
         """Multiple paginated requests given presence of specific header.
 
-        Note:  Only available in V4.
+        Note:
+            Only available in V4.
         """
         response = self._make_request(path, method=method, **kwargs)
         data = []
@@ -91,7 +92,8 @@ class _CloudClient(_Client):
     def _get_pagination_token(self, response):
         """Retrieve pagination token.
 
-        Note:  Only available in V4.
+        Note:
+            Only available in V4.
         """
         return response.headers.get('x-dbt-continuation-token', None)
 
@@ -154,7 +156,7 @@ class _CloudClient(_Client):
         )
 
     @v2
-    def cancel_run(self, account_id: int, run_id: int):
+    def cancel_run(self, account_id: int, run_id: int) -> Dict:
         """Cancel a run.
 
         Args:
@@ -170,7 +172,8 @@ class _CloudClient(_Client):
     def create_adapter(self, account_id: int, project_id: int, payload: Dict) -> Dict:
         """Create an adapter
 
-        Note:  This is a prerequisite for creating a Databricks connection
+        Note:
+            This is a prerequisite for creating a Databricks connection
 
         Args:
             account_id (int): Numeric ID of the account
@@ -287,6 +290,13 @@ class _CloudClient(_Client):
             account_id (int): Numeric ID of the account
             project_id (int): Numeric ID of the project
             payload (dict): Dictionary representing the repository to create
+
+        Note:
+            After creating / updating a dbt Cloud repository's SSH key, you will need
+            to add the generated key text as a deploy key to the target repository.
+            This gives dbt Cloud permissions to read / write in the repository
+
+            You can read more in the [docs](https://docs.getdbt.com/docs/dbt-cloud/cloud-configuring-dbt-cloud/cloud-configuring-repositories)  # noqa: E501
         """
         return self._simple_request(
             f'accounts/{account_id}/projects/{project_id}/repositories/',
@@ -301,6 +311,15 @@ class _CloudClient(_Client):
         Args:
             account_id (int): Numeric ID of the account
             payload (dict): Dictionary representing the service token to create
+
+        Note:
+            This request creates a service token, but does not assign permissions to
+            it.  Permissions are assigned via the
+            [assign_service_token_permissions](cloud.md#assign_service_token_permissions)
+
+            See the [user tokens](https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/user-tokens)  # noqa: E501
+            and [service tokens](https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/service-tokens)  # noqa: E501
+            documentation for more information.
         """
         return self._simple_request(
             f'accounts/{account_id}/service-tokens/', method='post', json=payload
@@ -313,6 +332,12 @@ class _CloudClient(_Client):
         Args:
             account_id (int): Numeric ID of the account
             payload (dict): Dictionary representing the group to create
+
+        Note:
+            The group_name is the name of the dbt Cloud group. The list of
+            sso_mapping_groups are string values that dbt Cloud will attempt to match
+            with incoming information from your identity provider at login time, in
+            order to assign the group with group_name to the user.
         """
         return self._simple_request(
             f'accounts/{account_id}/groups/', method='post', json=payload
@@ -328,6 +353,10 @@ class _CloudClient(_Client):
             account_id (int): Numeric ID of the account
             permission_id (int): Numeric ID of the permission that contains
                 user you'd like to deactivate
+
+        Note:
+            Note: Ensure the `groups` object contains all of a user's assigned group
+            permissions. This request will fail if a user has already been deactivated.
         """
         return self._simple_request(
             f'accounts/{account_id}/permissions/{permission_id}',
@@ -475,7 +504,7 @@ class _CloudClient(_Client):
         Args:
             account_id (int): Numeric ID of the account to retrieve
             job_id (int): Numeric ID of the job to retrieve
-            order_by (:obj:`str`, optional): Field to order the result by.
+            order_by (str, optional): Field to order the result by.
                 Use - to indicate reverse order.
         """
         return self._simple_request(
@@ -501,8 +530,8 @@ class _CloudClient(_Client):
 
         Args:
             project_name (str): Name of project to retrieve
-            account_id (:obj:`int`, optional): Numeric ID of the account to retrieve
-            account_name (:obj:`str`, optional): Name of account to retrieve
+            account_id (int, optional): Numeric ID of the account to retrieve
+            account_name (str, optional): Name of account to retrieve
         """
         if account_id is None and account_name is None:
             accounts = self.list_accounts()
@@ -534,9 +563,9 @@ class _CloudClient(_Client):
         Args:
             account_id (int): Numeric ID of the account to retrieve
             run_id (int): Numeric ID of the run to retrieve
-            include_related (:obj:`list` of :obj:`str`, optional): List of related
-                fields to pull with the run. Valid values are "trigger", "job",
-                "repository", "debug_logs", "run_steps", and "environment".
+            include_related (list): List of related
+                fields to pull with the run. Valid values are `trigger`, `job`,
+                `repository`, `debug_logs`, `run_steps`, and `environment`.
         """
         return self._simple_request(
             f'accounts/{account_id}/runs/{run_id}',
@@ -555,14 +584,15 @@ class _CloudClient(_Client):
         """Fetch artifacts from a completed run.
 
         Once a run has completed, you can use this endpoint to download the
-        manifest.json, run_results.json or catalog.json files from dbt Cloud. These
-        artifacts contain information about the models in your dbt project, timing
-        information around their execution, and a status message indicating the result
-        of the model build.
+        `manifest.json`, `run_results.json` or `catalog.json` files from dbt Cloud.
+        These artifacts contain information about the models in your dbt project,
+        timing information around their execution, and a status message indicating the
+        result of the model build.
 
-        Note: By default, this endpoint returns artifacts from the last step in the
-        run. To list artifacts from other steps in the run, use the step query
-        parameter described below.
+        Note:
+            By default, this endpoint returns artifacts from the last step in the
+            run. To list artifacts from other steps in the run, use the step query
+            parameter described below.
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
@@ -570,7 +600,7 @@ class _CloudClient(_Client):
             path (str): Paths are rooted at the target/ directory. Use manifest.json,
                 catalog.json, or run_results.json to download dbt-generated artifacts
                 for the run.
-            step (:obj:`str`, optional): The index of the Step in the Run to query for
+            step (str, optional): The index of the Step in the Run to query for
                 artifacts. The first step in the run has the index 1. If the step
                 parameter is omitted, then this endpoint will return the artifacts
                 compiled for the last step in the run.
@@ -645,14 +675,14 @@ class _CloudClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            logged_at_start (:obj:`str`, optional):  Date to begin retrieving audit
+            logged_at_start (str, optional):  Date to begin retrieving audit
                 logs
                 Format is yyyy-mm-dd
-            logged_at_end (:obj:`str`, optional): Date to stop retrieving audit logs.
+            logged_at_end (str, optional): Date to stop retrieving audit logs.
                 Format is yyyy-mm-dd
-            offset (:obj:`int`, optional): The offset to apply when listing runs.
+            offset (int, optional): The offset to apply when listing runs.
                 Use with limit to paginate results.
-            limit (:obj:`int`, optional): The limit to apply when listing runs.
+            limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
         """
         return self._simple_request(
@@ -716,7 +746,6 @@ class _CloudClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            project_id (int): Numeric ID of the project to retrieve
         """
         return self._simple_request(f'accounts/{account_id}/groups/')
 
@@ -737,9 +766,9 @@ class _CloudClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            order_by (:obj:`str`, optional): Field to order the result by.
+            order_by (str, optional): Field to order the result by.
                 Use - to indicate reverse order.
-            project_id (:obj:`int`, optional): Numeric ID of the project containing jobs
+            project_id (int, optional): Numeric ID of the project containing jobs
         """
         return self._simple_request(
             f'accounts/{account_id}/jobs/',
@@ -780,7 +809,7 @@ class _CloudClient(_Client):
         Args:
             account_id (int): Numeric ID of the account to retrieve
             run_id (int): Numeric ID of the run to retrieve
-            step (:obj:`str`, optional): The index of the Step in the Run to query for
+            step (str, optional): The index of the Step in the Run to query for
                 artifacts. The first step in the run has the index 1. If the step
                 parameter is omitted, then this endpoint will return the artifacts
                 compiled for the last step in the run.
@@ -805,17 +834,17 @@ class _CloudClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            include_related (:obj:`list` of :obj:`str`, optional): List of related
-                fields to pull with the run. Valid values are "trigger", "job",
-                "repository", "debug_logs", "run_steps", and "environment".
-            job_definition_id (:obj:`int`, optional): Applies a filter to only return
+            include_related (list): List of related
+                fields to pull with the run. Valid values are `trigger`, `job`,
+                `repository`, `debug_logs`, `run_steps`, and `environment`.
+            job_definition_id (int, optional): Applies a filter to only return
                 runs
                 from the specified Job.
-            order_by (:obj:`str`, optional): Field to order the result by.
+            order_by (str, optional): Field to order the result by.
                 Use - to indicate reverse order.
-            offset (:obj:`int`, optional): The offset to apply when listing runs.
+            offset (int, optional): The offset to apply when listing runs.
                 Use with limit to paginate results.
-            limit (:obj:`int`, optional): The limit to apply when listing runs.
+            limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
         """
         return self._simple_request(
@@ -847,7 +876,7 @@ class _CloudClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            limit (:obj:`int`, optional): A limit on the number of objects to be
+            limit (int, optional): A limit on the number of objects to be
                 returned, between 1 and 100.
             environment (str): A filter on the list based on the object's
                 environment_id field.
@@ -903,11 +932,11 @@ class _CloudClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            limit (:obj:`int`, optional): The limit to apply when listing runs.
+            limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
-            offset (:obj:`int`, optional): The offset to apply when listing runs.
+            offset (int, optional): The offset to apply when listing runs.
                 Use with limit to paginate results.
-            order_by (:obj:`str`, optional): Field to order the result by.
+            order_by (str, optional): Field to order the result by.
                 Use - to indicate reverse order.
         """
         return self._simple_request(
@@ -946,7 +975,7 @@ class _CloudClient(_Client):
     @v2
     def trigger_job_and_poll(
         self, account_id: int, job_id: int, payload: Dict, poll_interval: int = 10
-    ) -> int:
+    ) -> Dict:
         """Trigger a job by its ID and poll until completion:  one of
           SUCCESS, ERROR, or CANCELLED.
 
@@ -954,37 +983,23 @@ class _CloudClient(_Client):
             account_id (int): Numeric ID of the account to retrieve
             job_id (int): Numeric ID of the job to trigger
             payload (dict): Payload required for post request
-            poll_interval (:obj:`int`, optional): Number of seconds to wait in between
+            poll_interval (int, optional): Number of seconds to wait in between
                 polling
         """
-
-        def _run_status_formatted(run_id: int, status: str, time: float) -> str:
-            """Format a string indicating status of job.
-
-            Args:
-                run_id (int): Numeric ID of the run to retrieve
-                status (str): Status of job
-                time (float): Elapsed time since job triggered
-            """
-            return (
-                f'Run {run_id} - {status.capitalize()}, Elapsed time: {round(time, 0)}s'
-            )
-
         run_id = self.trigger_job(account_id, job_id, payload)['data']['id']
-        print('Job Triggered!')
-        start = time.time()
 
         while True:
             time.sleep(poll_interval)
             run = self.get_run(account_id, run_id)
             status = run['data']['status']
-            status_name = JobRunStatus(status).name
-            if status == JobRunStatus.SUCCESS:
-                print(_run_status_formatted(run_id, status_name, time.time() - start))
-                return run_id
-            if status in [JobRunStatus.CANCELLED, JobRunStatus.ERROR]:
-                raise Exception(run['data']['status_message'])
-            print(_run_status_formatted(run_id, status_name, time.time() - start))
+            if status in [
+                JobRunStatus.SUCCESS,
+                JobRunStatus.CANCELLED,
+                JobRunStatus.ERROR,
+            ]:
+                break
+
+        return run
 
     @v3
     def update_connection(
