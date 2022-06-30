@@ -1,9 +1,18 @@
 <p align="center">
+    <a href="#"><img src="img/dbt-standalone.png"></a>
+</p>
+<p align="center">
     <em>An unaffiliated python interface for dbt Cloud APIs</em>
 </p>
 <p align="center">
     <a href="https://codecov.io/gh/dpguthrie/dbtc" target="_blank">
         <img src="https://img.shields.io/codecov/c/github/dpguthrie/dbtc" alt="Coverage">
+    </a>
+    <a href="https://pypi.org/project/dbtc" target="_blank">
+        <img src="https://badge.fury.io/py/dbtc.svg" alt="Package version">
+    </a>
+    <a href="https://pepy.tech/project/dbtc" target="_blank">
+        <img src="https://pepy.tech/badge/dbtc" alt="Downloads">
     </a>
 </p>
 
@@ -27,9 +36,9 @@ dbtc is an unaffiliated python interface to various dbt Cloud API endpoints.
 
 This library acts as a convenient interface to two different APIs that dbt Cloud offers:
 
-- Cloud API:  This is a REST API that exposes endpoints that allow users to programatically create, read, update, and delete
+- **Cloud API**:  This is a REST API that exposes endpoints that allow users to programatically create, read, update, and delete
 resources within their dbt Cloud Account.
-- Metadata API:  This is a GraphQL API that exposes metadata generated from a job run within dbt Cloud.
+- **Metadata API**:  This is a GraphQL API that exposes metadata generated from a job run within dbt Cloud.
 
 ## Requirements
 
@@ -39,11 +48,15 @@ Python 3.7+
 - [sgqlc]() - Simple GraphQL Client
 - [Typer](https://github.com/ross/requests-futures) - Library for building CLI applications
 
-## Installation (Coming Soon)
+## Installation
 
-```bash
-pip install dbtc
-```
+<div class="termynal" data-termynal data-ty-typeDelay="40" data-ty-lineDelay="700">
+    <span data-ty="input">pip install dbtc</span>
+    <span data-ty="progress"></span>
+    <span data-ty>Successfully installed dbtc</span>
+    <a href="#" data-terminal-control="">restart ↻</a>
+</div>
+
 ## Basic Usage
 
 ### Python
@@ -57,10 +70,17 @@ from dbtc import dbtCloudClient
 
 client = dbtCloudClient()
 
-account = client.cloud.get_account_by_name('My Account')
-project = client.cloud.get_project_by_name(account['id'], 'My Project')
+project = client.cloud.get_project(account_id=1, project_id=1)
+```
 
-run_id = client.cloud.trigger_job_and_poll()
+### CLI
+
+All of the methods available via the `dbtCloudClient` class are also available through the command line via `dbtc`.
+
+The same code above can be written as follows using the CLI:
+
+```bash
+dbtc get-project --account-id=1 --project-id=1
 ```
 
 ## License
