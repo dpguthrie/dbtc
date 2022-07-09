@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.3] - 2022-07-08
+
+### Added
+- The metadata methods are now available via the CLI
+- A `status` arg can now be used in the `list_runs` method on the `cloud` property
+
 ## [0.1.2] - 2022-06-30
 
 ### Fixed
