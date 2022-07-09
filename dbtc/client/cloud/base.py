@@ -829,6 +829,7 @@ class _CloudClient(_Client):
         order_by: str = None,
         offset: int = None,
         limit: int = None,
+        status: str = None,
     ) -> Dict:
         """List runs in an account.
 
@@ -846,7 +847,15 @@ class _CloudClient(_Client):
                 Use with limit to paginate results.
             limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
+            status (str, optional): The status to apply when listing runs.
+                Options include queued, starting, running, success, error, and
+                cancelled
         """
+        if status is not None:
+            try:
+                status = getattr(JobRunStatus, status.upper()).value
+            except AttributeError:
+                pass
         return self._simple_request(
             f'accounts/{account_id}/runs',
             params={
@@ -855,6 +864,7 @@ class _CloudClient(_Client):
                 'order_by': order_by,
                 'offset': offset,
                 'limit': limit,
+                'status': status,
             },
         )
 

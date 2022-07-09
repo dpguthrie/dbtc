@@ -84,6 +84,9 @@ REPOSITORY_ID = typer.Option(
     ..., '--repository-id', '-y', help='Numeric ID of the repository.'
 )
 RUN_ID = typer.Option(..., '--run-id', '-r', help='Numeric ID of run to retrieve.')
+RUN_ID_OPTIONAL = typer.Option(
+    None, '--run-id', '-r', help='Numeric ID of run to retrieve.'
+)
 SERVICE_TOKEN_ID = typer.Option(
     ..., '--service-token-id', '-t', help='Numeric ID of the service token.'
 )
@@ -93,12 +96,25 @@ TOKEN = typer.Option(
     envvar='DBT_CLOUD_SERVICE_TOKEN',
     help='Service token for dbt Cloud Account.',
 )
+UNIQUE_ID = typer.Option(
+    ..., '--unique-id', help='The unique ID of this particular object.'
+)
 USER_ID = typer.Option(..., '--user-id', '-u', help='Numeric ID of the user.')
 
 
-def _dbt_cloud_request(ctx: typer.Context, method: str, *args, **kwargs):
-    data = getattr(dbtc(**ctx.obj).cloud, method)(*args, **kwargs)
+def _dbt_api_request(ctx: typer.Context, property: str, method: str, *args, **kwargs):
+    instance = dbtc(**ctx.obj)
+    api = getattr(instance, property)
+    data = getattr(api, method)(*args, **kwargs)
     typer.echo(json.dumps(data))
+
+
+def _dbt_cloud_request(ctx: typer.Context, method: str, *args, **kwargs):
+    _dbt_api_request(ctx, 'cloud', method, *args, **kwargs)
+
+
+def _dbt_metadata_request(ctx: typer.Context, method: str, *args, **kwargs):
+    _dbt_api_request(ctx, 'metadata', method, *args, **kwargs)
 
 
 @app.callback()
@@ -389,6 +405,190 @@ def get_account_licenses(ctx: typer.Context, account_id: int = ACCOUNT_ID):
 
 
 @app.command()
+def get_exposure(
+    ctx: typer.Context,
+    job_id: int = JOB_ID,
+    name: str = typer.Option(..., '--name', help='Name of the exposure to retrieve'),
+    run_id: int = RUN_ID_OPTIONAL,
+):
+    """Query information about a particular exposure."""
+    _dbt_metadata_request(ctx, 'get_exposure', job_id, name, run_id=run_id)
+
+
+@app.command()
+def get_exposures(
+    ctx: typer.Context, job_id: int = JOB_ID, run_id: int = RUN_ID_OPTIONAL
+):
+    """Query information about all exposures in a given job."""
+    _dbt_metadata_request(ctx, 'get_exposures', job_id, run_id=run_id)
+
+
+@app.command()
+def get_macro(
+    ctx: typer.Context,
+    job_id: int = JOB_ID,
+    unique_id: str = UNIQUE_ID,
+    run_id: int = RUN_ID_OPTIONAL,
+):
+    """Query information about a particular macro."""
+    _dbt_metadata_request(ctx, 'get_macro', job_id, unique_id, run_id=run_id)
+
+
+@app.command()
+def get_macros(ctx: typer.Context, job_id: int = JOB_ID, run_id: int = RUN_ID_OPTIONAL):
+    """Query information about all macros in a given job."""
+    _dbt_metadata_request(ctx, 'get_macros', job_id, run_id=run_id)
+
+
+@app.command()
+def get_metric(
+    ctx: typer.Context,
+    job_id: int = JOB_ID,
+    unique_id: str = UNIQUE_ID,
+    run_id: int = RUN_ID_OPTIONAL,
+):
+    """Query information about a particular metric."""
+    _dbt_metadata_request(ctx, 'get_metric', job_id, unique_id, run_id=run_id)
+
+
+@app.command()
+def get_metrics(
+    ctx: typer.Context, job_id: int = JOB_ID, run_id: int = RUN_ID_OPTIONAL
+):
+    """Query information about all metrics in a given job."""
+    _dbt_metadata_request(ctx, 'get_metrics', job_id, run_id=run_id)
+
+
+@app.command()
+def get_model(
+    ctx: typer.Context,
+    job_id: int = JOB_ID,
+    unique_id: str = UNIQUE_ID,
+    run_id: int = RUN_ID_OPTIONAL,
+):
+    """Query information about a particular model."""
+    _dbt_metadata_request(ctx, 'get_model', job_id, unique_id, run_id=run_id)
+
+
+@app.command()
+def get_models(
+    ctx: typer.Context,
+    job_id: int = JOB_ID,
+    run_id: int = RUN_ID_OPTIONAL,
+    database: str = typer.Option(
+        None, '--database', help='The database where this table/view lives'
+    ),
+    schema: str = typer.Option(
+        None, '--schema', help='The schema where this table/view lives'
+    ),
+    identifier: str = typer.Option(
+        None, '--identifier', help='The identifier of this table/view'
+    ),
+):
+    """Query information about all models in a given job."""
+    _dbt_metadata_request(
+        ctx,
+        'get_models',
+        job_id,
+        run_id=run_id,
+        database=database,
+        schema=schema,
+        identifier=identifier,
+    )
+
+
+@app.command()
+def get_seed(
+    ctx: typer.Context,
+    job_id: int = JOB_ID,
+    unique_id: str = UNIQUE_ID,
+    run_id: int = RUN_ID_OPTIONAL,
+):
+    """Query information about a particular seed."""
+    _dbt_metadata_request(ctx, 'get_seed', job_id, unique_id, run_id=run_id)
+
+
+@app.command()
+def get_seeds(ctx: typer.Context, job_id: int = JOB_ID, run_id: int = RUN_ID_OPTIONAL):
+    """Query information about all seeds in a given job."""
+    _dbt_metadata_request(ctx, 'get_seeds', job_id, run_id=run_id)
+
+
+@app.command()
+def get_snapshot(
+    ctx: typer.Context,
+    job_id: int = JOB_ID,
+    unique_id: str = UNIQUE_ID,
+    run_id: int = RUN_ID_OPTIONAL,
+):
+    """Query information about a particular snapshot."""
+    _dbt_metadata_request(ctx, 'get_snapshot', job_id, unique_id, run_id=run_id)
+
+
+@app.command()
+def get_snapshots(
+    ctx: typer.Context, job_id: int = JOB_ID, run_id: int = RUN_ID_OPTIONAL
+):
+    """Query information about all snapshots in a given job."""
+    _dbt_metadata_request(ctx, 'get_snapshots', job_id, run_id=run_id)
+
+
+@app.command()
+def get_source(
+    ctx: typer.Context,
+    job_id: int = JOB_ID,
+    unique_id: str = UNIQUE_ID,
+    run_id: int = RUN_ID_OPTIONAL,
+):
+    """Query information about a particular source."""
+    _dbt_metadata_request(ctx, 'get_source', job_id, unique_id, run_id=run_id)
+
+
+@app.command()
+def get_sources(
+    ctx: typer.Context,
+    job_id: int = JOB_ID,
+    run_id: int = RUN_ID_OPTIONAL,
+    database: str = typer.Option(
+        None, '--database', help='The database where this table/view lives'
+    ),
+    schema: str = typer.Option(
+        None, '--schema', help='The schema where this table/view lives'
+    ),
+    identifier: str = typer.Option(
+        None, '--identifier', help='The identifier of this table/view'
+    ),
+):
+    """Query information about all sources in a given job."""
+    _dbt_metadata_request(
+        ctx,
+        'get_sources',
+        job_id,
+        run_id=run_id,
+        database=database,
+        schema=schema,
+        identifier=identifier,
+    )
+
+
+@app.command()
+def get_test(
+    ctx: typer.Context,
+    job_id: int = JOB_ID,
+    unique_id: str = UNIQUE_ID,
+    run_id: int = RUN_ID_OPTIONAL,
+):
+    """Query information about a particular test."""
+    _dbt_metadata_request(ctx, 'get_test', job_id, unique_id, run_id=run_id)
+
+
+@app.command()
+def get_tests(ctx: typer.Context, job_id: int = JOB_ID, run_id: int = RUN_ID_OPTIONAL):
+    """Query information about all tests in a given job."""
+    _dbt_metadata_request(ctx, 'get_tests', job_id, run_id=run_id)
+
+
+@app.command()
 def get_job(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
@@ -674,6 +874,9 @@ def list_runs(
     order_by: str = ORDER_BY,
     offset: int = OFFSET,
     limit: int = LIMIT,
+    status: str = typer.Option(
+        None, '--status', help='Status to apply when listing runs'
+    ),
 ):
     """List runs for a specific account."""
     _dbt_cloud_request(
@@ -685,6 +888,7 @@ def list_runs(
         order_by=order_by,
         offset=offset,
         limit=limit,
+        status=status,
     )
 
 
