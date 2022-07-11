@@ -203,6 +203,37 @@ class _MetadataClient(_Client):
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
         )
 
+    def get_model_by_environment(
+        self,
+        environment_id: int,
+        unique_id: str,
+        last_run_count: int = 10,
+        with_catalog: bool = False,
+    ):
+        """The model by environment object allows you to query information about a
+        particular model based on environment_id
+
+        Note:
+            This feature is currently in beta and subject to change.
+
+        Args:
+            environment_id (int): The environment_id for this model
+            unique_id (str): The unique ID of this model
+            last_run_count (int, optional): Number of last run results where this model
+                was built to return (max of 10). Defaults to 10.
+            with_catalog (bool, optional): If true, return only runs that have catalog
+                information for this model. Defaults to False.
+        """
+        return self._make_request(
+            "model_by_environment",
+            {
+                "environment_id": environment_id,
+                "unique_id": unique_id,
+                "last_run_count": last_run_count,
+                "with_catalog": with_catalog,
+            },
+        )
+
     def get_models(
         self,
         job_id: int,

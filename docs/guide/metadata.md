@@ -122,6 +122,25 @@ The `metadata` property on the `dbtCloudClient` class contains methods that allo
     dbtc get-model --job-id=12345
     ```
 
+## get_model_by_environment
+::: dbtc.client.metadata._MetadataClient.get_model_by_environment
+
+**Examples:**
+=== "Python"
+
+    Assuming that `client` is an instance of `dbtCloudClient`
+    ```py
+    client.metadata.get_model_by_environment(
+        environment_id, unique_id
+    )
+    ```
+
+=== "CLI"
+
+    ```bash
+    dbtc get-model-by-environment --environment-id=12345 --unique-id=models.tpch.order_items
+    ```
+
 ## get_models
 ::: dbtc.client.metadata._MetadataClient.get_models
 
