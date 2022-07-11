@@ -471,6 +471,33 @@ def get_model(
 
 
 @app.command()
+def get_model_by_environment(
+    ctx: typer.Context,
+    environment_id: int = ENVIRONMENT_ID,
+    unique_id: str = UNIQUE_ID,
+    last_run_count: int = typer.Option(
+        10,
+        '--last-run-count',
+        help='Number of run results where this model was built to return (max of 10)',
+    ),
+    with_catalog: bool = typer.Option(
+        False,
+        '--with-catalog',
+        help='If true, return only runs that have catalog information for this model',
+    ),
+):
+    """Query information about a particular model based on environment_id."""
+    _dbt_metadata_request(
+        ctx,
+        'get_model_by_environment',
+        environment_id,
+        unique_id,
+        last_run_count,
+        with_catalog,
+    )
+
+
+@app.command()
 def get_models(
     ctx: typer.Context,
     job_id: int = JOB_ID,
