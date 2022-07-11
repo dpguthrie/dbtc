@@ -52,13 +52,22 @@ class TimePeriod(sgqlc.types.Enum):
 ########################################################################
 class CatalogColumn(sgqlc.types.Type):
     __schema__ = schema
-    __field_names__ = ('name', 'index', 'type', 'comment', 'description', 'tags')
+    __field_names__ = (
+        'name',
+        'index',
+        'type',
+        'comment',
+        'description',
+        'tags',
+        'meta',
+    )
     name = sgqlc.types.Field(String, graphql_name='name')
     index = sgqlc.types.Field(Int, graphql_name='index')
     type = sgqlc.types.Field(String, graphql_name='type')
     comment = sgqlc.types.Field(String, graphql_name='comment')
     description = sgqlc.types.Field(String, graphql_name='description')
     tags = sgqlc.types.Field(sgqlc.types.list_of(String), graphql_name='tags')
+    meta = sgqlc.types.Field(JSONObject, graphql_name='meta')
 
 
 class CatalogStat(sgqlc.types.Type):
@@ -138,6 +147,7 @@ class Query(sgqlc.types.Type):
         'metric',
         'models',
         'model',
+        'model_by_environment',
         'seeds',
         'seed',
         'snapshots',
@@ -305,6 +315,38 @@ class Query(sgqlc.types.Type):
                         graphql_name='uniqueId',
                         default=None,
                     ),
+                ),
+            )
+        ),
+    )
+    model_by_environment = sgqlc.types.Field(
+        sgqlc.types.non_null(sgqlc.types.list_of(sgqlc.types.non_null('ModelNode'))),
+        graphql_name='modelByEnvironment',
+        args=sgqlc.types.ArgDict(
+            (
+                (
+                    'environment_id',
+                    sgqlc.types.Arg(
+                        sgqlc.types.non_null(Int),
+                        graphql_name='environmentId',
+                        default=None,
+                    ),
+                ),
+                (
+                    'unique_id',
+                    sgqlc.types.Arg(
+                        sgqlc.types.non_null(String),
+                        graphql_name='uniqueId',
+                        default=None,
+                    ),
+                ),
+                (
+                    'last_run_count',
+                    sgqlc.types.Arg(Int, graphql_name='lastRunCount', default=1),
+                ),
+                (
+                    'with_catalog',
+                    sgqlc.types.Arg(Boolean, graphql_name='withCatalog', default=False),
                 ),
             )
         ),
@@ -630,6 +672,7 @@ class ModelNode(sgqlc.types.Type, CloudArtifactInterface, NodeInterface):
         'children_l1',
         'raw_sql',
         'compiled_sql',
+        'materialized_type',
         'columns',
         'stats',
         'run_results',
@@ -669,6 +712,7 @@ class ModelNode(sgqlc.types.Type, CloudArtifactInterface, NodeInterface):
     )
     raw_sql = sgqlc.types.Field(String, graphql_name='rawSql')
     compiled_sql = sgqlc.types.Field(String, graphql_name='compiledSql')
+    materialized_type = sgqlc.types.Field(String, graphql_name='materializedType')
     columns = sgqlc.types.Field(
         sgqlc.types.list_of(CatalogColumn), graphql_name='columns'
     )
