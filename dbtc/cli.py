@@ -492,8 +492,8 @@ def get_model_by_environment(
         'get_model_by_environment',
         environment_id,
         unique_id,
-        last_run_count,
-        with_catalog,
+        last_run_count=last_run_count,
+        with_catalog=with_catalog,
     )
 
 
