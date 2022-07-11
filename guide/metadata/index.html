@@ -406,6 +406,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#get_model_by_environment" class="md-nav__link">
+    get_model_by_environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#get_models" class="md-nav__link">
     get_models
   </a>
@@ -569,6 +576,13 @@
         <li class="md-nav__item">
   <a href="#get_model" class="md-nav__link">
     get_model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_model_by_environment" class="md-nav__link">
+    get_model_by_environment
   </a>
   
 </li>
@@ -1105,6 +1119,80 @@ was generated for</p></td>
 </div>
 </div>
 </div>
+<h2 id="get_model_by_environment">get_model_by_environment<a class="headerlink" href="#get_model_by_environment" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-object doc-method">
+
+
+    <div class="doc doc-contents first">
+
+      <p>The model by environment object allows you to query information about a
+particular model based on environment_id</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature is currently in beta and subject to change.</p>
+</div>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>environment_id</code></td>
+        <td><code>int</code></td>
+        <td><p>The environment_id for this model</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>unique_id</code></td>
+        <td><code>str</code></td>
+        <td><p>The unique ID of this model</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>last_run_count</code></td>
+        <td><code>int</code></td>
+        <td><p>Number of last run results where this model
+was built to return (max of 10). Defaults to 10.</p></td>
+        <td><code>10</code></td>
+      </tr>
+      <tr>
+        <td><code>with_catalog</code></td>
+        <td><code>bool</code></td>
+        <td><p>If true, return only runs that have catalog
+information for this model. Defaults to False.</p></td>
+        <td><code>False</code></td>
+      </tr>
+  </tbody>
+</table>
+    </div>
+
+  </div>
+
+<p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Python</label><label for="__tabbed_8_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_model_by_environment</span><span class="p">(</span>
+    <span class="n">environment_id</span><span class="p">,</span> <span class="n">unique_id</span>
+<span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc get-model-by-environment --environment-id<span class="o">=</span><span class="m">12345</span> --unique-id<span class="o">=</span>models.tpch.order_items
+</code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="get_models">get_models<a class="headerlink" href="#get_models" title="Permanent link">&para;</a></h2>
 
 
@@ -1171,7 +1259,7 @@ was generated for</p></td>
   </div>
 
 <p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Python</label><label for="__tabbed_8_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Python</label><label for="__tabbed_9_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -1238,7 +1326,7 @@ was generated for</p></td>
   </div>
 
 <p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Python</label><label for="__tabbed_9_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Python</label><label for="__tabbed_10_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -1299,7 +1387,7 @@ was generated for</p></td>
   </div>
 
 <p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Python</label><label for="__tabbed_10_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Python</label><label for="__tabbed_11_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -1366,7 +1454,7 @@ was generated for</p></td>
   </div>
 
 <p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Python</label><label for="__tabbed_11_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Python</label><label for="__tabbed_12_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -1427,7 +1515,7 @@ was generated for</p></td>
   </div>
 
 <p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Python</label><label for="__tabbed_12_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Python</label><label for="__tabbed_13_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -1494,7 +1582,7 @@ was generated for</p></td>
   </div>
 
 <p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Python</label><label for="__tabbed_13_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Python</label><label for="__tabbed_14_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -1573,7 +1661,7 @@ was generated for</p></td>
   </div>
 
 <p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Python</label><label for="__tabbed_14_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Python</label><label for="__tabbed_15_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -1639,7 +1727,7 @@ was generated for</p></td>
   </div>
 
 <p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Python</label><label for="__tabbed_15_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">Python</label><label for="__tabbed_16_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -1700,7 +1788,7 @@ was generated for</p></td>
   </div>
 
 <p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">Python</label><label for="__tabbed_16_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="17:2"><input checked="checked" id="__tabbed_17_1" name="__tabbed_17" type="radio" /><input id="__tabbed_17_2" name="__tabbed_17" type="radio" /><div class="tabbed-labels"><label for="__tabbed_17_1">Python</label><label for="__tabbed_17_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
