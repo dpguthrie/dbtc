@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.4] - 2022-07-11
+
+### Added
+- `get_model_by_environment` to the `metadata` property
+- `meta` field is now available when you query columns
+
 ## [0.1.3] - 2022-07-08
 
 ### Added
