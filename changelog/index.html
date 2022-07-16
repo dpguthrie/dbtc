@@ -377,6 +377,26 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#014-2022-07-11" class="md-nav__link">
+    [0.1.4] - 2022-07-11
+  </a>
+  
+    <nav class="md-nav" aria-label="[0.1.4] - 2022-07-11">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    Added
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#013-2022-07-08" class="md-nav__link">
     [0.1.3] - 2022-07-08
   </a>
@@ -385,7 +405,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added" class="md-nav__link">
+  <a href="#added_1" class="md-nav__link">
     Added
   </a>
   
@@ -432,7 +452,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_1" class="md-nav__link">
+  <a href="#added_2" class="md-nav__link">
     Added
   </a>
   
@@ -452,7 +472,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_2" class="md-nav__link">
+  <a href="#added_3" class="md-nav__link">
     Added
   </a>
   
@@ -498,6 +518,26 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#014-2022-07-11" class="md-nav__link">
+    [0.1.4] - 2022-07-11
+  </a>
+  
+    <nav class="md-nav" aria-label="[0.1.4] - 2022-07-11">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    Added
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#013-2022-07-08" class="md-nav__link">
     [0.1.3] - 2022-07-08
   </a>
@@ -506,7 +546,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added" class="md-nav__link">
+  <a href="#added_1" class="md-nav__link">
     Added
   </a>
   
@@ -553,7 +593,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_1" class="md-nav__link">
+  <a href="#added_2" class="md-nav__link">
     Added
   </a>
   
@@ -573,7 +613,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_2" class="md-nav__link">
+  <a href="#added_3" class="md-nav__link">
     Added
   </a>
   
@@ -603,8 +643,14 @@
 
 
 <h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
-<h2 id="013-2022-07-08">[0.1.3] - 2022-07-08<a class="headerlink" href="#013-2022-07-08" title="Permanent link">&para;</a></h2>
+<h2 id="014-2022-07-11">[0.1.4] - 2022-07-11<a class="headerlink" href="#014-2022-07-11" title="Permanent link">&para;</a></h2>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>get_model_by_environment</code> to the <code>metadata</code> property</li>
+<li><code>meta</code> field is now available when you query columns</li>
+</ul>
+<h2 id="013-2022-07-08">[0.1.3] - 2022-07-08<a class="headerlink" href="#013-2022-07-08" title="Permanent link">&para;</a></h2>
+<h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>The metadata methods are now available via the CLI</li>
 <li>A <code>status</code> arg can now be used in the <code>list_runs</code> method on the <code>cloud</code> property</li>
@@ -619,12 +665,12 @@
 <li>The <code>trigger_job_and_poll</code> method now returns the <code>Run</code>, represented as a <code>dict</code>.  It will no longer raise an exception if the result of the run is cancelled or error.</li>
 </ul>
 <h2 id="011-2022-05-16">[0.1.1] - 2022-05-16<a class="headerlink" href="#011-2022-05-16" title="Permanent link">&para;</a></h2>
-<h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
+<h3 id="added_2">Added<a class="headerlink" href="#added_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li>The <code>cloud</code> property on the <code>dbtCloudClient</code> class now contains v3 endpoints</li>
 </ul>
 <h2 id="010-2022-05-13">[0.1.0] - 2022-05-13<a class="headerlink" href="#010-2022-05-13" title="Permanent link">&para;</a></h2>
-<h3 id="added_2">Added<a class="headerlink" href="#added_2" title="Permanent link">&para;</a></h3>
+<h3 id="added_3">Added<a class="headerlink" href="#added_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>dbtCloudClient</code> class is the main interface to the dbt Cloud APIs.  The <code>cloud</code> property contains methods that allow for programmatic access to different resources within dbt Cloud (e.g. <code>dbtCloudClient().cloud.list_accounts()</code>).  The <code>metadata</code> property contains methods that allow for retrieval of metadata related to a dbt Cloud job run (e.g. <code>dbtCloudClient().metadata.get_models(job_id, run_id)</code>).</li>
 <li><code>dbtc</code> is a command line interface to the methods on the <code>dbtCloudClient</code> class (e.g. <code>dbtc list-accounts</code>)</li>
