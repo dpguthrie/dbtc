@@ -9,6 +9,7 @@ import requests
 
 # first party
 from dbtc.client.base import _Client
+from dbtc.client.metadata import _MetadataClient
 
 
 def _version_decorator(func, version):
@@ -968,46 +969,77 @@ class _CloudClient(_Client):
         )
 
     @v2
-    def trigger_job(self, account_id: int, job_id: int, payload: Dict):
-        """Trigger a job by its ID.
+    def trigger_job(
+        self,
+        account_id: int,
+        job_id: int,
+        payload: Dict,
+        *,
+        should_poll: bool = True,
+        poll_interval: int = 10,
+        restart_from_failure: bool = False,
+        restart_commands: List = ['build'],
+        before_steps: List = None,
+        after_steps: List = None,
+    ):
+        """Trigger a job by its ID
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
             job_id (int): Numeric ID of the job to trigger
             payload (dict): Payload required for post request
+            should_poll (bool, optional): Poll until completion if `True`, completion
+                is one of success, failure, or cancelled
+            poll_interval (int, optional): Number of seconds to wait in between
+                polling
+            restart_from_failure (bool, optional): Restart your job from the point of
+                failure
+            restart_commands (list, optional): Command pattern to follow for restart.
+                One of `['build']` or `['run', 'test']`
+            before_steps (list, optional): Steps to run prior to the restart commands
+            after_steps (list, optional): Steps to run after the restart commands
         """
-        return self._simple_request(
+        if restart_from_failure:
+            models = _MetadataClient(service_token=self.service_token).query(
+                f'{{models(jobId: {job_id}) {{name, error}}}}'
+            )
+            rerun_models = ' '.join(
+                [
+                    m['name'] + '+'
+                    for m in models['data']['models']
+                    if m['error'] is not None
+                ]
+            )
+            if rerun_models != '':
+                if restart_commands != ['build'] and restart_commands != [
+                    'run',
+                    'test',
+                ]:
+                    raise Exception('Invalid restart commands specified')
+
+                restart_steps = [
+                    f'dbt {command} -s {rerun_models}' for command in restart_commands
+                ]
+                steps = (before_steps or []) + restart_steps + (after_steps or [])
+                payload.update({'steps_override': steps})
+
+        run = self._simple_request(
             f'accounts/{account_id}/jobs/{job_id}/run/',
             method='post',
             json=payload,
         )
-
-    @v2
-    def trigger_job_and_poll(
-        self, account_id: int, job_id: int, payload: Dict, poll_interval: int = 10
-    ) -> Dict:
-        """Trigger a job by its ID and poll until completion:  one of
-          SUCCESS, ERROR, or CANCELLED.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            job_id (int): Numeric ID of the job to trigger
-            payload (dict): Payload required for post request
-            poll_interval (int, optional): Number of seconds to wait in between
-                polling
-        """
-        run_id = self.trigger_job(account_id, job_id, payload)['data']['id']
-
-        while True:
-            time.sleep(poll_interval)
-            run = self.get_run(account_id, run_id)
-            status = run['data']['status']
-            if status in [
-                JobRunStatus.SUCCESS,
-                JobRunStatus.CANCELLED,
-                JobRunStatus.ERROR,
-            ]:
-                break
+        if should_poll:
+            run_id = run['data']['id']
+            while True:
+                time.sleep(poll_interval)
+                run = self.get_run(account_id, run_id)
+                status = run['data']['status']
+                if status in [
+                    JobRunStatus.SUCCESS,
+                    JobRunStatus.CANCELLED,
+                    JobRunStatus.ERROR,
+                ]:
+                    break
 
         return run
 
