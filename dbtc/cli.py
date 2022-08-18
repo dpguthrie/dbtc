@@ -7,6 +7,7 @@ import typer
 
 # first party
 from dbtc import dbtCloudClient as dbtc
+from dbtc.console import console
 
 app = typer.Typer()
 
@@ -106,7 +107,7 @@ def _dbt_api_request(ctx: typer.Context, property: str, method: str, *args, **kw
     instance = dbtc(**ctx.obj)
     api = getattr(instance, property)
     data = getattr(api, method)(*args, **kwargs)
-    typer.echo(json.dumps(data))
+    console.print_json(json.dumps(data))
 
 
 def _dbt_cloud_request(ctx: typer.Context, method: str, *args, **kwargs):
@@ -973,6 +974,17 @@ def trigger_job(
     account_id: int = ACCOUNT_ID,
     job_id: int = JOB_ID,
     payload: str = PAYLOAD,
+    should_poll: bool = typer.Option(
+        True,
+        help='Poll until job completion (status is one of success, failure, or '
+        'cancelled',
+    ),
+    poll_interval: int = typer.Option(
+        10, '--poll-interval', help='Number of seconds to wait in between polling.'
+    ),
+    restart_from_failure: bool = typer.Option(
+        False, help='Restart your job from the point of failure'
+    ),
 ):
     """Trigger job to run."""
     _dbt_cloud_request(
@@ -981,27 +993,9 @@ def trigger_job(
         account_id,
         job_id,
         json.loads(payload),
-    )
-
-
-@app.command()
-def trigger_job_and_poll(
-    ctx: typer.Context,
-    account_id: int = ACCOUNT_ID,
-    job_id: int = JOB_ID,
-    payload: str = PAYLOAD,
-    poll_interval: int = typer.Option(
-        10, '--poll-interval', help='Number of seconds to wait in between polling.'
-    ),
-):
-    """Trigger job and poll until completion (success or failure)."""
-    _dbt_cloud_request(
-        ctx,
-        'trigger_job_and_poll',
-        account_id,
-        job_id,
-        json.loads(payload),
+        should_poll=should_poll,
         poll_interval=poll_interval,
+        restart_from_failure=restart_from_failure,
     )
 
 
