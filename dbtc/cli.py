@@ -977,7 +977,7 @@ def trigger_job(
     should_poll: bool = typer.Option(
         True,
         help='Poll until job completion (status is one of success, failure, or '
-        'cancelled',
+        'cancelled)',
     ),
     poll_interval: int = typer.Option(
         10, '--poll-interval', help='Number of seconds to wait in between polling.'
