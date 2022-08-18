@@ -9,7 +9,21 @@ import requests
 
 # first party
 from dbtc.client.base import _Client
-from dbtc.client.metadata import _MetadataClient
+
+
+class JobRunStatus(enum.IntEnum):
+    QUEUED = 1
+    STARTING = 2
+    RUNNING = 3
+    SUCCESS = 10
+    ERROR = 20
+    CANCELLED = 30
+
+
+COMMAND_TYPES = {
+    'run': ['dbt build', 'dbt test', 'dbt run', 'dbt seed', 'dbt snapshot'],
+    'other': ['dbt run-operation', 'dbt source', 'dbt docs generate'],
+}
 
 
 def _version_decorator(func, version):
@@ -25,15 +39,6 @@ def _version_decorator(func, version):
 v2 = partial(_version_decorator, version='v2')
 v3 = partial(_version_decorator, version='v3')
 v4 = partial(_version_decorator, version='v4')
-
-
-class JobRunStatus(enum.IntEnum):
-    QUEUED = 1
-    STARTING = 2
-    RUNNING = 3
-    SUCCESS = 10
-    ERROR = 20
-    CANCELLED = 30
 
 
 class _CloudClient(_Client):
@@ -978,9 +983,6 @@ class _CloudClient(_Client):
         should_poll: bool = True,
         poll_interval: int = 10,
         restart_from_failure: bool = False,
-        restart_commands: List = ['build'],
-        before_steps: List = None,
-        after_steps: List = None,
     ):
         """Trigger a job by its ID
 
@@ -994,46 +996,135 @@ class _CloudClient(_Client):
                 polling
             restart_from_failure (bool, optional): Restart your job from the point of
                 failure
-            restart_commands (list, optional): Command pattern to follow for restart.
-                One of `['build']` or `['run', 'test']`
-            before_steps (list, optional): Steps to run prior to the restart commands
-            after_steps (list, optional): Steps to run after the restart commands
         """
-        if restart_from_failure:
-            models = _MetadataClient(service_token=self.service_token).query(
-                f'{{models(jobId: {job_id}) {{name, error}}}}'
-            )
-            rerun_models = ' '.join(
-                [
-                    m['name'] + '+'
-                    for m in models['data']['models']
-                    if m['error'] is not None
-                ]
-            )
-            if rerun_models != '':
-                if restart_commands != ['build'] and restart_commands != [
-                    'run',
-                    'test',
-                ]:
-                    raise Exception('Invalid restart commands specified')
 
-                restart_steps = [
-                    f'dbt {command} -s {rerun_models}' for command in restart_commands
-                ]
-                steps = (before_steps or []) + restart_steps + (after_steps or [])
-                payload.update({'steps_override': steps})
+        def run_status_formatted(run: Dict, time: float) -> str:
+            """Format a string indicating status of job.
+            Args:
+                run (dict): Dictionary representation of a Run
+                time (float): Elapsed time since job triggered
+            """
+            status = JobRunStatus(run['data']['status']).name
+            url = run['data']['href']
+            try:
+                step = run['data']['run_steps'][-1]
+                current_step = f'{step["index"]}. {step["name"]}'
+            except IndexError:
+                current_step = 'N/A'
+            return (
+                f'Status: "{status.capitalize()}", Elapsed time: {round(time, 0)}s'
+                f', Current step: "{current_step}", View here: {url}'
+            )
+
+        def step_meets_condition(
+            step: Dict,
+            command_type: str = 'run',
+            statuses: List[str] = ['error', 'skipped', 'failed'],
+        ) -> bool:
+            return (
+                any(command in step['name'] for command in COMMAND_TYPES[command_type])
+                and step['status_humanized'].lower() in statuses
+            )
+
+        if restart_from_failure:
+            self.console.log(f'Restarting job {job_id} from last failed state.')
+            last_run_data = self.list_runs(
+                account_id=account_id,
+                include_related=['run_steps'],
+                job_definition_id=job_id,
+                order_by='-id',
+                limit=1,
+            )['data'][0]
+
+            last_run_status = last_run_data['status_humanized'].lower()
+            last_run_id = last_run_data['id']
+
+            if last_run_status == 'error':
+                rerun_steps = []
+
+                all_commands = COMMAND_TYPES['run'] + COMMAND_TYPES['other']
+                for run_step in last_run_data['run_steps']:
+
+                    # get the dbt command used within this step
+                    try:
+                        command = [
+                            cmd for cmd in all_commands if cmd in run_step['name']
+                        ][0]
+                    except IndexError:
+                        self.console.log(
+                            f'Skipping rerun for command "{run_step["name"]}" '
+                            'as it does not need to be repeated.'
+                        )
+                    else:
+
+                        # errors and failures are when we need to inspect to figure
+                        # out the point of failure
+                        if step_meets_condition(run_step, 'run', ['error', 'failed']):
+
+                            # get the run results scoped to the step which had an error
+                            step_results = self.get_run_artifact(
+                                account_id=account_id,
+                                run_id=last_run_id,
+                                path='run_results.json',
+                                step=run_step['index'],
+                            )['results']
+
+                            rerun_nodes = ' '.join(
+                                [
+                                    record['unique_id'].split('.')[2]
+                                    for record in step_results
+                                    if record['status']
+                                    in ['error', 'skipped', 'failed']
+                                ]
+                            )
+
+                            command = f'{command} -s {rerun_nodes}'
+                            rerun_steps.append(command)
+                            self.console.log(
+                                f'Modifying command "{run_step["name"]}" as an error '
+                                'or failure was encountered.'
+                            )
+                            self.console.log(f'The new command is now "{command}".')
+
+                        # skipped and other commands should be rerun entirely
+                        elif step_meets_condition(
+                            run_step, 'run', ['skipped']
+                        ) or step_meets_condition(
+                            run_step, 'other', ['error', 'skipped', 'failed']
+                        ):
+                            rerun_steps.append(command)
+
+                        else:
+                            self.console.log(
+                                f'Skipping rerun for command "{command}" as it '
+                                'succeeded on the previous iteration.'
+                            )
+
+                payload.update({"steps_override": rerun_steps})
+                self.console.log(
+                    f'Triggering modified job to re-run failed steps: {rerun_steps}'
+                )
+
+            else:
+                self.console.log(
+                    'Process triggered with restart_from_failure set to True but no '
+                    'failed run steps found - triggering base run.'
+                )
 
         run = self._simple_request(
             f'accounts/{account_id}/jobs/{job_id}/run/',
             method='post',
             json=payload,
         )
+        start = time.time()
+        self.console.log(f'Run triggered for job {job_id}.')
         if should_poll:
             run_id = run['data']['id']
             while True:
                 time.sleep(poll_interval)
                 run = self.get_run(account_id, run_id)
                 status = run['data']['status']
+                self.console.log(run_status_formatted(run, time.time() - start))
                 if status in [
                     JobRunStatus.SUCCESS,
                     JobRunStatus.CANCELLED,
