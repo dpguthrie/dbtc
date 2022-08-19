@@ -1018,8 +1018,8 @@ class _CloudClient(_Client):
 
         def step_meets_condition(
             step: Dict,
-            command_type: str = 'run',
-            statuses: List[str] = ['error', 'skipped', 'failed'],
+            command_type: str,
+            statuses: List[str],
         ) -> bool:
             return (
                 any(command in step['name'] for command in COMMAND_TYPES[command_type])
