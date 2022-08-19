@@ -2,7 +2,6 @@
 from typing import Dict
 
 # third party
-import requests
 from sgqlc.endpoint.http import HTTPEndpoint
 from sgqlc.operation import Operation
 
@@ -14,8 +13,6 @@ from dbtc.client.metadata.schema import Query
 class _MetadataClient(_Client):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.session = requests.Session()
-        self.session.headers = self.headers
 
     _header_property = 'service_token'
     _default_domain = 'metadata.cloud.getdbt.com'
@@ -32,10 +29,6 @@ class _MetadataClient(_Client):
         ).__fields__()
         data = self._endpoint(op)
         return data
-
-    def query(self, query: str):
-        response = self.session.post(self.full_url(), json={'query': query})
-        return response.json()
 
     def get_exposure(self, job_id: int, name: str, *, run_id: int = None) -> Dict:
         """
