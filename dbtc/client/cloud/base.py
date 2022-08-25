@@ -1131,7 +1131,8 @@ class _CloudClient(_Client):
                     JobRunStatus.ERROR,
                 ]:
                     break
-
+        else:
+            self.console.log(run_status_formatted(run, time.time() - start))
         return run
 
     @v3
