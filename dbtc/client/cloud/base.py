@@ -1132,7 +1132,7 @@ class _CloudClient(_Client):
                 ]:
                     break
         else:
-            self.console.log(run_status_formatted(run, time.time() - start))
+            self.console.log(f'View run:  {run["data"]["href"]}')
         return run
 
     @v3
