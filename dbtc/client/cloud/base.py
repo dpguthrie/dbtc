@@ -1042,15 +1042,14 @@ class _CloudClient(_Client):
             if last_run_status == 'error':
                 rerun_steps = []
 
+                # Ensure run-operation
                 all_commands = COMMAND_TYPES['other'] + COMMAND_TYPES['run']
                 for run_step in last_run_data['run_steps']:
 
                     # get the dbt command used within this step
-                    try:
-                        command = [
-                            cmd for cmd in all_commands if cmd in run_step['name']
-                        ][0]
-                    except IndexError:
+                    command = run_step['name'].partition('`')[2].partition('`')[0]
+                    command_exists = any(cmd for cmd in all_commands if cmd in command)
+                    if not command_exists:
                         self.console.log(
                             f'Skipping rerun for command "{run_step["name"]}" '
                             'as it does not need to be repeated.'
@@ -1078,13 +1077,17 @@ class _CloudClient(_Client):
                                 ]
                             )
 
-                            command = f'{command} -s {rerun_nodes}'
-                            rerun_steps.append(command)
+                            modified_command = (
+                                f'{command.split(" ")[0:2]} -s {rerun_nodes}'
+                            )
+                            rerun_steps.append(modified_command)
                             self.console.log(
-                                f'Modifying command "{run_step["name"]}" as an error '
+                                f'Modifying command "{command}" as an error '
                                 'or failure was encountered.'
                             )
-                            self.console.log(f'The new command is now "{command}".')
+                            self.console.log(
+                                f'The new command is now "{modified_command}".'
+                            )
 
                         # skipped and other commands should be rerun entirely
                         elif step_meets_condition(
@@ -1092,11 +1095,11 @@ class _CloudClient(_Client):
                         ) or step_meets_condition(
                             run_step, 'other', ['error', 'skipped', 'failed']
                         ):
-                            rerun_steps.append(run_step['name'])
+                            rerun_steps.append(command)
 
                         else:
                             self.console.log(
-                                f'Skipping rerun for command "{run_step["name"]}" as '
+                                f'Skipping rerun for command "{command}" as '
                                 'it succeeded on the previous iteration.'
                             )
 
@@ -1116,6 +1119,7 @@ class _CloudClient(_Client):
             method='post',
             json=payload,
         )
+        self.console.log(run)
         start = time.time()
         self.console.log(f'Run triggered for job {job_id}.')
         if should_poll:
