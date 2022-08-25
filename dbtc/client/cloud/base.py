@@ -1042,7 +1042,7 @@ class _CloudClient(_Client):
             if last_run_status == 'error':
                 rerun_steps = []
 
-                all_commands = COMMAND_TYPES['run'] + COMMAND_TYPES['other']
+                all_commands = COMMAND_TYPES['other'] + COMMAND_TYPES['run']
                 for run_step in last_run_data['run_steps']:
 
                     # get the dbt command used within this step
@@ -1092,12 +1092,12 @@ class _CloudClient(_Client):
                         ) or step_meets_condition(
                             run_step, 'other', ['error', 'skipped', 'failed']
                         ):
-                            rerun_steps.append(command)
+                            rerun_steps.append(run_step['name'])
 
                         else:
                             self.console.log(
-                                f'Skipping rerun for command "{command}" as it '
-                                'succeeded on the previous iteration.'
+                                f'Skipping rerun for command "{run_step["name"]}" as '
+                                'it succeeded on the previous iteration.'
                             )
 
                 payload.update({"steps_override": rerun_steps})
