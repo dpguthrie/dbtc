@@ -1078,7 +1078,7 @@ class _CloudClient(_Client):
                             )
 
                             modified_command = (
-                                f'{command.split(" ")[0:2]} -s {rerun_nodes}'
+                                f'{" ".join(command.split(" ")[0:2])} -s {rerun_nodes}'
                             )
                             rerun_steps.append(modified_command)
                             self.console.log(
