@@ -1135,6 +1135,8 @@ class _CloudClient(_Client):
                     JobRunStatus.ERROR,
                 ]:
                     break
+        else:
+            self.console.log(f'View run: {run["data"]["href"]}')
 
         return run
 
