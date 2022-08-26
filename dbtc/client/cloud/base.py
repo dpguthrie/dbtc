@@ -21,9 +21,10 @@ class JobRunStatus(enum.IntEnum):
 
 
 COMMAND_TYPES = {
-    'run': ['dbt build', 'dbt test', 'dbt run', 'dbt seed', 'dbt snapshot'],
     'other': ['dbt run-operation', 'dbt source', 'dbt docs generate'],
+    'run': ['dbt build', 'dbt test', 'dbt run', 'dbt seed', 'dbt snapshot'],
 }
+ALL_COMMANDS = [i for k, v in COMMAND_TYPES.items() for i in v]
 
 
 def _version_decorator(func, version):
@@ -983,6 +984,7 @@ class _CloudClient(_Client):
         should_poll: bool = True,
         poll_interval: int = 10,
         restart_from_failure: bool = False,
+        trigger_on_failure_only: bool = False,
     ):
         """Trigger a job by its ID
 
@@ -996,6 +998,11 @@ class _CloudClient(_Client):
                 polling
             restart_from_failure (bool, optional): Restart your job from the point of
                 failure
+            trigger_on_failure_only (bool, optional): Only relevant when setting
+                restart_from_failure to True.  This has the effect of only triggering
+                the job when the prior invocation was not successful. Otherwise, the
+                function will exit prior to triggering the job.
+
         """
 
         def run_status_formatted(run: Dict, time: float) -> str:
@@ -1042,14 +1049,11 @@ class _CloudClient(_Client):
             if last_run_status == 'error':
                 rerun_steps = []
 
-                # Ensure run-operation
-                all_commands = COMMAND_TYPES['other'] + COMMAND_TYPES['run']
                 for run_step in last_run_data['run_steps']:
 
                     # get the dbt command used within this step
                     command = run_step['name'].partition('`')[2].partition('`')[0]
-                    command_exists = any(cmd for cmd in all_commands if cmd in command)
-                    if not command_exists:
+                    if not any(cmd for cmd in ALL_COMMANDS if cmd in command):
                         self.console.log(
                             f'Skipping rerun for command "{run_step["name"]}" '
                             'as it does not need to be repeated.'
@@ -1085,9 +1089,6 @@ class _CloudClient(_Client):
                                 f'Modifying command "{command}" as an error '
                                 'or failure was encountered.'
                             )
-                            self.console.log(
-                                f'The new command is now "{modified_command}".'
-                            )
 
                         # skipped and other commands should be rerun entirely
                         elif step_meets_condition(
@@ -1111,18 +1112,22 @@ class _CloudClient(_Client):
             else:
                 self.console.log(
                     'Process triggered with restart_from_failure set to True but no '
-                    'failed run steps found - triggering base run.'
+                    'failed run steps found.'
                 )
+                if trigger_on_failure_only:
+                    self.console.log(
+                        'Not triggering job because prior run was successful.'
+                    )
+                    return
 
         run = self._simple_request(
             f'accounts/{account_id}/jobs/{job_id}/run/',
             method='post',
             json=payload,
         )
-        self.console.log(run)
-        start = time.time()
         self.console.log(f'Run triggered for job {job_id}.')
         if should_poll:
+            start = time.time()
             run_id = run['data']['id']
             while True:
                 time.sleep(poll_interval)

@@ -985,6 +985,15 @@ def trigger_job(
     restart_from_failure: bool = typer.Option(
         False, help='Restart your job from the point of failure'
     ),
+    trigger_on_failure_only: bool = typer.Option(
+        False,
+        help=(
+            'Only relevant when setting restart_from_failure to True.  This has the '
+            'effect of only triggering the job when the prior invocation was not '
+            'successful. Otherwise, the function will exit prior to triggering the '
+            'job.'
+        ),
+    ),
 ):
     """Trigger job to run."""
     _dbt_cloud_request(
@@ -996,6 +1005,7 @@ def trigger_job(
         should_poll=should_poll,
         poll_interval=poll_interval,
         restart_from_failure=restart_from_failure,
+        trigger_on_failure_only=trigger_on_failure_only,
     )
 
 
