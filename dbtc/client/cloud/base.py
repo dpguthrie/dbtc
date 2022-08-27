@@ -1029,11 +1029,7 @@ class _CloudClient(_Client):
             statuses: List[str],
         ) -> bool:
             return (
-                # Ensures that dbt run doesn't also match dbt run-operation
-                any(
-                    f'{command} ' in step['name']
-                    for command in COMMAND_TYPES[command_type]
-                )
+                any(command in step['name'] for command in COMMAND_TYPES[command_type])
                 and step['status_humanized'].lower() in statuses
             )
 
@@ -1064,9 +1060,17 @@ class _CloudClient(_Client):
                         )
                     else:
 
+                        # skipped and other commands should be rerun entirely
+                        if step_meets_condition(
+                            run_step, 'run', ['skipped']
+                        ) or step_meets_condition(
+                            run_step, 'other', ['error', 'skipped', 'failed']
+                        ):
+                            rerun_steps.append(command)
+
                         # errors and failures are when we need to inspect to figure
                         # out the point of failure
-                        if step_meets_condition(run_step, 'run', ['error', 'failed']):
+                        elif step_meets_condition(run_step, 'run', ['error', 'failed']):
 
                             # get the run results scoped to the step which had an error
                             step_results = self.get_run_artifact(
@@ -1092,14 +1096,6 @@ class _CloudClient(_Client):
                                 f'Modifying command "{command}" as an error '
                                 'or failure was encountered.'
                             )
-
-                        # skipped and other commands should be rerun entirely
-                        elif step_meets_condition(
-                            run_step, 'run', ['skipped']
-                        ) or step_meets_condition(
-                            run_step, 'other', ['error', 'skipped', 'failed']
-                        ):
-                            rerun_steps.append(command)
 
                         else:
                             self.console.log(
