@@ -1029,7 +1029,11 @@ class _CloudClient(_Client):
             statuses: List[str],
         ) -> bool:
             return (
-                any(command in step['name'] for command in COMMAND_TYPES[command_type])
+                # Ensures that dbt run doesn't also match dbt run-operation
+                any(
+                    f'{command} ' in step['name']
+                    for command in COMMAND_TYPES[command_type]
+                )
                 and step['status_humanized'].lower() in statuses
             )
 
@@ -1076,8 +1080,7 @@ class _CloudClient(_Client):
                                 [
                                     record['unique_id'].split('.')[2]
                                     for record in step_results
-                                    if record['status']
-                                    in ['error', 'skipped', 'failed']
+                                    if record['status'] in ['error', 'skip', 'fail']
                                 ]
                             )
 
