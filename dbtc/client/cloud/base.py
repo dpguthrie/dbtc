@@ -1,5 +1,7 @@
 # stdlib
+import argparse
 import enum
+import shlex
 import time
 from functools import partial, wraps
 from typing import Dict, List
@@ -1049,6 +1051,11 @@ class _CloudClient(_Client):
             if last_run_status == 'error':
                 rerun_steps = []
 
+                # Set up argument parser to parse the step's command for args and vars
+                parser = argparse.ArgumentParser(description='Argparse Test script')
+                parser.add_argument("--args", help='dbt macro arguments')
+                parser.add_argument("--vars", help='dbt command line variables')
+
                 for run_step in last_run_data['run_steps']:
 
                     # get the dbt command used within this step
@@ -1091,6 +1098,14 @@ class _CloudClient(_Client):
                             modified_command = (
                                 f'{" ".join(command.split(" ")[0:2])} -s {rerun_nodes}'
                             )
+                            parsed_command, _ = parser.parse_known_args(
+                                shlex.split(command)
+                            )
+                            if parsed_command.args:
+                                modified_command += f" --args '{parsed_command.args}'"
+
+                            if parsed_command.vars:
+                                modified_command += f" --vars '{parsed_command.vars}'"
                             rerun_steps.append(modified_command)
                             self.console.log(
                                 f'Modifying command "{command}" as an error '
