@@ -16,6 +16,11 @@ JOB_ASSERTIONS = {
     121826: ['dbt test -s unique_good_model_clerk_name'],
     121830: ['dbt seed -s bad_seed'],
     121832: ['dbt snapshot -s bad_snapshot'],
+    122458: ['dbt run -s bad_model --vars \'{"key": "value"}\''],
+    122473: [
+        'dbt build -s unique_good_model_clerk_name --vars \'{key: value, other_key: other_value}\'',  # noqa: E501
+        'dbt run-operation good_macro --args \'{arg_1: value_1}\'',
+    ],
 }
 
 ACCOUNT_ID = 43786
