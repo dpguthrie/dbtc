@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.0] - 2022-08-30
+
+### Added
+- The ability to restart a job from failure.  The `trigger_job` method now accepts an argument `restart_from_failure` (default `False`) that will determine whether or not the last run attempt for a job was unsuccessful - in the event it was, it will parse the steps within that job and find the nodes that it needs to rerun as well as any steps that were skipped entirely.
+- Additional commands to the `trigger_job` method:
+  - `should_poll` - Indicate whether or not the method should poll for completion (default `True`)
+  - `poll_interval` - How long in between polling requests (default 10 seconds)
+  - `restart_from_failure` - Described above
+  - `trigger_on_failure_only` - Only relevant when setting `restart_from_failure` to `True`.  This has the effect, when set to `True`, of only triggering the job when the prior invocation was not successful.  Otherwise, the function will exit prior to triggering the job (default `False`)
+- Logging to stderr when using the `trigger_job` method (internally using the `rich` package that comes when installing `Typer`)
+- Multiple tests for the `restart_from_failure` functionality
+
+### Removed
+- The `trigger_job_and_poll` method within the `cloud` property of the `dbtCloudClient` class.  The polling functionality is now rolled up into the single `trigger_job` method with the argument `should_poll` (default is `True`)
+
 ## [0.1.4] - 2022-07-11
 
 ### Added
