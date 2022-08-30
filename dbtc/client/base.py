@@ -2,6 +2,9 @@
 import abc
 import os
 
+# first party
+from dbtc.console import err_console
+
 
 class _Client(abc.ABC):
     def __init__(
@@ -14,6 +17,7 @@ class _Client(abc.ABC):
         self.api_key = api_key or os.getenv('DBT_CLOUD_API_KEY', None)
         self.service_token = service_token or os.getenv('DBT_CLOUD_SERVICE_TOKEN', None)
         self._host = host or os.getenv('DBT_CLOUD_HOST', self._default_domain)
+        self.console = err_console
 
     @property
     @abc.abstractmethod
