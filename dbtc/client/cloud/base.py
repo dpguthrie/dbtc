@@ -1090,7 +1090,7 @@ class _CloudClient(_Client):
                                 [
                                     record['unique_id'].split('.')[2]
                                     for record in step_results
-                                    if record['status'] in ['error', 'skip', 'fail']
+                                    if record['status'] in ['error', 'skipped', 'fail']
                                 ]
                             )
 
