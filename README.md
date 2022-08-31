@@ -118,15 +118,13 @@ dbtc trigger-job \
 Similarly, for the metadata example above:
 
 ```bash
-dbtc get-models \
-    --job-id 1
+dbtc get-models --job-id 1
 ```
 
 If not setting your service token as an environment variable, do the following:
 
 ```bash
-dbtc --token this_is_my_token get_models \
-    --job-id 1
+dbtc --token this_is_my_token get_models --job-id 1
 ```
 
 ## License
