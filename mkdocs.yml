@@ -16,6 +16,7 @@ theme:
   features:
     - navigation.instant
     - navigation.tracking
+    - navigation.top
     - search.suggest
     - search.highlight
     - search.share
@@ -27,7 +28,7 @@ theme:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
-      primary: white
+      primary: black
       scheme: slate
       toggle:
         icon: material/toggle-switch
@@ -95,6 +96,7 @@ nav:
   - User Guide:
     - guide/intro.md
     - guide/cloud.md
+    - guide/restart_from_failure.md
     - guide/metadata.md
   - changelog.md
 

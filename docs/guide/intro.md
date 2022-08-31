@@ -1,6 +1,8 @@
 # Introduction
 
-## Class
+## Python
+
+### Class
 
 The `dbtCloudClient` class is the main interface through which you will interact with dbt Cloud API endpoints.  The class accepts three optional arguments:
 
@@ -33,7 +35,7 @@ client = dbtCloudClient()
 !!! info
     The `host` argument is only necessary for customers on single-tenant instances
 
-### Properties
+### Interfaces
 
 The `dbtCloudClient` class contains two properties:
 
