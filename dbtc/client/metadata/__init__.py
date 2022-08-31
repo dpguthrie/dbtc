@@ -36,16 +36,16 @@ class _MetadataClient(_Client):
             exposure. You can learn more about exposures [here](
             https://docs.getdbt.com/docs/building-a-dbt-project/exposures).
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this expsoure was
+                generated for
+            name (str): The name of this particular exposure
+            run_id (int, optional): The run ID of the run in dbt Cloud that this
+                exposure was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            unique_id (str): The unique ID of this particular model
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "exposure",
@@ -63,15 +63,15 @@ class _MetadataClient(_Client):
             given job. You can learn more about exposures [here](
             https://docs.getdbt.com/docs/building-a-dbt-project/exposures).
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this exposure was
+                generated for
+            run_id (int, optional): The run ID of the run in dbt Cloud that this
+                exposure was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "exposures",
@@ -89,16 +89,16 @@ class _MetadataClient(_Client):
         The macro object allows you to query information about a particular macro in a
         given job.
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this macro was
+                generated for
+            unique_id (str): The unique ID of this particular macro
+            run_id (int, optional): The run ID of the run in dbt Cloud that this macro
+                was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            unique_id (str): The unique ID of this particular model
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "macro",
@@ -115,15 +115,15 @@ class _MetadataClient(_Client):
         The macros object allows you to query information about all macros in a
             given job.
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this macro was
+                generated for
+            run_id (int, optional): The run ID of the run in dbt Cloud that this macro
+                was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request("macros", {"job_id": job_id, "run_id": run_id})
 
@@ -138,16 +138,16 @@ class _MetadataClient(_Client):
         The metric object allows you to query information about [metrics](
             https://docs.getdbt.com/docs/building-a-dbt-project/metrics).
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this metric was
+                generated for
+            unique_id (str): The unique ID of this particular metric
+            run_id (int, optional): The run ID of the run in dbt Cloud that this metric
+                was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            unique_id (str): The unique ID of this particular model
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "metric",
@@ -164,15 +164,15 @@ class _MetadataClient(_Client):
         The metrics object allows you to query information about [metrics](
             https://docs.getdbt.com/docs/building-a-dbt-project/metrics).
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this metric was
+                generated for
+            run_id (int, optional): The run ID of the run in dbt Cloud that this metric
+                was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request("metrics", {"job_id": job_id, "run_id": run_id})
 
@@ -187,16 +187,16 @@ class _MetadataClient(_Client):
         The model object allows you to query information about a particular model in a
         given job.
 
-        Note:
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-
         Args:
             job_id (int): The unique ID of the job in dbt Cloud that this model was
                 generated for
             unique_id (str): The unique ID of this particular model
             run_id (int, optional): The run ID of the run in dbt Cloud that this model
                 was generated for
+
+        !!! note
+            If you do not include a run_id, it will default to the most recent run of
+            the specified job.
         """
         return self._make_request(
             "model",
@@ -213,7 +213,7 @@ class _MetadataClient(_Client):
         """The model by environment object allows you to query information about a
         particular model based on environment_id
 
-        Note:
+        !!! warning
             This feature is currently in beta and subject to change.
 
         Args:
@@ -223,6 +223,10 @@ class _MetadataClient(_Client):
                 was built to return (max of 10). Defaults to 10.
             with_catalog (bool, optional): If true, return only runs that have catalog
                 information for this model. Defaults to False.
+
+        !!! note
+            If you do not include a run_id, it will default to the most recent run of
+            the specified job.
         """
         return self._make_request(
             "model_by_environment",
@@ -247,10 +251,6 @@ class _MetadataClient(_Client):
         The models object allows you to query information about all models in a given
             job.
 
-        Note:
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-
         Args:
             job_id (int): The unique ID of the job in dbt Cloud that this model was
                 generated for
@@ -259,6 +259,10 @@ class _MetadataClient(_Client):
             database (str, optional): The database where this table/view lives
             schema (str, optional): The schema where this table/view lives
             identifier (str, optional): The identifier of this table/view
+
+        !!! note
+            If you do not include a run_id, it will default to the most recent run of
+            the specified job.
         """
         return self._make_request(
             "models",
@@ -282,16 +286,16 @@ class _MetadataClient(_Client):
         The seed object allows you to query information about a particular seed in a
             given job.
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this seed was
+                generated for
+            unique_id (str): The unique ID of this particular seed
+            run_id (int, optional): The run ID of the run in dbt Cloud that this seed
+                was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            unique_id (str): The unique ID of this particular model
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "seed",
@@ -308,15 +312,15 @@ class _MetadataClient(_Client):
         The seeds object allows you to query information about a all seeds in a given
             job.
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this seed was
+                generated for
+            run_id (int, optional): The run ID of the run in dbt Cloud that this seed
+                was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "seeds",
@@ -334,16 +338,16 @@ class _MetadataClient(_Client):
         The snapshot object allows you to query information about a particular
             snapshot.
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this snapshot was
+                generated for
+            unique_id (str): The unique ID of this particular snapshot
+            run_id (int, optional): The run ID of the run in dbt Cloud that this
+                snapshot was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            unique_id (str): The unique ID of this particular model
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "snapshot",
@@ -360,15 +364,16 @@ class _MetadataClient(_Client):
         The snapshots object allows you to query information about all snapshots in a
             given job.
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this snapshot was
+                generated for
+            run_id (int, optional): The run ID of the run in dbt Cloud that this
+                snapshot was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
 
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "snapshots",
@@ -389,16 +394,16 @@ class _MetadataClient(_Client):
         The source object allows you to query information about a particular source in
             a given job.
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this source was
+                generated for
+            unique_id (str): The unique ID of this particular source
+            run_id (int, optional): The run ID of the run in dbt Cloud that this source
+                was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            unique_id (str): The unique ID of this particular model
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "source",
@@ -418,18 +423,18 @@ class _MetadataClient(_Client):
         The snapshots object allows you to query information about all snapshots in a
             given job.
 
-        Note:
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-
         Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
+            job_id (int): The unique ID of the job in dbt Cloud that this source was
                 generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
+            run_id (int, optional): The run ID of the run in dbt Cloud that this source
                 was generated for
             database (str, optional): The database where this table/view lives
             schema (str, optional): The schema where this table/view lives
             identifier (str, optional): The identifier of this table/view
+
+        !!! note
+            If you do not include a run_id, it will default to the most recent run of
+            the specified job.
         """
         return self._make_request(
             "sources",
@@ -452,16 +457,16 @@ class _MetadataClient(_Client):
         """
         The test object allows you to query information about a particular test.
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this test was
+                generated for
+            unique_id (str): The unique ID of this particular test
+            run_id (int, optional): The run ID of the run in dbt Cloud that this test
+                was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            unique_id (str): The unique ID of this particular model
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "test", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}
@@ -477,15 +482,15 @@ class _MetadataClient(_Client):
         The tests object allows you to query information about all tests in a given
             job.
 
-        Note:
+        Args:
+            job_id (int): The unique ID of the job in dbt Cloud that this test was
+                generated for
+            run_id (int, optional): The run ID of the run in dbt Cloud that this test
+                was generated for
+
+        !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
         """
         return self._make_request(
             "tests",

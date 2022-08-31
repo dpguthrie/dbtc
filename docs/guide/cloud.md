@@ -725,8 +725,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ### trigger_job
 ::: dbtc.client.cloud.base._CloudClient.trigger_job
-### trigger_job_and_poll
-::: dbtc.client.cloud.base._CloudClient.trigger_job_and_poll
+
 ### update_job
 ::: dbtc.client.cloud.base._CloudClient.update_job
 

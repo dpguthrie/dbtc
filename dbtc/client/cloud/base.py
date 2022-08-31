@@ -969,7 +969,6 @@ class _CloudClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
             payload (dict): Dictionary representing the connection to test
         """
         return self._simple_request(
