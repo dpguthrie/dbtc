@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.1] - 2022-08-31
+
+### Fixed
+- Checking for an invalid result "skip" instead of "skipped" when identifying nodes that need to be reran.
+
 ## [0.2.0] - 2022-08-30
 
 ### Added
