@@ -59,17 +59,74 @@ pip install dbtc
 
 The interface to both APIs are located in the `dbtCloudClient` class.
 
-The example below shows how you use the `cloud` property on an instance of the `dbtCloudClient` class to access methods that allow for programmatic control over dbt Cloud resources.
+The example below shows how you use the `cloud` property on an instance of the `dbtCloudClient` class to to access a method, `trigger_job`, that with certain arguments, allows you to restart a job from the point of failure.
+
+```python
+from dbtc import dbtCloudClient
+
+# Assumes that DBT_CLOUD_SERVICE_TOKEN env var is set
+client = dbtCloudClient()
+
+account_id = 1
+job_id = 1
+payload = {'cause': 'Restarting from failure'}
+
+run = client.cloud.trigger_job(
+    account_id,
+    job_id,
+    payload,
+    restart_from_failure=True,
+    should_poll=False,
+)
+
+# This returns a dictionary containing two keys
+run['data']
+run['status']
+```
+
+Similarly, use the `metadata` property to retrieve information about certain resources within your project - the example below shows how to retrieve metadata from models related to the most recent run for a given `job_id`.
 
 ```python
 from dbtc import dbtCloudClient
 
 client = dbtCloudClient()
 
-account = client.cloud.get_account_by_name('My Account')
-project = client.cloud.get_project_by_name(account['id'], 'My Project')
+job_id = 1
 
-run_id = client.cloud.trigger_job_and_poll()
+models = client.metadata.get_models(job_id)
+
+# Models nested inside a couple keys
+models['data']['models']
+
+# This is a list
+models['data']['models'][0]
+```
+
+### CLI
+
+The CLI example below will map to the python cloud example above:
+
+```bash
+dbtc trigger-job \
+    --account-id 1
+    --job-id 1
+    --payload '{"cause": "Restarting from failure"}' \
+    --restart_from_failure \
+    --no-should-poll
+```
+
+Similarly, for the metadata example above:
+
+```bash
+dbtc get-models \
+    --job-id 1
+```
+
+If not setting your service token as an environment variable, do the following:
+
+```bash
+dbtc --token this_is_my_token get_models \
+    --job-id 1
 ```
 
 ## License
