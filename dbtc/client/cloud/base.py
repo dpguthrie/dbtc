@@ -25,9 +25,11 @@ class JobRunStatus(enum.IntEnum):
 COMMAND_TYPES = {
     'other': ['dbt run-operation', 'dbt source', 'dbt docs generate'],
     'run': ['dbt build', 'dbt test', 'dbt run', 'dbt seed', 'dbt snapshot'],
+    '--fail-fast': ['dbt build', 'dbt test', 'dbt run', 'dbt seed', 'dbt snapshot'],
 }
 ALL_COMMANDS = [i for k, v in COMMAND_TYPES.items() for i in v]
 
+DBT_GLOBAL_CONFIGS = ['--warn-error', '--use-experimental-parser']
 
 def _version_decorator(func, version):
     @wraps(func)
@@ -1030,7 +1032,7 @@ class _CloudClient(_Client):
             statuses: List[str],
         ) -> bool:
             return (
-                any(command in step['name'] for command in COMMAND_TYPES[command_type])
+                any(command in step['check_command'] for command in COMMAND_TYPES[command_type])
                 and step['status_humanized'].lower() in statuses
             )
 
@@ -1051,28 +1053,50 @@ class _CloudClient(_Client):
                 rerun_steps = []
 
                 # Set up argument parser to parse the step's command for args and vars
-                parser = argparse.ArgumentParser(description='Argparse Test script')
+                parser = argparse.ArgumentParser(description='Parser for dbt CLI variables')
+                # named arguments
                 parser.add_argument("--args", help='dbt macro arguments')
                 parser.add_argument("--vars", help='dbt command line variables')
+                # booleans
+                parser.add_argument("--warn-error", help="elevate warnings as errors", action='store_true')
+                parser.add_argument("--full-refresh", help="whether to terminate dbt run immediately on error. This means no run_results.json!", action='store_true')
+                parser.add_argument("--use-experimental-parser", help="use the experimental parser", action='store_true')
 
                 for run_step in last_run_data['run_steps']:
-
                     # get the dbt command used within this step
-                    command = run_step['name'].partition('`')[2].partition('`')[0]
-                    if not any(cmd for cmd in ALL_COMMANDS if cmd in command):
+                    original_command = run_step['name'].partition('`')[2].partition('`')[0]
+                    check_command = run_step['name'].partition('`')[2].partition('`')[0]
+                    parsed_command, _ = parser.parse_known_args(
+                                shlex.split(original_command)
+                            )
+
+                    # identify any global CLI args and remove them to be added later
+                    identified_global_configs = []
+                    for cfg in DBT_GLOBAL_CONFIGS:
+                        cfg_cli_format = cfg.replace('--', '').replace('-', '_')
+                        if parsed_command.__dict__[cfg_cli_format]:
+                            check_command = check_command.replace(f'{cfg} ', '')
+                            identified_global_configs.append(cfg)
+
+                    if not any(cmd for cmd in ALL_COMMANDS if cmd in check_command):
                         self.console.log(
                             f'Skipping rerun for command "{run_step["name"]}" '
                             'as it does not need to be repeated.'
                         )
                     else:
-
+                        run_step['check_command'] = check_command
                         # skipped and other commands should be rerun entirely
                         if step_meets_condition(
                             run_step, 'run', ['skipped']
                         ) or step_meets_condition(
                             run_step, 'other', ['error', 'skipped', 'failed']
+                        
+                        # fail fast is a special case, where we need to restart the command entirely 
+                        # because there are no run results to inspect!
+                        ) or step_meets_condition(
+                            run_step, '--fail-fast', ['error', 'skipped', 'failed']
                         ):
-                            rerun_steps.append(command)
+                            rerun_steps.append(original_command)
 
                         # errors and failures are when we need to inspect to figure
                         # out the point of failure
@@ -1095,25 +1119,28 @@ class _CloudClient(_Client):
                             )
 
                             modified_command = (
-                                f'{" ".join(command.split(" ")[0:2])} -s {rerun_nodes}'
+                                f'{" ".join(check_command.split(" ")[0:2])} -s {rerun_nodes}'
                             )
-                            parsed_command, _ = parser.parse_known_args(
-                                shlex.split(command)
-                            )
+                            
                             if parsed_command.args:
                                 modified_command += f" --args '{parsed_command.args}'"
 
                             if parsed_command.vars:
                                 modified_command += f" --vars '{parsed_command.vars}'"
+                            
+                            for cfg in identified_global_configs:
+                                modified_command = modified_command.replace('dbt ', f'dbt {cfg} ')
+                            
                             rerun_steps.append(modified_command)
+                            
                             self.console.log(
-                                f'Modifying command "{command}" as an error '
+                                f'Modifying command "{original_command}" as an error '
                                 'or failure was encountered.'
                             )
 
                         else:
                             self.console.log(
-                                f'Skipping rerun for command "{command}" as '
+                                f'Skipping rerun for command "{original_command}" as '
                                 'it succeeded on the previous iteration.'
                             )
 
