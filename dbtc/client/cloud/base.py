@@ -1082,9 +1082,10 @@ class _CloudClient(_Client):
                         )
                         sub_command = remaining[1]
 
-                        if sub_command not in RUN_COMMANDS or (
-                            sub_command in RUN_COMMANDS and status == 'skipped'
-                        ):
+                        if (
+                            sub_command not in RUN_COMMANDS
+                            and status in ['error', 'cancelled', 'skipped']
+                        ) or (sub_command in RUN_COMMANDS and status == 'skipped'):
                             rerun_steps.append(command)
 
                         # errors and failures are when we need to inspect to figure
