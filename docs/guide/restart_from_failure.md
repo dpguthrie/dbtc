@@ -57,10 +57,45 @@ When responding to failures in a particular area of the DAG, it's often expedien
     Assuming that `DBT_CLOUD_SERVICE_TOKEN` environment variable has been set.
     ```bash
     dbtc trigger-job \
-        --account-id 43786
-        --job-id 73796
+        --account-id 1
+        --job-id 1
         --payload '{"cause": "Restarting from failure"}' \
         --restart-from-failure
+    ```
+
+=== "Github Action"
+
+    **Required**:  You'll need to create a [secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) in your repo called `DBT_CLOUD_SERVICE_TOKEN`.  The token can be obtained from [dbt Cloud](https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/service-tokens)
+
+
+    ```yaml
+    name: Restart from Failure
+    on:
+      workflow_dispatch:
+
+    jobs:
+      restart:
+        runs-on: ubuntu-latest
+        env:
+          DBT_CLOUD_SERVICE_TOKEN: ${{ secrets.DBT_CLOUD_SERVICE_TOKEN }}
+          DBT_CLOUD_ACCOUNT_ID: 1
+          JOB_ID: 1
+        # Optional if statement to gate this to a particular user or users
+        if: github.actor == 'dpguthrie'
+        steps:
+          - uses: actions/checkout@v2
+          - uses: actions/setup-python@v2
+            with:
+              python-version: "3.9.x"
+
+          - name: Restart Job from Failure
+            run: |
+              pip install dbtc==0.2.0
+              dbtc trigger-job \
+                  --job-id=$JOB_ID \
+                  --payload='{"cause": "Restarting job from failure"}' \
+                  --no-should-poll \
+                  --restart-from-failure
     ```
 
 === "Response"
@@ -76,10 +111,10 @@ When responding to failures in a particular area of the DAG, it's often expedien
         'data': {
             'id': 78614274,
             'trigger_id': 79329387,
-            'account_id': 43786,
-            'environment_id': xxxxx,
-            'project_id': 146089,
-            'job_definition_id': 122458,
+            'account_id': 1,
+            'environment_id': 1,
+            'project_id': 1,
+            'job_definition_id': 1,
             'status': 1,
             'dbt_version': '1.2.0-latest',
             'git_branch': None,
@@ -106,7 +141,7 @@ When responding to failures in a particular area of the DAG, it's often expedien
             'trigger': {
                 'id': 79329387,
                 'cause': 'Just cause',
-                'job_definition_id': 122458,
+                'job_definition_id': 1,
                 'git_branch': None,
                 'git_sha': None,
                 'azure_pull_request_id': None,
@@ -129,10 +164,10 @@ When responding to failures in a particular area of the DAG, it's often expedien
                 },
                 'generate_docs': False,
                 'run_generate_sources': False,
-                'id': 122458,
-                'account_id': 43786,
-                'project_id': 146089,
-                'environment_id': xxxxxx,
+                'id': 1,
+                'account_id': 1,
+                'project_id': 1,
+                'environment_id': 1,
                 'name': 'Test 10 - Restart with Vars',
                 'dbt_version': None,
                 'created_at': '2022-08-29T14:02:57.378279Z',
@@ -178,7 +213,7 @@ When responding to failures in a particular area of the DAG, it's often expedien
             'run_duration_humanized': '0 minutes',
             'created_at_humanized': '0 minutes ago',
             'finished_at_humanized': '0 minutes from now',
-            'job_id': 122458,
+            'job_id': 1,
             'is_running': None
         }
     }

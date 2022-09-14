@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.2] - 2022-09-15
+
+### Fixed
+- Global CLI args `--warn-error` and `--use-experimental-parser` were not being considered.  If they were present in the command, the modified command would have been invalid.  These are now included within the `modified_command` if present in the initial step's command.
+
+### Added
+- `--full-refresh` flag is now being pulled in the `modified_command` if present in the initial step's command.
+
+## [0.2.1] - 2022-08-31
+
+### Fixed
+- Checking for an invalid result "skip" instead of "skipped" when identifying nodes that need to be reran.
+
 ## [0.2.0] - 2022-08-30
 
 ### Added
