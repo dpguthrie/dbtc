@@ -61,8 +61,10 @@ class _CloudClient(_Client):
         self.parser = argparse.ArgumentParser()
         all_cli_args = {**GLOBAL_CLI_ARGS, **SUB_COMMAND_CLI_ARGS}
         for arg_specs in all_cli_args.values():
-            flags = arg_specs.pop('flags')
-            self.parser.add_argument(*flags, **arg_specs)
+            flags = arg_specs['flags']
+            self.parser.add_argument(
+                *flags, **{k: v for k, v in arg_specs.items() if k != 'flags'}
+            )
 
     _default_domain = 'cloud.getdbt.com'
     _path = None
