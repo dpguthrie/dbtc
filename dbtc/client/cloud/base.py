@@ -35,6 +35,7 @@ SUB_COMMAND_CLI_ARGS = {
     'args': {'flags': ('--args',)},
     'fail_fast': {'flags': ('-x', '--fail-fast'), 'action': 'store_true'},
     'full_refresh': {'flags': ('--full-refresh',), 'action': 'store_true'},
+    'store_failures': {'flags': ('--store-failures',), 'action': 'store_true'},
 }
 
 
