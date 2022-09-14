@@ -1041,6 +1041,7 @@ class _CloudClient(_Client):
             for arg in cli_args:
                 value = getattr(namespace, arg, None)
                 if value:
+                    arg = arg.replace('_', '-')
                     if isinstance(value, bool):
                         string += f' --{arg}'
                     else:
