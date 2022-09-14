@@ -4,7 +4,7 @@ import enum
 import shlex
 import time
 from functools import partial, wraps
-from typing import Dict, List
+from typing import Dict, Iterable, List
 
 # third party
 import requests
@@ -22,11 +22,20 @@ class JobRunStatus(enum.IntEnum):
     CANCELLED = 30
 
 
-COMMAND_TYPES = {
-    'other': ['dbt run-operation', 'dbt source', 'dbt docs generate'],
-    'run': ['dbt build', 'dbt test', 'dbt run', 'dbt seed', 'dbt snapshot'],
+RUN_COMMANDS = ['build', 'run', 'test', 'seed', 'snapshot']
+GLOBAL_CLI_ARGS = {
+    'warn_error': {'flags': ('--warn-error',), 'action': 'store_true'},
+    'use_experimental_parser': {
+        'flags': ('--use-experimental-parser',),
+        'action': 'store_true',
+    },
 }
-ALL_COMMANDS = [i for k, v in COMMAND_TYPES.items() for i in v]
+SUB_COMMAND_CLI_ARGS = {
+    'vars': {'flags': ('--vars',)},
+    'args': {'flags': ('--args',)},
+    'fail_fast': {'flags': ('-x', '--fail-fast'), 'action': 'store_true'},
+    'full_refresh': {'flags': ('--full-refresh',), 'action': 'store_true'},
+}
 
 
 def _version_decorator(func, version):
@@ -49,6 +58,11 @@ class _CloudClient(_Client):
         super().__init__(**kwargs)
         self.session = requests.Session()
         self.session.headers = self.headers
+        self.parser = argparse.ArgumentParser()
+        all_cli_args = {**GLOBAL_CLI_ARGS, **SUB_COMMAND_CLI_ARGS}
+        for arg_specs in all_cli_args.values():
+            flags = arg_specs.pop('flags')
+            self.parser.add_argument(*flags, **arg_specs)
 
     _default_domain = 'cloud.getdbt.com'
     _path = None
@@ -1014,25 +1028,30 @@ class _CloudClient(_Client):
             """
             status = JobRunStatus(run['data']['status']).name
             url = run['data']['href']
-            try:
-                step = run['data']['run_steps'][-1]
-                current_step = f'{step["index"]}. {step["name"]}'
-            except IndexError:
-                current_step = 'N/A'
             return (
                 f'Status: "{status.capitalize()}", Elapsed time: {round(time, 0)}s'
-                f', Current step: "{current_step}", View here: {url}'
+                f', View here: {url}'
             )
 
-        def step_meets_condition(
-            step: Dict,
-            command_type: str,
-            statuses: List[str],
-        ) -> bool:
-            return (
-                any(command in step['name'] for command in COMMAND_TYPES[command_type])
-                and step['status_humanized'].lower() in statuses
-            )
+        def build_modified_command(
+            sub_command: str,
+            rerun_nodes: str,
+            namespace: argparse.Namespace,
+        ) -> str:
+            def _parse_args(cli_args: Iterable[str], namespace: argparse.Namespace):
+                string = ''
+                for arg in cli_args:
+                    value = getattr(namespace, arg, None)
+                    if value:
+                        if isinstance(value, bool):
+                            string += f' --{arg}'
+                        else:
+                            string += f" --{arg} '{value}'"
+                return string
+
+            global_args = _parse_args(GLOBAL_CLI_ARGS.keys(), namespace)
+            sub_command_args = _parse_args(SUB_COMMAND_CLI_ARGS.keys(), namespace)
+            return f'dbt{global_args} {sub_command} -s {rerun_nodes}{sub_command_args}'
 
         if restart_from_failure:
             self.console.log(f'Restarting job {job_id} from last failed state.')
@@ -1050,72 +1069,67 @@ class _CloudClient(_Client):
             if last_run_status == 'error':
                 rerun_steps = []
 
-                # Set up argument parser to parse the step's command for args and vars
-                parser = argparse.ArgumentParser(description='Argparse Test script')
-                parser.add_argument("--args", help='dbt macro arguments')
-                parser.add_argument("--vars", help='dbt command line variables')
-
                 for run_step in last_run_data['run_steps']:
 
-                    # get the dbt command used within this step
-                    command = run_step['name'].partition('`')[2].partition('`')[0]
-                    if not any(cmd for cmd in ALL_COMMANDS if cmd in command):
+                    status = run_step['status_humanized'].lower()
+                    # Skipping cloning, profile setup, and dbt deps - always
+                    # the first three steps in any run
+                    if run_step['index'] <= 3 or status == 'success':
                         self.console.log(
                             f'Skipping rerun for command "{run_step["name"]}" '
                             'as it does not need to be repeated.'
                         )
+
                     else:
 
-                        # skipped and other commands should be rerun entirely
-                        if step_meets_condition(
-                            run_step, 'run', ['skipped']
-                        ) or step_meets_condition(
-                            run_step, 'other', ['error', 'skipped', 'failed']
+                        # get the dbt command used within this step
+                        command = run_step['name'].partition('`')[2].partition('`')[0]
+                        namespace, remaining = self.parser.parse_known_args(
+                            shlex.split(command)
+                        )
+                        sub_command = remaining[1]
+
+                        if sub_command not in RUN_COMMANDS or (
+                            sub_command in RUN_COMMANDS and status == 'skipped'
                         ):
                             rerun_steps.append(command)
 
                         # errors and failures are when we need to inspect to figure
                         # out the point of failure
-                        elif step_meets_condition(run_step, 'run', ['error', 'failed']):
+                        else:
 
                             # get the run results scoped to the step which had an error
-                            step_results = self.get_run_artifact(
-                                account_id=account_id,
-                                run_id=last_run_id,
-                                path='run_results.json',
-                                step=run_step['index'],
-                            )['results']
-
-                            rerun_nodes = ' '.join(
-                                [
-                                    record['unique_id'].split('.')[2]
-                                    for record in step_results
-                                    if record['status'] in ['error', 'skipped', 'fail']
-                                ]
-                            )
-
-                            modified_command = (
-                                f'{" ".join(command.split(" ")[0:2])} -s {rerun_nodes}'
-                            )
-                            parsed_command, _ = parser.parse_known_args(
-                                shlex.split(command)
-                            )
-                            if parsed_command.args:
-                                modified_command += f" --args '{parsed_command.args}'"
-
-                            if parsed_command.vars:
-                                modified_command += f" --vars '{parsed_command.vars}'"
-                            rerun_steps.append(modified_command)
-                            self.console.log(
-                                f'Modifying command "{command}" as an error '
-                                'or failure was encountered.'
-                            )
-
-                        else:
-                            self.console.log(
-                                f'Skipping rerun for command "{command}" as '
-                                'it succeeded on the previous iteration.'
-                            )
+                            # an error here indicates that either:
+                            # 1) the fail-fast flag was set, in which case
+                            #    the run_results.json file was never created; or
+                            # 2) there was a problem on dbt Cloud's side saving
+                            #    this artifact
+                            try:
+                                step_results = self.get_run_artifact(
+                                    account_id=account_id,
+                                    run_id=last_run_id,
+                                    path='run_results.json',
+                                    step=run_step['index'],
+                                )['results']
+                            except KeyError:
+                                rerun_steps.append(command)
+                            else:
+                                rerun_nodes = ' '.join(
+                                    [
+                                        record['unique_id'].split('.')[2]
+                                        for record in step_results
+                                        if record['status']
+                                        in ['error', 'skipped', 'fail']
+                                    ]
+                                )
+                                modified_command = build_modified_command(
+                                    sub_command, rerun_nodes, namespace
+                                )
+                                rerun_steps.append(modified_command)
+                                self.console.log(
+                                    f'Modifying command "{command}" as an error '
+                                    'or failure was encountered.'
+                                )
 
                 payload.update({"steps_override": rerun_steps})
                 self.console.log(
@@ -1138,7 +1152,11 @@ class _CloudClient(_Client):
             method='post',
             json=payload,
         )
-        self.console.log(f'Run triggered for job {job_id}.')
+        if not run['status']['is_success']:
+            self.console.log(f'Run NOT triggered for job {job_id}.  See run response.')
+            return run
+
+        self.console.log(run_status_formatted(run, 0))
         if should_poll:
             start = time.time()
             run_id = run['data']['id']
@@ -1153,8 +1171,6 @@ class _CloudClient(_Client):
                     JobRunStatus.ERROR,
                 ]:
                     break
-        else:
-            self.console.log(f'View run: {run["data"]["href"]}')
 
         return run
 
