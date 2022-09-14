@@ -21,6 +21,19 @@ JOB_ASSERTIONS = {
         'dbt build -s unique_good_model_clerk_name --vars \'{key: value, other_key: other_value}\'',  # noqa: E501
         'dbt run-operation good_macro --args \'{arg_1: value_1}\'',
     ],
+    128120: [
+        'dbt --use-experimental-parser run -s bad_model --vars \'{"key": "value"}\'',
+    ],
+    128138: [
+        (
+            'dbt build -s unique_order_items_bad_order_key '
+            'fct_order_items_bad fct_orders_bad not_null_fct_orders_bad_order_key '
+            'relationships_fct_orders_bad_customer_key__customer_key__ref_dim_customers_ '  # noqa: E501
+            'unique_fct_orders_bad_order_key'
+        ),
+        'dbt run-operation good_macro',
+        'dbt docs generate',
+    ],
 }
 
 ACCOUNT_ID = 43786
