@@ -1033,25 +1033,16 @@ class _CloudClient(_Client):
                 f', View here: {url}'
             )
 
-        def build_modified_command(
-            sub_command: str,
-            rerun_nodes: str,
-            namespace: argparse.Namespace,
-        ) -> str:
-            def _parse_args(cli_args: Iterable[str], namespace: argparse.Namespace):
-                string = ''
-                for arg in cli_args:
-                    value = getattr(namespace, arg, None)
-                    if value:
-                        if isinstance(value, bool):
-                            string += f' --{arg}'
-                        else:
-                            string += f" --{arg} '{value}'"
-                return string
-
-            global_args = _parse_args(GLOBAL_CLI_ARGS.keys(), namespace)
-            sub_command_args = _parse_args(SUB_COMMAND_CLI_ARGS.keys(), namespace)
-            return f'dbt{global_args} {sub_command} -s {rerun_nodes}{sub_command_args}'
+        def parse_args(cli_args: Iterable[str], namespace: argparse.Namespace):
+            string = ''
+            for arg in cli_args:
+                value = getattr(namespace, arg, None)
+                if value:
+                    if isinstance(value, bool):
+                        string += f' --{arg}'
+                    else:
+                        string += f" --{arg} '{value}'"
+            return string
 
         if restart_from_failure:
             self.console.log(f'Restarting job {job_id} from last failed state.')
@@ -1122,9 +1113,13 @@ class _CloudClient(_Client):
                                         in ['error', 'skipped', 'fail']
                                     ]
                                 )
-                                modified_command = build_modified_command(
-                                    sub_command, rerun_nodes, namespace
+                                global_args = parse_args(
+                                    GLOBAL_CLI_ARGS.keys(), namespace
                                 )
+                                sub_command_args = parse_args(
+                                    SUB_COMMAND_CLI_ARGS.keys(), namespace
+                                )
+                                modified_command = f'dbt{global_args} {sub_command} -s {rerun_nodes}{sub_command_args}'  # noqa: E501
                                 rerun_steps.append(modified_command)
                                 self.console.log(
                                     f'Modifying command "{command}" as an error '
