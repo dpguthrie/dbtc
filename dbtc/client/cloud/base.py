@@ -1107,7 +1107,10 @@ class _CloudClient(_Client):
                                     path='run_results.json',
                                     step=run_step['index'],
                                 )['results']
-                            except KeyError:
+
+                            # If the artifact isn't found, the API returns a 404 with
+                            # no json.  The ValueError will catch the JSONDecodeError
+                            except ValueError:
                                 rerun_steps.append(command)
                             else:
                                 rerun_nodes = ' '.join(
