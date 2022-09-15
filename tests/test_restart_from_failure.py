@@ -34,6 +34,7 @@ JOB_ASSERTIONS = {
         'dbt run-operation good_macro',
         'dbt docs generate',
     ],
+    128218: ['dbt run -x', 'dbt build --fail-fast', 'dbt docs generate'],
 }
 
 ACCOUNT_ID = 43786
