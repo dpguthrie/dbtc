@@ -1880,13 +1880,13 @@
 These artifacts contain information about the models in your dbt project,
 timing information around their execution, and a status message indicating the
 result of the model build.</p>
-
-<details class="note">
-  <summary>Note</summary>
-  <p>By default, this endpoint returns artifacts from the last step in the
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, this endpoint returns artifacts from the last step in the
 run. To list artifacts from other steps in the run, use the step query
 parameter described below.</p>
-</details>
+</div>
+
   <p><strong>Parameters:</strong></p>
   <table>
     <thead>
@@ -2147,11 +2147,11 @@ Use with offset to paginate results.</p></td>
   <div class="doc doc-contents first">
   
       <p>Create an adapter</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a prerequisite for creating a Databricks connection</p>
+</div>
 
-<details class="note">
-  <summary>Note</summary>
-  <p>This is a prerequisite for creating a Databricks connection</p>
-</details>
   <p><strong>Parameters:</strong></p>
   <table>
     <thead>
@@ -3506,14 +3506,14 @@ environment variables have been set.
         </tr>
     </tbody>
   </table>
-
-<details class="note">
-  <summary>Note</summary>
-  <p>The group_name is the name of the dbt Cloud group. The list of
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The group_name is the name of the dbt Cloud group. The list of
 sso_mapping_groups are string values that dbt Cloud will attempt to match
 with incoming information from your identity provider at login time, in
 order to assign the group with group_name to the user.</p>
-</details>
+</div>
+
   </div>
 
 </div><p><strong>Examples:</strong></p>
@@ -4185,14 +4185,14 @@ function will exit prior to triggering the job.</p></td>
         </tr>
     </tbody>
   </table>
-
-<details class="note">
-  <summary>Note</summary>
-  <p>After creating / updating a dbt Cloud repository's SSH key, you will need
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>After creating / updating a dbt Cloud repository's SSH key, you will need
 to add the generated key text as a deploy key to the target repository.
 This gives dbt Cloud permissions to read / write in the repository</p>
 <p>You can read more in the <a href="https://docs.getdbt.com/docs/dbt-cloud/cloud-configuring-dbt-cloud/cloud-configuring-repositories">docs</a>  # noqa: E501</p>
-</details>
+</div>
+
   </div>
 
 </div><p><strong>Examples:</strong></p>
@@ -5427,16 +5427,16 @@ environment variables have been set.
         </tr>
     </tbody>
   </table>
-
-<details class="note">
-  <summary>Note</summary>
-  <p>This request creates a service token, but does not assign permissions to
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This request creates a service token, but does not assign permissions to
 it.  Permissions are assigned via the
 <a href="./#assign_service_token_permissions">assign_service_token_permissions</a></p>
 <p>See the <a href="https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/user-tokens">user tokens</a>  # noqa: E501
 and <a href="https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/service-tokens">service tokens</a>  # noqa: E501
 documentation for more information.</p>
-</details>
+</div>
+
   </div>
 
 </div><p><strong>Examples:</strong></p>
@@ -5699,12 +5699,12 @@ user you'd like to deactivate</p></td>
         </tr>
     </tbody>
   </table>
-
-<details class="note">
-  <summary>Note</summary>
-  <p>Note: Ensure the <code>groups</code> object contains all of a user's assigned group
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Ensure the <code>groups</code> object contains all of a user's assigned group
 permissions. This request will fail if a user has already been deactivated.</p>
-</details>
+</div>
+
   </div>
 
 </div><p><strong>Examples:</strong></p>
