@@ -1,10 +1,12 @@
 # stdlib
 import argparse
+from datetime import datetime
 import enum
 import shlex
 import time
 from functools import partial, wraps
 from typing import Dict, Iterable, List
+import uuid
 
 # third party
 import requests
@@ -786,7 +788,7 @@ class _CloudClient(_Client):
 
     @v2
     def list_jobs(
-        self, account_id: int, *, order_by: str = None, project_id: int = None
+        self, account_id: int, *, order_by: str = None, project_id: int = None,
     ) -> Dict:
         """List jobs in an account or specific project.
 
@@ -795,7 +797,7 @@ class _CloudClient(_Client):
             order_by (str, optional): Field to order the result by.
                 Use - to indicate reverse order.
             project_id (int, optional): Numeric ID of the project containing jobs
-        """
+        """        
         return self._simple_request(
             f'accounts/{account_id}/jobs/',
             params={'order_by': order_by, 'project_id': project_id},
@@ -992,6 +994,107 @@ class _CloudClient(_Client):
             f'accounts/{account_id}/connections/test/', method='post', json=payload
         )
 
+    @v2
+    def trigger_job_for_ci(
+        self, 
+        account_id: int,
+        job_id: int,
+        payload: Dict,
+        *,
+        should_poll: bool = True,
+        poll_interval: int = 10,
+    ):
+
+        """Trigger a job by its ID - designed to enable running CI jobs in parallel
+        
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            job_id (int): Numeric ID of the job to trigger
+            payload (dict): Payload required for post request
+            should_poll (bool, optional): Poll until completion if `True`, completion
+                is one of success, failure, or cancelled
+            poll_interval (int, optional): Number of seconds to wait in between
+                polling
+            name_like (str, optional): Job prefix to identify the CI job "pool"
+        """
+        #TODO: this should be abstracted somewhere
+        def run_status_formatted(run: Dict, time: float) -> str:
+            """Format a string indicating status of job.
+            Args:
+                run (dict): Dictionary representation of a Run
+                time (float): Elapsed time since job triggered
+            """
+            status = JobRunStatus(run['data']['status']).name
+            url = run['data']['href']
+            return (
+                f'Status: "{status.capitalize()}", Elapsed time: {round(time, 0)}s'
+                f', View here: {url}'
+            )
+        
+        most_recent_job_run = self.list_runs(
+            account_id=account_id,
+            job_definition_id=job_id,
+            limit=1,
+            order_by='-id'
+            )['data'][0]
+
+        job_run_status = most_recent_job_run['status_humanized']
+        self.console.log(f'Status for most recent run of job {job_id} is {job_run_status}.')
+
+        if job_run_status not in ['Queued', 'Starting', 'Running']:
+            self.console.log(f'Triggering base CI job {job_id}.')
+            
+        else:
+            self.console.log(f'Replicating base CI job.')
+            job_definition = self.get_job(
+                account_id=account_id,
+                job_id=job_id
+            )['data']
+            
+            job_definition['name'] = job_definition['name'] + '-' + datetime.now().strftime('%Y-%m-%d--%H:%M:%S')
+            job_definition['id'] = None
+            job_definition['dbt_version'] = None
+            keys = ['id', 'name', 'execution', 'account_id', 'project_id', 'environment_id', 
+                    'dbt_version', 'execute_steps', 'state', 'deferring_job_definition_id', 
+                    'triggers', 'settings', 'schedule']
+            job_definition = {k:v for k,v in job_definition.items() if k in keys}
+            print(job_definition)
+            new_job = self.create_job(
+                account_id=account_id,
+                project_id=job_definition['project_id'],
+                payload=job_definition
+            )
+
+            print(new_job)
+
+        run = self._simple_request(
+            f'accounts/{account_id}/jobs/{job_id}/run/',
+            method='post',
+            json=payload,
+        )
+        if not run['status']['is_success']:
+            self.console.log(f'Run NOT triggered for job {job_id}.  See run response.')
+            return run
+
+        self.console.log(run_status_formatted(run, 0))
+        if should_poll:
+            start = time.time()
+            run_id = run['data']['id']
+            while True:
+                time.sleep(poll_interval)
+                run = self.get_run(account_id, run_id)
+                status = run['data']['status']
+                self.console.log(run_status_formatted(run, time.time() - start))
+                if status in [
+                    JobRunStatus.SUCCESS,
+                    JobRunStatus.CANCELLED,
+                    JobRunStatus.ERROR,
+                ]:
+                    break
+
+        return run
+
+    
     @v2
     def trigger_job(
         self,
