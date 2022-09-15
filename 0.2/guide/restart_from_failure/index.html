@@ -13,7 +13,7 @@
       
       
       <link rel="icon" href="../../img/dbt-standalone.png">
-      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.2">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.0">
     
     
       
@@ -56,7 +56,7 @@
   
 
 
-  <script id="__analytics">function __md_analytics(){function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-FBR4YZVM7P"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&n("event","search",{search_term:this.value})}),document$.subscribe(function(){var a=document.forms.feedback;if(void 0!==a)for(var e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");n("event","feedback",{page:t,data:e}),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}),location$.subscribe(function(e){n("config","G-FBR4YZVM7P",{page_path:e.pathname})})});var e=document.createElement("script");e.async=!0,e.src="https://www.googletagmanager.com/gtag/js?id=G-FBR4YZVM7P",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
+  <script id="__analytics">function __md_analytics(){function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-FBR4YZVM7P"),document.addEventListener("DOMContentLoaded",function(){if(document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&n("event","search",{search_term:this.value})}),document.forms.feedback){var e,a=document.forms.feedback;for(e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");n("event","feedback",{page:t,data:e}),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}"undefined"!=typeof location$&&location$.subscribe(function(e){n("config","G-FBR4YZVM7P",{page_path:e.pathname})})});var e=document.createElement("script");e.async=!0,e.src="https://www.googletagmanager.com/gtag/js?id=G-FBR4YZVM7P",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
 
   
     <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
@@ -564,7 +564,7 @@
 <li>Ensure the job isn't triggered on an ongoing basis or otherwise put into the orchestration flow unintentionally.</li>
 </ul>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">CLI</label><label for="__tabbed_1_3">Response</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">CLI</label><label for="__tabbed_1_3">Github Action</label><label for="__tabbed_1_4">Response</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dbtc</span> <span class="kn">import</span> <span class="n">dbtCloudClient</span>
@@ -582,11 +582,42 @@
 <div class="tabbed-block">
 <p>Assuming that <code>DBT_CLOUD_SERVICE_TOKEN</code> environment variable has been set.
 <div class="highlight"><pre><span></span><code>dbtc trigger-job <span class="se">\</span>
-    --account-id <span class="m">43786</span>
-    --job-id <span class="m">73796</span>
+    --account-id <span class="m">1</span>
+    --job-id <span class="m">1</span>
     --payload <span class="s1">&#39;{&quot;cause&quot;: &quot;Restarting from failure&quot;}&#39;</span> <span class="se">\</span>
     --restart-from-failure
 </code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<p><strong>Required</strong>:  You'll need to create a <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository">secret</a> in your repo called <code>DBT_CLOUD_SERVICE_TOKEN</code>.  The token can be obtained from <a href="https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/service-tokens">dbt Cloud</a></p>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart from Failure</span><span class="w"></span>
+<span class="nt">on</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w"></span>
+
+<span class="nt">jobs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">restart</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span><span class="w"></span>
+<span class="w">    </span><span class="nt">env</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">DBT_CLOUD_SERVICE_TOKEN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.DBT_CLOUD_SERVICE_TOKEN }}</span><span class="w"></span>
+<span class="w">      </span><span class="nt">DBT_CLOUD_ACCOUNT_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">      </span><span class="nt">JOB_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># Optional if statement to gate this to a particular user or users</span><span class="w"></span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.actor == &#39;dpguthrie&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v2</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v2</span><span class="w"></span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.9.x&quot;</span><span class="w"></span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart Job from Failure</span><span class="w"></span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
+<span class="w">          </span><span class="no">pip install dbtc==0.2.0</span><span class="w"></span>
+<span class="w">          </span><span class="no">dbtc trigger-job \</span><span class="w"></span>
+<span class="w">              </span><span class="no">--job-id=$JOB_ID \</span><span class="w"></span>
+<span class="w">              </span><span class="no">--payload=&#39;{&quot;cause&quot;: &quot;Restarting job from failure&quot;}&#39; \</span><span class="w"></span>
+<span class="w">              </span><span class="no">--no-should-poll \</span><span class="w"></span>
+<span class="w">              </span><span class="no">--restart-from-failure</span><span class="w"></span>
+</code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"></span>
@@ -599,10 +630,10 @@
 <span class="w">    </span><span class="err">&#39;da</span><span class="kc">ta</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">78614274</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="err">&#39;</span><span class="kc">tr</span><span class="err">igger_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">79329387</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="err">&#39;accou</span><span class="kc">nt</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">43786</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="err">&#39;e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">xxxxx</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="err">&#39;projec</span><span class="kc">t</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">146089</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="err">&#39;job_de</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">i</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">122458</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="err">&#39;accou</span><span class="kc">nt</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="err">&#39;e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="err">&#39;projec</span><span class="kc">t</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="err">&#39;job_de</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">i</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="err">&#39;s</span><span class="kc">tatus</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="err">&#39;db</span><span class="kc">t</span><span class="err">_versio</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mf">1.2.0-</span><span class="err">la</span><span class="kc">test</span><span class="err">&#39;</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="err">&#39;gi</span><span class="kc">t</span><span class="err">_bra</span><span class="kc">n</span><span class="err">ch&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">No</span><span class="kc">ne</span><span class="p">,</span><span class="w"></span>
@@ -629,7 +660,7 @@
 <span class="w">        </span><span class="err">&#39;</span><span class="kc">tr</span><span class="err">igger&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">            </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">79329387</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="err">&#39;cause&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Jus</span><span class="kc">t</span><span class="w"> </span><span class="err">cause&#39;</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="err">&#39;job_de</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">i</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">122458</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="err">&#39;job_de</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">i</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="err">&#39;gi</span><span class="kc">t</span><span class="err">_bra</span><span class="kc">n</span><span class="err">ch&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">No</span><span class="kc">ne</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="err">&#39;gi</span><span class="kc">t</span><span class="err">_sha&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">No</span><span class="kc">ne</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="err">&#39;azure_pull_reques</span><span class="kc">t</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">No</span><span class="kc">ne</span><span class="p">,</span><span class="w"></span>
@@ -652,10 +683,10 @@
 <span class="w">            </span><span class="p">},</span><span class="w"></span>
 <span class="w">            </span><span class="err">&#39;ge</span><span class="kc">nerate</span><span class="err">_docs&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">False</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="err">&#39;ru</span><span class="kc">n</span><span class="err">_ge</span><span class="kc">nerate</span><span class="err">_sources&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">False</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">122458</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="err">&#39;accou</span><span class="kc">nt</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">43786</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="err">&#39;projec</span><span class="kc">t</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">146089</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="err">&#39;e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">xxxxxx</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="err">&#39;accou</span><span class="kc">nt</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="err">&#39;projec</span><span class="kc">t</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="err">&#39;e</span><span class="kc">n</span><span class="err">viro</span><span class="kc">n</span><span class="err">me</span><span class="kc">nt</span><span class="err">_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="err">&#39;</span><span class="kc">na</span><span class="err">me&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Tes</span><span class="kc">t</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">-</span><span class="w"> </span><span class="err">Res</span><span class="kc">tart</span><span class="w"> </span><span class="err">wi</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">Vars&#39;</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="err">&#39;db</span><span class="kc">t</span><span class="err">_versio</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">No</span><span class="kc">ne</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="err">&#39;crea</span><span class="kc">te</span><span class="err">d_a</span><span class="kc">t</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">2022-08-29</span><span class="err">T</span><span class="mi">14</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mf">57.378279</span><span class="err">Z&#39;</span><span class="p">,</span><span class="w"></span>
@@ -701,7 +732,7 @@
 <span class="w">        </span><span class="err">&#39;ru</span><span class="kc">n</span><span class="err">_dura</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">_huma</span><span class="kc">n</span><span class="err">ized&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0</span><span class="w"> </span><span class="err">mi</span><span class="kc">nutes</span><span class="err">&#39;</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="err">&#39;crea</span><span class="kc">te</span><span class="err">d_a</span><span class="kc">t</span><span class="err">_huma</span><span class="kc">n</span><span class="err">ized&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0</span><span class="w"> </span><span class="err">mi</span><span class="kc">nutes</span><span class="w"> </span><span class="err">ago&#39;</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="err">&#39;</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">ished_a</span><span class="kc">t</span><span class="err">_huma</span><span class="kc">n</span><span class="err">ized&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0</span><span class="w"> </span><span class="err">mi</span><span class="kc">nutes</span><span class="w"> </span><span class="kc">fr</span><span class="err">om</span><span class="w"> </span><span class="kc">n</span><span class="err">ow&#39;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="err">&#39;job_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">122458</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="err">&#39;job_id&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="err">&#39;is_ru</span><span class="kc">nn</span><span class="err">i</span><span class="kc">n</span><span class="err">g&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">No</span><span class="kc">ne</span><span class="w"></span>
 <span class="w">    </span><span class="p">}</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
