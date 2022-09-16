@@ -285,7 +285,6 @@ class _CloudClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
             payload (dict): Dictionary representing the job to create
         """
         return self._simple_request(
