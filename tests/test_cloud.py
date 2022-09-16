@@ -65,6 +65,11 @@ def test_list_invited_users(dbtc_client):
 
 
 @pytest.mark.dependency(depends=['test_list_accounts'])
+def test_list_environments_by_account(dbtc_client):
+    _test_cloud_method(dbtc_client, 'list_environments')
+
+
+@pytest.mark.dependency(depends=['test_list_accounts'])
 def test_list_projects(dbtc_client):
     _test_and_set(
         dbtc_client, 'list_projects', 'project_id', account_id=pytest.account_id
@@ -74,6 +79,11 @@ def test_list_projects(dbtc_client):
 @pytest.mark.dependency(depends=['test_list_projects'])
 def test_list_users(dbtc_client):
     _test_and_set(dbtc_client, 'list_users', 'user_id', account_id=pytest.account_id)
+
+
+@pytest.mark.dependency(depends=['test_list_projects'])
+def test_list_environments_by_project(dbtc_client):
+    _test_cloud_method(dbtc_client, 'list_environments', project_id=pytest.project_id)
 
 
 @pytest.mark.dependency(depends=['test_list_projects'])
