@@ -97,7 +97,7 @@ class _CloudClient(_Client):
     ) -> List[Dict]:
         """Multiple paginated requests given presence of specific header.
 
-        Note:
+        !!! note
             Only available in V4.
         """
         response = self._make_request(path, method=method, **kwargs)
@@ -120,7 +120,7 @@ class _CloudClient(_Client):
     def _get_pagination_token(self, response):
         """Retrieve pagination token.
 
-        Note:
+        !!! note
             Only available in V4.
         """
         return response.headers.get('x-dbt-continuation-token', None)
@@ -200,7 +200,7 @@ class _CloudClient(_Client):
     def create_adapter(self, account_id: int, project_id: int, payload: Dict) -> Dict:
         """Create an adapter
 
-        Note:
+        !!! note
             This is a prerequisite for creating a Databricks connection
 
         Args:
@@ -281,17 +281,16 @@ class _CloudClient(_Client):
             url += 'bulk/'
         return self._simple_request(url, method='post', json=payload)
 
-    @v3
-    def create_job(self, account_id: int, project_id: int, payload: Dict) -> Dict:
+    @v2
+    def create_job(self, account_id: int, payload: Dict) -> Dict:
         """Create a job
 
         Args:
             account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
             payload (dict): Dictionary representing the job to create
         """
         return self._simple_request(
-            f'accounts/{account_id}/projects/{project_id}/jobs/',
+            f'accounts/{account_id}/jobs/',
             method='post',
             json=payload,
         )
@@ -319,7 +318,7 @@ class _CloudClient(_Client):
             project_id (int): Numeric ID of the project
             payload (dict): Dictionary representing the repository to create
 
-        Note:
+        !!! note
             After creating / updating a dbt Cloud repository's SSH key, you will need
             to add the generated key text as a deploy key to the target repository.
             This gives dbt Cloud permissions to read / write in the repository
@@ -340,7 +339,7 @@ class _CloudClient(_Client):
             account_id (int): Numeric ID of the account
             payload (dict): Dictionary representing the service token to create
 
-        Note:
+        !!! note
             This request creates a service token, but does not assign permissions to
             it.  Permissions are assigned via the
             [assign_service_token_permissions](cloud.md#assign_service_token_permissions)
@@ -361,7 +360,7 @@ class _CloudClient(_Client):
             account_id (int): Numeric ID of the account
             payload (dict): Dictionary representing the group to create
 
-        Note:
+        !!! note
             The group_name is the name of the dbt Cloud group. The list of
             sso_mapping_groups are string values that dbt Cloud will attempt to match
             with incoming information from your identity provider at login time, in
@@ -371,7 +370,7 @@ class _CloudClient(_Client):
             f'accounts/{account_id}/groups/', method='post', json=payload
         )
 
-    @v3
+    @v2
     def deactivate_user_license(
         self, account_id: int, permission_id: int, payload: Dict
     ) -> Dict:
@@ -382,8 +381,8 @@ class _CloudClient(_Client):
             permission_id (int): Numeric ID of the permission that contains
                 user you'd like to deactivate
 
-        Note:
-            Note: Ensure the `groups` object contains all of a user's assigned group
+        !!! note
+            Ensure the `groups` object contains all of a user's assigned group
             permissions. This request will fail if a user has already been deactivated.
         """
         return self._simple_request(
@@ -438,7 +437,7 @@ class _CloudClient(_Client):
             json=payload,
         )
 
-    @v3
+    @v2
     def delete_job(self, account_id: int, job_id: int) -> Dict:
         """Delete job for a specified account
 
@@ -617,7 +616,7 @@ class _CloudClient(_Client):
         timing information around their execution, and a status message indicating the
         result of the model build.
 
-        Note:
+        !!! note
             By default, this endpoint returns artifacts from the last step in the
             run. To list artifacts from other steps in the run, use the step query
             parameter described below.
@@ -748,16 +747,27 @@ class _CloudClient(_Client):
         )
 
     @v3
-    def list_environments(self, account_id: int, project_id: int) -> Dict:
+    def list_environments_by_account(self, account_id: int) -> Dict:
+        """List environments for a specific account
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+        """
+        return self._simple_request(f'accounts/{account_id}/environments/')
+
+    @v3
+    def list_environments(self, account_id: int, project_id: int = None) -> Dict:
         """List environments for a specific account and project
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            project_id (int): Numeric ID of the project to retrieve
+            project_id (int, optional): Numeric ID of the project to retrieve
         """
-        return self._simple_request(
-            f'accounts/{account_id}/projects/{project_id}/environments/'
-        )
+        uri = f'accounts/{account_id}/'
+        if project_id is not None:
+            uri += f'projects/{project_id}/'
+        uri += 'environments/'
+        return self._simple_request(uri)
 
     @v3
     def list_feature_flags(self, account_id: int) -> Dict:

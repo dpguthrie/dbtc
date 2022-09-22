@@ -885,8 +885,9 @@ def list_run_artifacts(
 
     Use this endpoint to fetch a list of artifact fiels generated for a completed run.
 
-    Note:  By default, this endpoint returns artifacts from the last step in the run.
-    To list artifacts from other steps in the run, use the `step` query parameter.
+    !!! note
+        By default, this endpoint returns artifacts from the last step in the run.
+        To list artifacts from other steps in the run, use the `step` query parameter.
     """
     _dbt_cloud_request(ctx, 'list_run_artifacts', account_id, run_id, step=step)
 
