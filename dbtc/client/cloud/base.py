@@ -1013,6 +1013,7 @@ class _CloudClient(_Client):
         *,
         should_poll: bool = True,
         poll_interval: int = 10,
+        delete_replicated_job = True,
     ):
 
         """Trigger a job by its ID - designed to enable running CI jobs in parallel
@@ -1025,7 +1026,9 @@ class _CloudClient(_Client):
                 is one of success, failure, or cancelled
             poll_interval (int, optional): Number of seconds to wait in between
                 polling
-            name_like (str, optional): Job prefix to identify the CI job "pool"
+            delete_replicated_job (bool, optional): True is the default, which will 
+               automatically clean up any jobs replicated due to the base CI job
+               being busy at PR time. 
         """
         #TODO: this should be abstracted somewhere
         def run_status_formatted(run: Dict, time: float) -> str:
@@ -1053,6 +1056,7 @@ class _CloudClient(_Client):
 
         if job_run_status not in ['Queued', 'Starting', 'Running']:
             self.console.log(f'Triggering base CI job {job_id}.')
+            delete_replicated_job = False # IMPORTANT: this prevents removing the base CI job
             
         else:
             self.console.log(f'Replicating base CI job.')
@@ -1061,21 +1065,22 @@ class _CloudClient(_Client):
                 job_id=job_id
             )['data']
             
+            # TODO: this is gross - need a more ergnomic way to express these
             job_definition['name'] = job_definition['name'] + '-' + datetime.now().strftime('%Y-%m-%d--%H:%M:%S')
             job_definition['id'] = None
             job_definition['dbt_version'] = None
+
+            # the dbt Cloud API will fail job create requests that contain extra keys. This is the minimal set required to 
+            # create a new job
             keys = ['id', 'name', 'execution', 'account_id', 'project_id', 'environment_id', 
                     'dbt_version', 'execute_steps', 'state', 'deferring_job_definition_id', 
                     'triggers', 'settings', 'schedule']
             job_definition = {k:v for k,v in job_definition.items() if k in keys}
-            print(job_definition)
             new_job = self.create_job(
                 account_id=account_id,
-                project_id=job_definition['project_id'],
                 payload=job_definition
-            )
-
-            print(new_job)
+            )['data']
+            job_id = new_job['id']
 
         run = self._simple_request(
             f'accounts/{account_id}/jobs/{job_id}/run/',
@@ -1102,6 +1107,9 @@ class _CloudClient(_Client):
                 ]:
                     break
 
+        if delete_replicated_job:
+            self.delete_job(account_id=account_id, job_id=job_id)
+        
         return run
 
     
