@@ -13,7 +13,12 @@ import requests
 
 # first party
 from dbtc.client.base import _Client
-
+from dbtc.client.cloud.configs.dbt_cloud_api import create_job_request
+from dbtc.client.cloud.configs.dbt_core_cli import (
+    run_commands,
+    global_cli_args,
+    sub_command_cli_args
+)
 
 class JobRunStatus(enum.IntEnum):
     QUEUED = 1
@@ -22,23 +27,6 @@ class JobRunStatus(enum.IntEnum):
     SUCCESS = 10
     ERROR = 20
     CANCELLED = 30
-
-
-RUN_COMMANDS = ['build', 'run', 'test', 'seed', 'snapshot']
-GLOBAL_CLI_ARGS = {
-    'warn_error': {'flags': ('--warn-error',), 'action': 'store_true'},
-    'use_experimental_parser': {
-        'flags': ('--use-experimental-parser',),
-        'action': 'store_true',
-    },
-}
-SUB_COMMAND_CLI_ARGS = {
-    'vars': {'flags': ('--vars',)},
-    'args': {'flags': ('--args',)},
-    'fail_fast': {'flags': ('-x', '--fail-fast'), 'action': 'store_true'},
-    'full_refresh': {'flags': ('--full-refresh',), 'action': 'store_true'},
-    'store_failures': {'flags': ('--store-failures',), 'action': 'store_true'},
-}
 
 
 def _version_decorator(func, version):
@@ -62,7 +50,7 @@ class _CloudClient(_Client):
         self.session = requests.Session()
         self.session.headers = self.headers
         self.parser = argparse.ArgumentParser()
-        all_cli_args = {**GLOBAL_CLI_ARGS, **SUB_COMMAND_CLI_ARGS}
+        all_cli_args = {**global_cli_args, **sub_command_cli_args}
         for arg_specs in all_cli_args.values():
             flags = arg_specs['flags']
             self.parser.add_argument(
@@ -1070,17 +1058,16 @@ class _CloudClient(_Client):
             job_definition['id'] = None
             job_definition['dbt_version'] = None
 
-            # the dbt Cloud API will fail job create requests that contain extra keys. This is the minimal set required to 
-            # create a new job
+            # the dbt Cloud API will fail job create requests that contain extra keys. 
+            # This is the minimal set required to create a new job
             keys = ['id', 'name', 'execution', 'account_id', 'project_id', 'environment_id', 
                     'dbt_version', 'execute_steps', 'state', 'deferring_job_definition_id', 
                     'triggers', 'settings', 'schedule']
             job_definition = {k:v for k,v in job_definition.items() if k in keys}
-            new_job = self.create_job(
+            job_id = self.create_job(
                 account_id=account_id,
                 payload=job_definition
-            )['data']
-            job_id = new_job['id']
+            )['data']['id']
 
         run = self._simple_request(
             f'accounts/{account_id}/jobs/{job_id}/run/',
@@ -1206,9 +1193,9 @@ class _CloudClient(_Client):
                         sub_command = remaining[1]
 
                         if (
-                            sub_command not in RUN_COMMANDS
+                            sub_command not in run_commands
                             and status in ['error', 'cancelled', 'skipped']
-                        ) or (sub_command in RUN_COMMANDS and status == 'skipped'):
+                        ) or (sub_command in run_commands and status == 'skipped'):
                             rerun_steps.append(command)
 
                         # errors and failures are when we need to inspect to figure
@@ -1243,10 +1230,10 @@ class _CloudClient(_Client):
                                     ]
                                 )
                                 global_args = parse_args(
-                                    GLOBAL_CLI_ARGS.keys(), namespace
+                                    global_cli_args.keys(), namespace
                                 )
                                 sub_command_args = parse_args(
-                                    SUB_COMMAND_CLI_ARGS.keys(), namespace
+                                    sub_command_cli_args.keys(), namespace
                                 )
                                 modified_command = f'dbt{global_args} {sub_command} -s {rerun_nodes}{sub_command_args}'  # noqa: E501
                                 rerun_steps.append(modified_command)

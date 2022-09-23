@@ -1,12 +1,15 @@
-RUN_COMMANDS = ['build', 'run', 'test', 'seed', 'snapshot']
-GLOBAL_CLI_ARGS = {
+
+run_commands = ['build', 'run', 'test', 'seed', 'snapshot']
+
+global_cli_args = {
     'warn_error': {'flags': ('--warn-error',), 'action': 'store_true'},
     'use_experimental_parser': {
         'flags': ('--use-experimental-parser',),
         'action': 'store_true',
     },
 }
-SUB_COMMAND_CLI_ARGS = {
+
+sub_command_cli_args = {
     'vars': {'flags': ('--vars',)},
     'args': {'flags': ('--args',)},
     'fail_fast': {'flags': ('-x', '--fail-fast'), 'action': 'store_true'},
