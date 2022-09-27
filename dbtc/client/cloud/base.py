@@ -1,33 +1,24 @@
 # stdlib
 import argparse
 from datetime import datetime
-import enum
 import shlex
 import time
 from functools import partial, wraps
 from typing import Dict, Iterable, List
 from urllib import request
-import uuid
 
 # third party
 import requests
 
 # first party
 from dbtc.client.base import _Client
+from dbtc.client.cloud.configs.enums import JobRunStatus, JobRunModes
 from dbtc.client.cloud.configs.dbt_cloud_api import dbtCloudAPIRequestFactory
 from dbtc.client.cloud.configs.dbt_core_cli import (
     run_commands,
     global_cli_args,
     sub_command_cli_args
 )
-
-class JobRunStatus(enum.IntEnum):
-    QUEUED = 1
-    STARTING = 2
-    RUNNING = 3
-    SUCCESS = 10
-    ERROR = 20
-    CANCELLED = 30
 
 
 def _version_decorator(func, version):
