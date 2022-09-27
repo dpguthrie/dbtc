@@ -114,7 +114,7 @@ class _CloudClient(_Client):
         return obj
     
     def _validate_job_run_mode(self, mode):
-        if mode not in ['standard', 'restart_from_failure', 'autoscale']:
+        if mode not in JobRunModes:
             return False
         
         return True
