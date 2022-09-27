@@ -1146,6 +1146,7 @@ class _CloudClient(_Client):
         trigger_on_failure_only: bool = False,
         mode: str = 'standard',
         autoscale_delete_post_run: bool = True,
+        autoscale_job_name_slug: str = None,
     ):
         """Trigger a job by its ID
 
@@ -1172,6 +1173,9 @@ class _CloudClient(_Client):
                   creates a copy of the running job
             autoscale_delete_post_run (bool, optional): Only relevant when mode = 'autoscale'
                 Remove a job replicated via autoscaling after it finishes running.
+            autoscale_job_name_slug (str, optional): Only relevant when mode = 'autoscale'
+                append value to the existing job name when replicating the job definition.
+                If None defaults to the current timestamp on job creation
         """
 
         def run_status_formatted(run: Dict, time: float) -> str:
@@ -1235,10 +1239,14 @@ class _CloudClient(_Client):
                     job_id=job_id
                 )
                 
-                #TODO: need to figure out the best way to disambiguate replicated jobs.
-                creation_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-                new_job_name = '-'.join([new_job_definition['name'], creation_time])
-                new_job_definition['name'] = new_job_name
+                if not autoscale_job_name_slug:
+                    creation_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+                    new_job_name = '-'.join([new_job_definition['name'], creation_time])
+                    new_job_definition['name'] = new_job_name
+                else:
+                    new_job_name = '-'.join([new_job_definition['name'], autoscale_job_name_slug])
+                    new_job_definition['name'] = new_job_name
+                    
                 job_id = self.create_job(
                     account_id=account_id,
                     payload=new_job_definition

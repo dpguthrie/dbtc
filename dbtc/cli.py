@@ -1012,6 +1012,11 @@ def trigger_job(
             'Delete job created via autoscaling after it finishes running'
         )
     ),
+    autoscale_job_name_slug: str = typer.Option(
+        True, help=(
+            'Append this string to the end of the replicated job name to disambiguate'
+        )
+    ),
 ):
     """Trigger job to run."""
     _dbt_cloud_request(
@@ -1026,6 +1031,7 @@ def trigger_job(
         trigger_on_failure_only=trigger_on_failure_only,
         mode=mode,
         autoscale_delete_post_run=autoscale_delete_post_run,
+        autoscale_job_name_slug=autoscale_job_name_slug,
     )
 
 
