@@ -1,5 +1,4 @@
 # stdlib
-from enum import auto
 import json
 from typing import List, Optional
 
@@ -1005,12 +1004,10 @@ def trigger_job(
             '    exited with an error. If yes, restart from the point of failure '
             'autoscale: determine with the target job is currently running '
             '    If yes, create and then run the clone.'
-        )
+        ),
     ),
     autoscale_delete_post_run: bool = typer.Option(
-        True, help=(
-            'Delete job created via autoscaling after it finishes running'
-        )
+        True, help=('Delete job created via autoscaling after it finishes running')
     ),
 ):
     """Trigger job to run."""

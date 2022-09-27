@@ -1,4 +1,3 @@
-
 run_commands = ['build', 'run', 'test', 'seed', 'snapshot']
 
 global_cli_args = {
