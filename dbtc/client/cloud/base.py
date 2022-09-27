@@ -12,7 +12,7 @@ import requests
 
 # first party
 from dbtc.client.base import _Client
-from dbtc.client.cloud.configs.enums import JobRunStatus, JobRunModes
+from dbtc.client.cloud.configs.enums import JobRunStatus, JobRunStrategies
 from dbtc.client.cloud.configs.dbt_cloud_api import dbtCloudAPIRequestFactory
 from dbtc.client.cloud.configs.dbt_core_cli import (
     run_commands,
@@ -113,8 +113,8 @@ class _CloudClient(_Client):
             obj = None
         return obj
     
-    def _validate_job_run_mode(self, mode):
-        if mode not in JobRunModes:
+    def _validate_job_run_strategy(self, job_run_strategy):
+        if job_run_strategy not in JobRunStrategies:
             return False
         
         return True
@@ -1144,7 +1144,7 @@ class _CloudClient(_Client):
         poll_interval: int = 10,
         restart_from_failure: bool = False,
         trigger_on_failure_only: bool = False,
-        mode: str = 'standard',
+        job_run_strategy: str = 'standard',
         autoscale_delete_post_run: bool = True,
         autoscale_job_name_slug: str = None,
     ):
@@ -1164,16 +1164,16 @@ class _CloudClient(_Client):
                 restart_from_failure to True.  This has the effect of only triggering
                 the job when the prior invocation was not successful. Otherwise, the
                 function will exit prior to triggering the job.
-            mode (str, optional): Must be one of ['standard', 'restart_from_failure', 
+            job_run_strategy (str, optional): Must be one of ['standard', 'restart_from_failure', 
                 'autoscaling']. 
-                - standard mode triggers the job to run as-is.
+                - standard strategy triggers the job to run as-is.
                 - restart_from_failure checks for errors on the prior invocation and, 
                   if found, restarts failed models only.
                 - autoscale checks whether the job_id is actively running. If so,
                   creates a copy of the running job
-            autoscale_delete_post_run (bool, optional): Only relevant when mode = 'autoscale'
+            autoscale_delete_post_run (bool, optional): Only relevant when job_run_strategy = 'autoscale'
                 Remove a job replicated via autoscaling after it finishes running.
-            autoscale_job_name_slug (str, optional): Only relevant when mode = 'autoscale'
+            autoscale_job_name_slug (str, optional): Only relevant when job_run_strategy = 'autoscale'
                 append value to the existing job name when replicating the job definition.
                 If None defaults to the current timestamp on job creation
         """
@@ -1193,13 +1193,13 @@ class _CloudClient(_Client):
         
         # this is here to not break existing stuff 09.26.2022
         if restart_from_failure:
-            mode = 'restart_from_failure'
+            job_run_strategy = 'restart_from_failure'
 
-        mode_is_valid = self._validate_job_run_mode(mode)
-        if not mode_is_valid:
-            raise Exception(f'mode: {mode} is not one of ["standard", "restart_from_failure", "autoscale"]')
+        is_valid_strategy = self._validate_job_run_mode(job_run_strategy)
+        if not is_valid_strategy:
+            raise Exception(f'strategy: {job_run_strategy} is not one of ["standard", "restart_from_failure", "autoscale"]')
 
-        if mode == 'restart_from_failure':
+        if job_run_strategy == 'restart_from_failure':
             self.console.log(f'Restarting job {job_id} from last failed state.')
             payload, has_failures = self._get_restart_job_definition(
                 account_id=account_id,
@@ -1214,7 +1214,7 @@ class _CloudClient(_Client):
                 )
                 return None
 
-        elif mode == 'autoscale':
+        elif job_run_strategy == 'autoscale':
             self.console.log(f'Triggered with autoscaling set to True. Detecting any running instances')
             most_recent_job_run = self.list_runs(
                 account_id=account_id,
@@ -1246,7 +1246,7 @@ class _CloudClient(_Client):
                 else:
                     new_job_name = '-'.join([new_job_definition['name'], autoscale_job_name_slug])
                     new_job_definition['name'] = new_job_name
-                    
+
                 job_id = self.create_job(
                     account_id=account_id,
                     payload=new_job_definition
@@ -1280,7 +1280,7 @@ class _CloudClient(_Client):
                 ]:
                     break
             
-        if mode == 'autoscale' and autoscale_delete_post_run:
+        if job_run_strategy == 'autoscale' and autoscale_delete_post_run:
             self.delete_job(
                 account_id=account_id,
                 job_id=job_id

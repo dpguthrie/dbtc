@@ -8,7 +8,7 @@ class JobRunStatus(enum.IntEnum):
     ERROR = 20
     CANCELLED = 30
 
-class JobRunModes(str, enum.Enum):
+class JobRunStrategies(str, enum.Enum):
     STANDARD = 'standard'
     RESTART = 'restart_from_failure'
     AUTOSCALE = 'autoscale'

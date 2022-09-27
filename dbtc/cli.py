@@ -996,7 +996,7 @@ def trigger_job(
             'job.'
         ),
     ),
-    mode: str = typer.Option(
+    job_run_strategy: str = typer.Option(
         'standard',
         help=(
             'Possible values are ["standard", "restart_from_failure", "autoscale"] '
@@ -1029,7 +1029,7 @@ def trigger_job(
         poll_interval=poll_interval,
         restart_from_failure=restart_from_failure,
         trigger_on_failure_only=trigger_on_failure_only,
-        mode=mode,
+        job_run_strategy=job_run_strategy,
         autoscale_delete_post_run=autoscale_delete_post_run,
         autoscale_job_name_slug=autoscale_job_name_slug,
     )
