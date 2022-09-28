@@ -13,6 +13,7 @@ python = "^3.8"
 sgqlc = "^15.0"
 requests = "^2.27.1"
 typer = {extras = ["all"], version = "^0.6.1"}
+pydantic = "^1.10.2"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
