@@ -1,4 +1,5 @@
 # stdlib
+from enum import auto
 import json
 from typing import List, Optional
 
@@ -255,11 +256,10 @@ def create_environment_variables(
 def create_job(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    project_id: int = PROJECT_ID,
     payload: str = PAYLOAD,
 ):
     """Create a job in a project."""
-    _dbt_cloud_request(ctx, 'create_job', account_id, project_id, json.loads(payload))
+    _dbt_cloud_request(ctx, 'create_job', account_id, json.loads(payload))
 
 
 @app.command()
@@ -970,6 +970,74 @@ def test_connection(
 
 
 @app.command()
+def trigger_job_with_autoscaling(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    job_id: int = JOB_ID,
+    payload: str = PAYLOAD,
+    should_poll: bool = typer.Option(
+        True,
+        help='Poll until job completion (status is one of success, failure, or '
+        'cancelled)',
+    ),
+    poll_interval: int = typer.Option(
+        10, '--poll-interval', help='Number of seconds to wait in between polling.'
+    ),
+    autoscale_delete_post_run: bool = typer.Option(
+        False, help='Delete the cloned job immediately after it runs'
+    ),
+    autoscale_job_identifier: str = typer.Option(
+        False,
+        help=(
+            'A string to append to the name of the job with id specified in job_id '
+            'E.g. if the job is named "my_dbt_cloud_job" and the autoscale_job_identifier '
+            'is "my_new_job", the cloned job will be named "my_dbt_cloud_job-my_new_job" '
+        ),
+    ),
+):
+    """Trigger job to run."""
+    _dbt_cloud_request(
+        ctx,
+        'trigger_job_with_autoscaling',
+        account_id,
+        job_id,
+        json.loads(payload),
+        should_poll=should_poll,
+        poll_interval=poll_interval,
+        autoscale_delete_post_run=autoscale_delete_post_run,
+        autoscale_job_identifier=autoscale_job_identifier,
+    )
+
+
+@app.command()
+def trigger_job_restart_from_failure(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    job_id: int = JOB_ID,
+    payload: str = PAYLOAD,
+    should_poll: bool = typer.Option(
+        True,
+        help='Poll until job completion (status is one of success, failure, or '
+        'cancelled)',
+    ),
+    poll_interval: int = typer.Option(
+        10, '--poll-interval', help='Number of seconds to wait in between polling.'
+    )
+):
+    """Trigger job to rerun from the point of failure on its most recent run 
+       Does nothing if no failures are identified on the most recent run."""
+    _dbt_cloud_request(
+        ctx,
+        'trigger_job_restart_from_failure',
+        account_id,
+        job_id,
+        json.loads(payload),
+        should_poll=should_poll,
+        poll_interval=poll_interval,
+    )
+
+
+@app.command()
 def trigger_job(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
@@ -995,25 +1063,6 @@ def trigger_job(
             'job.'
         ),
     ),
-    job_run_strategy: str = typer.Option(
-        'standard',
-        help=(
-            'Possible values are ["standard", "restart_from_failure", "autoscale"] '
-            'standard: runs existing job as-is '
-            'restart_from_failure: determine whether the last run of the target job '
-            '    exited with an error. If yes, restart from the point of failure '
-            'autoscale: determine with the target job is currently running '
-            '    If yes, create and then run the clone.'
-        ),
-    ),
-    autoscale_delete_post_run: bool = typer.Option(
-        True, help=('Delete job created via autoscaling after it finishes running')
-    ),
-    autoscale_job_name_slug: str = typer.Option(
-        True, help=(
-            'Append this string to the end of the replicated job name to disambiguate'
-        )
-    ),
 ):
     """Trigger job to run."""
     _dbt_cloud_request(
@@ -1026,9 +1075,6 @@ def trigger_job(
         poll_interval=poll_interval,
         restart_from_failure=restart_from_failure,
         trigger_on_failure_only=trigger_on_failure_only,
-        job_run_strategy=job_run_strategy,
-        autoscale_delete_post_run=autoscale_delete_post_run,
-        autoscale_job_name_slug=autoscale_job_name_slug,
     )
 
 

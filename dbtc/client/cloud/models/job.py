@@ -28,6 +28,10 @@ class _JobTrigger(BaseModel):
     git_provider_webhook: Optional[bool] = None
 
 
+class Test(BaseModel):
+    account_id: int
+    id: Optional[int] = None
+
 class Job(BaseModel):
 
     # Required
@@ -35,22 +39,21 @@ class Job(BaseModel):
     environment_id: int
     generate_docs: bool
     name: str
+    dbt_version: str
     project_id: int
     run_generate_sources: bool
+    schedule: _JobSchedule
+    settings: _JobSettings
+    triggers: _JobTrigger
     state: Literal[State.active, State.deleted]
 
     # Optional
-    dbt_version: Optional[str] = None
-    deactivated: bool = False
-    deferring_job_definiton_id: Optional[int] = None
+    deactivated: Optional[bool] = False
+    deferring_job_definition_id: Optional[int] = None
     execute_steps: Optional[List[str]] = None
     execution: Optional[_JobExecution] = None
-    id: Optional[int] = None
     is_deferrable: Optional[bool] = False
     run_failure_count: int = 0
-    schedule: Optional[_JobSchedule] = None
-    settings: Optional[_JobSettings] = None
-    triggers: Optional[_JobTrigger] = None
 
     def __init__(self, **data):
         schedule = data.get('schedule', {})

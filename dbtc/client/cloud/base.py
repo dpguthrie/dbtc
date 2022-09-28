@@ -1,32 +1,25 @@
 # stdlib
 import argparse
+from asyncore import poll
 import shlex
 import time
 from datetime import datetime
 from functools import partial, wraps
 from typing import Dict, Iterable, List
+from xxlimited import new
 
 # third party
 import requests
 
 # first party
 from dbtc.client.base import _Client
-<<<<<<< HEAD
-<<<<<<< HEAD
-from dbtc.client.cloud.configs.enums import JobRunStatus, JobRunStrategies
-from dbtc.client.cloud.configs.dbt_cloud_api import dbtCloudAPIRequestFactory
-=======
 from dbtc.client.cloud import models
->>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
-=======
-from dbtc.client.cloud import models
->>>>>>> feat/model-validation
 from dbtc.client.cloud.configs.dbt_core_cli import (
     global_cli_args,
     run_commands,
     sub_command_cli_args,
 )
-from dbtc.client.cloud.configs.enums import JobRunStrategies, JobRunStatus
+from dbtc.client.cloud.configs.enums import JobRunStatus
 
 
 def _version_decorator(func, version):
@@ -68,15 +61,17 @@ class _CloudClient(_Client):
 
         return 'api_key'
 
-    def _clone_resource(self, resource: str, **kwargs):
+    def _clone_resource(self, resource: str, account_id: int, **kwargs):
         create_args = kwargs.pop('create_args', None)
         payload = getattr(self, f'get_{resource}')(**kwargs)['data']
 
         # Can't recreate a resource with an ID
         payload.pop('id', None)
         if create_args is not None:
-            kwargs = {k: v for k, v in kwargs.items() if k in create_args}
+            payload = {k: v for k, v in kwargs.items() if k in create_args}
         kwargs['payload'] = payload
+        kwargs['account_id'] = account_id
+
         return getattr(self, f'create_{resource}')(**kwargs)
 
     def _make_request(
@@ -138,24 +133,6 @@ class _CloudClient(_Client):
         except IndexError:
             obj = None
         return obj
-<<<<<<< HEAD
-<<<<<<< HEAD
-    
-    def _validate_job_run_strategy(self, job_run_strategy):
-        if job_run_strategy not in JobRunStrategies:
-=======
-
-    def _validate_job_run_mode(self, mode):
-        if mode not in JobRunModes:
->>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
-=======
-    
-    def _validate_job_run_strategy(self, job_run_strategy):
-        if job_run_strategy not in JobRunStrategies:
->>>>>>> feat/model-validation
-            return False
-
-        return True
 
     @v3
     def assign_group_permissions(
@@ -339,7 +316,7 @@ class _CloudClient(_Client):
             f'accounts/{account_id}/jobs/',
             method='post',
             json=payload,
-            model=models.Job,
+            #model=models.Job,
         )
 
     @v3
@@ -1174,7 +1151,163 @@ class _CloudClient(_Client):
                 payload.update({"steps_override": rerun_steps})
 
         return payload, has_failures
+    
+    @v2
+    def trigger_job_with_autoscaling(
+        self,
+        account_id: int,
+        job_id: int,
+        payload: Dict,
+        *,
+        should_poll: bool = True,
+        poll_interval: int = 10,
+        autoscale_delete_post_run: bool = True,
+        autoscale_job_identifier: str = None,
+    ):
+        """Check if job with id = job_id is actively running. If it is, create a 
+           clone of the target job and then trigger the clone to run using self.trigger_job
+        
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            job_id (int): Numeric ID of the job to trigger
+            payload (dict): Payload required for post request
+            should_poll (bool, optional): Poll until completion if `True`, completion
+                is one of success, failure, or cancelled
+            poll_interval (int, optional): Number of seconds to wait in between
+                polling
+            autoscale_delete_post_run (bool, optional): Only relevant when job_run_strategy = 'autoscale'
+                Remove a job replicated via autoscaling after it finishes running.
+            autoscale_job_identifier (str, optional): Only relevant when job_run_strategy = 'autoscale'
+                append value to the existing job name when replicating the job definition.
+                If None defaults to the current timestamp on job creation
+        """
+        
+        is_new_job_created = False 
 
+        self.console.log(
+            'Triggered with autoscaling set to True. '
+            'Detecting any running instances'
+        )
+        most_recent_job_run = self.list_runs(
+            account_id=account_id, job_definition_id=job_id, limit=1, order_by='-id'
+        )['data'][0]
+        most_recent_job_run_status = most_recent_job_run['status_humanized']
+
+        self.console.log(
+            f'Status for most recent run of job {job_id} '
+            f'is {most_recent_job_run_status}.'
+        )
+
+        if most_recent_job_run_status not in ['Queued', 'Starting', 'Running']:
+            self.console.log(
+                f'autoscale set to true but base job with id {job_id} is free. '
+                'triggering base job and ignoring autoscale configuration.'
+            )
+
+        else:
+            self.console.log(f'job_id {job_id} has an active run. Cloning job.')
+            optional_fields = [k for k,v in models.Job.__fields__.items() if not v.required]
+            required_fields = [k for k,v in models.Job.__fields__.items() if v.required]
+            existing_job_defintion = self.get_job(
+                account_id=account_id, job_id=job_id
+            )['data']
+
+            new_job_definition = {k:v for k,v in existing_job_defintion.items() if k in required_fields}
+            
+            if not autoscale_job_identifier:
+                creation_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+                new_job_name = '-'.join([new_job_definition['name'], creation_time])
+                new_job_definition['name'] = new_job_name
+            else:
+                new_job_name = '-'.join([new_job_definition['name'], autoscale_job_identifier])
+                new_job_definition['name'] = new_job_name
+            
+            # make sure the id is none on the new job
+            new_job_definition['id'] = None
+            job_id = self.create_job(
+                account_id=account_id, payload=new_job_definition
+            )['data']['id']
+
+            # fill in optional fields on the job if present in the source
+            for field in optional_fields:
+                new_job_definition[field] = existing_job_defintion.get(field)
+            
+            # set the ID in the update request
+            new_job_definition['id'] = job_id
+            self.console.log(new_job_definition)
+            job_id = self.update_job(
+                account_id=account_id, job_id=job_id, payload=new_job_definition
+            )['data']['id']
+
+            is_new_job_created = True
+
+            self.console.log(f'Created new job with job_id: {job_id}')
+
+
+        self.console.log(f'Triggering new job with job_id: {job_id}')
+        run = self.trigger_job(
+            account_id=account_id,
+            job_id=job_id,
+            payload=payload,
+            should_poll=should_poll,
+            poll_interval=poll_interval
+        )
+        
+        if is_new_job_created and autoscale_delete_post_run:
+            self.console.log(f'Deleting autoscaled job with job_id: {job_id} post run')
+            self.delete_job(
+                account_id=account_id,
+                job_id=job_id
+            )
+        
+        return run
+    
+    @v2
+    def trigger_job_restart_from_failure(
+        self,
+        account_id: int,
+        job_id: int,
+        payload: Dict,
+        *,
+        should_poll: bool = True,
+        poll_interval: int = 10,
+    ):
+        """Check if job with job_id had failed steps on its prior run. 
+           If failed steps are found, modify the job run commands to restart
+           from the point of failure.
+           If no failed steps are found, return None
+        
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            job_id (int): Numeric ID of the job to trigger
+            payload (dict): Payload required for post request
+            should_poll (bool, optional): Poll until completion if `True`, completion
+                is one of success, failure, or cancelled
+            poll_interval (int, optional): Number of seconds to wait in between
+                polling
+        """
+
+        self.console.log(f'Detecting failures on prior run of job {job_id}')
+        payload, has_failures = self._get_restart_job_definition(
+            account_id=account_id,
+            job_id=job_id,
+            payload=payload
+        )
+
+        if has_failures:
+            run = self.trigger_job(
+                account_id=account_id,
+                job_id=job_id,
+                payload=payload,
+                should_poll=should_poll,
+                poll_interval=poll_interval           
+            )
+            return run
+        
+        self.console.log(f'No failed steps identified for job {job_id}. Exiting')
+        
+        return None
+            
     @v2
     def trigger_job(
         self,
@@ -1185,10 +1318,7 @@ class _CloudClient(_Client):
         should_poll: bool = True,
         poll_interval: int = 10,
         restart_from_failure: bool = False,
-        trigger_on_failure_only: bool = False,
-        job_run_strategy: str = 'standard',
-        autoscale_delete_post_run: bool = True,
-        autoscale_job_identifier: str = None,
+        trigger_on_failure_only: bool = True,
     ):
         """Trigger a job by its ID
 
@@ -1206,36 +1336,6 @@ class _CloudClient(_Client):
                 restart_from_failure to True.  This has the effect of only triggering
                 the job when the prior invocation was not successful. Otherwise, the
                 function will exit prior to triggering the job.
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> feat/model-validation
-            job_run_strategy (str, optional): Must be one of ['standard', 'restart_from_failure', 
-                'autoscaling']. 
-                - standard strategy triggers the job to run as-is.
-                - restart_from_failure checks for errors on the prior invocation and, 
-                  if found, restarts failed models only.
-                - autoscale checks whether the job_id is actively running. If so,
-                  creates a copy of the running job
-            autoscale_delete_post_run (bool, optional): Only relevant when job_run_strategy = 'autoscale'
-<<<<<<< HEAD
-=======
-            mode (str, optional): Must be one of ['standard', 'restart_from_failure',
-                'autoscaling'].
-                - standard mode triggers the job to run as-is.
-                - restart_from_failure checks for errors on the prior invocation and,
-                  if found, restarts failed models only.
-                - autoscale checks whether the job_id is actively running. If so,
-                  creates a copy of the running job
-            autoscale_delete_post_run (bool, optional): Only relevant when
-                mode = 'autoscale'
->>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
-=======
->>>>>>> feat/model-validation
-                Remove a job replicated via autoscaling after it finishes running.
-            autoscale_job_identifier (str, optional): Only relevant when job_run_strategy = 'autoscale'
-                append value to the existing job name when replicating the job definition.
-                If None defaults to the current timestamp on job creation
         """
 
         def run_status_formatted(run: Dict, time: float) -> str:
@@ -1253,112 +1353,18 @@ class _CloudClient(_Client):
 
         # this is here to not break existing stuff 09.26.2022
         if restart_from_failure:
-            job_run_strategy = 'restart_from_failure'
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-        is_valid_strategy = self._validate_job_run_mode(job_run_strategy)
-        if not is_valid_strategy:
-            raise Exception(f'strategy: {job_run_strategy} is not one of ["standard", "restart_from_failure", "autoscale"]')
-=======
-        mode_is_valid = self._validate_job_run_mode(mode)
-        if not mode_is_valid:
-=======
-        is_valid_strategy = self._validate_job_run_mode(job_run_strategy)
-        if not is_valid_strategy:
->>>>>>> feat/model-validation
-            raise Exception(
-                f'strategy: {job_run_strategy} is not one of '
-                '["standard", "restart_from_failure", "autoscale"]'
-<<<<<<< HEAD
+            run = self.restart_job_from_failure(
+                account_id=account_id,
+                job_id=job_id,
+                payload=payload
             )
->>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
-=======
-                )
->>>>>>> feat/model-validation
-
-        if job_run_strategy == 'restart_from_failure':
-            self.console.log(f'Restarting job {job_id} from last failed state.')
-            payload, has_failures = self._get_restart_job_definition(
-                account_id=account_id, job_id=job_id, payload=payload
-            )
-
-            if trigger_on_failure_only and not has_failures:
+             
+            if not run and trigger_on_failure_only:
                 self.console.log(
-                    'Process triggered with trigger_on_failure_only set to True but '
-                    'no failed run steps found. Terminating.'
-                )
-                return None
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-        elif job_run_strategy == 'autoscale':
-            self.console.log(f'Triggered with autoscaling set to True. Detecting any running instances')
-=======
-        elif mode == 'autoscale':
-=======
-        elif job_run_strategy == 'autoscale':
->>>>>>> feat/model-validation
-            self.console.log(
-                'Triggered with autoscaling set to True. '
-                'Detecting any running instances'
-            )
-<<<<<<< HEAD
->>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
-=======
->>>>>>> feat/model-validation
-            most_recent_job_run = self.list_runs(
-                account_id=account_id, job_definition_id=job_id, limit=1, order_by='-id'
-            )['data'][0]
-            most_recent_job_run_status = most_recent_job_run['status_humanized']
-
-            self.console.log(
-                f'Status for most recent run of job {job_id} '
-                f'is {most_recent_job_run_status}.'
-            )
-
-            if most_recent_job_run_status not in ['Queued', 'Starting', 'Running']:
-                self.console.log(
-                    f'autoscale set to true but base job with id {job_id} is free '
-                    'triggering base job and ignoring autoscale configuration.'
-                )
-                autoscale_delete_post_run = False
-
-            else:
-                self.console.log(f'job_id {job_id} has an active run. Cloning job.')
-
-                new_job_definition = self.clone_job(
-                    account_id=account_id, job_id=job_id
-                )
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> feat/model-validation
-                
-                if not autoscale_job_identifier:
-                    creation_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-                    new_job_name = '-'.join([new_job_definition['name'], creation_time])
-                    new_job_definition['name'] = new_job_name
-                else:
-                    new_job_name = '-'.join([new_job_definition['name'], autoscale_job_name_slug])
-                    new_job_definition['name'] = new_job_name
-
-<<<<<<< HEAD
-=======
-
-                # TODO: need to figure out the best way to disambiguate replicated jobs.
-                creation_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-                new_job_name = '-'.join([new_job_definition['name'], creation_time])
-                new_job_definition['name'] = new_job_name
->>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
-=======
->>>>>>> feat/model-validation
-                job_id = self.create_job(
-                    account_id=account_id, payload=new_job_definition
-                )['data']['id']
-
-                self.console.log(f'Created new job with job_id: {job_id}')
-
+                        'Not triggering job because prior run was successful.'
+                    )
+                return
+        
         run = self._simple_request(
             f'accounts/{account_id}/jobs/{job_id}/run/',
             method='post',
@@ -1384,24 +1390,6 @@ class _CloudClient(_Client):
                     JobRunStatus.ERROR,
                 ]:
                     break
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> feat/model-validation
-            
-        if job_run_strategy == 'autoscale' and autoscale_delete_post_run:
-            self.delete_job(
-                account_id=account_id,
-                job_id=job_id
-            )
-<<<<<<< HEAD
-=======
-
-        if mode == 'autoscale' and autoscale_delete_post_run:
-            self.delete_job(account_id=account_id, job_id=job_id)
->>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
-=======
->>>>>>> feat/model-validation
 
         return run
 
