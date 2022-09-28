@@ -1,24 +1,23 @@
 # stdlib
 import argparse
-from datetime import datetime
 import shlex
 import time
+from datetime import datetime
 from functools import partial, wraps
 from typing import Dict, Iterable, List
-from urllib import request
 
 # third party
 import requests
 
 # first party
 from dbtc.client.base import _Client
-from dbtc.client.cloud.configs.enums import JobRunStatus, JobRunStrategies
-from dbtc.client.cloud.configs.dbt_cloud_api import dbtCloudAPIRequestFactory
+from dbtc.client.cloud import models
 from dbtc.client.cloud.configs.dbt_core_cli import (
-    run_commands,
     global_cli_args,
-    sub_command_cli_args
+    run_commands,
+    sub_command_cli_args,
 )
+from dbtc.client.cloud.configs.enums import JobRunStrategies, JobRunStatus
 
 
 def _version_decorator(func, version):
@@ -31,6 +30,7 @@ def _version_decorator(func, version):
     return wrapper
 
 
+# Version Decorators
 v2 = partial(_version_decorator, version='v2')
 v3 = partial(_version_decorator, version='v3')
 v4 = partial(_version_decorator, version='v4')
@@ -42,7 +42,6 @@ class _CloudClient(_Client):
         self.session = requests.Session()
         self.session.headers = self.headers
         self.parser = argparse.ArgumentParser()
-        self.request_factory = dbtCloudAPIRequestFactory()
         all_cli_args = {**global_cli_args, **sub_command_cli_args}
         for arg_specs in all_cli_args.values():
             flags = arg_specs['flags']
@@ -60,10 +59,28 @@ class _CloudClient(_Client):
 
         return 'api_key'
 
+    def _clone_resource(self, resource: str, **kwargs):
+        create_args = kwargs.pop('create_args', None)
+        payload = getattr(self, f'get_{resource}')(**kwargs)['data']
+
+        # Can't recreate a resource with an ID
+        payload.pop('id', None)
+        if create_args is not None:
+            kwargs = {k: v for k, v in kwargs.items() if k in create_args}
+        kwargs['payload'] = payload
+        return getattr(self, f'create_{resource}')(**kwargs)
+
     def _make_request(
         self, path: str, *, method: str = 'get', **kwargs
     ) -> requests.Response:
         """Make request to API."""
+
+        # Model is not an argument that the request method accepts, needs to be removed
+        model = kwargs.pop('model', None)
+        if model is not None:
+
+            # This will validate the payload as well as add any optional fields
+            kwargs['json'] = model(**kwargs['json']).dict()
         full_url = self.full_url(path)
         response = self.session.request(method=method, url=full_url, **kwargs)
         return response
@@ -116,7 +133,7 @@ class _CloudClient(_Client):
     def _validate_job_run_strategy(self, job_run_strategy):
         if job_run_strategy not in JobRunStrategies:
             return False
-        
+
         return True
 
     @v3
@@ -181,6 +198,27 @@ class _CloudClient(_Client):
         return self._simple_request(
             f'accounts/{account_id}/runs/{run_id}/cancel',
             method='post',
+        )
+
+    @v2
+    def clone_job(
+        self,
+        account_id: int,
+        job_id: int,
+    ):
+
+        """Create a job using the configuration of another
+
+        !!! tip
+            If a job is currently running, replicate the job definition to a new job,
+            and trigger
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            job_id (int): Numeric ID of the job to trigger
+        """
+        return self._clone_resource(
+            'job', account_id=account_id, job_id=job_id, create_args=['account_id']
         )
 
     @v3
@@ -280,6 +318,7 @@ class _CloudClient(_Client):
             f'accounts/{account_id}/jobs/',
             method='post',
             json=payload,
+            model=models.Job,
         )
 
     @v3
@@ -291,7 +330,10 @@ class _CloudClient(_Client):
             payload (dict): Dictionary representing the project to create
         """
         return self._simple_request(
-            f'accounts/{account_id}/projects/', method='post', json=payload
+            f'accounts/{account_id}/projects/',
+            method='post',
+            json=payload,
+            model=models.Project,
         )
 
     @v3
@@ -785,7 +827,11 @@ class _CloudClient(_Client):
 
     @v2
     def list_jobs(
-        self, account_id: int, *, order_by: str = None, project_id: int = None,
+        self,
+        account_id: int,
+        *,
+        order_by: str = None,
+        project_id: int = None,
     ) -> Dict:
         """List jobs in an account or specific project.
 
@@ -794,7 +840,7 @@ class _CloudClient(_Client):
             order_by (str, optional): Field to order the result by.
                 Use - to indicate reverse order.
             project_id (int, optional): Numeric ID of the project containing jobs
-        """        
+        """
         return self._simple_request(
             f'accounts/{account_id}/jobs/',
             params={'order_by': order_by, 'project_id': project_id},
@@ -990,30 +1036,8 @@ class _CloudClient(_Client):
         return self._simple_request(
             f'accounts/{account_id}/connections/test/', method='post', json=payload
         )
-    
-    @v2 
-    def clone_job(
-        self,
-        account_id: int,
-        job_id: int,
-    ):
 
-        """If a job is currently running, replicate the job definition to a new job
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            job_id (int): Numeric ID of the job to trigger
-            payload (dict): Payload required for post request
-        """
-        
-        existing_job_definition = self.get_job(
-            account_id=account_id,
-            job_id=job_id
-        )['data']
-        
-        return self.request_factory.create_job_request(data=existing_job_definition)
-            
-    @v2 
+    @v2
     def _get_restart_job_definition(
         self,
         account_id: int,
@@ -1022,9 +1046,9 @@ class _CloudClient(_Client):
     ):
 
         """Identifies whether there was a failure on the previous run of the job.
-           When failures are identified, returns an updated job definition to 
+           When failures are identified, returns an updated job definition to
            restart from the point of failure.
-        
+
         Args:
             account_id (int): Numeric ID of the account to retrieve
             job_id (int): Numeric ID of the job to trigger
@@ -1042,16 +1066,16 @@ class _CloudClient(_Client):
                     else:
                         string += f" --{arg} '{value}'"
             return string
-        
+
         has_failures = False
 
         last_run_data = self.list_runs(
-                account_id=account_id,
-                include_related=['run_steps'],
-                job_definition_id=job_id,
-                order_by='-id',
-                limit=1,
-            )['data'][0]
+            account_id=account_id,
+            include_related=['run_steps'],
+            job_definition_id=job_id,
+            order_by='-id',
+            limit=1,
+        )['data'][0]
 
         last_run_status = last_run_data['status_humanized'].lower()
         last_run_id = last_run_data['id']
@@ -1111,13 +1135,10 @@ class _CloudClient(_Client):
                                 [
                                     record['unique_id'].split('.')[2]
                                     for record in step_results
-                                    if record['status']
-                                    in ['error', 'skipped', 'fail']
+                                    if record['status'] in ['error', 'skipped', 'fail']
                                 ]
                             )
-                            global_args = parse_args(
-                                global_cli_args.keys(), namespace
-                            )
+                            global_args = parse_args(global_cli_args.keys(), namespace)
                             sub_command_args = parse_args(
                                 sub_command_cli_args.keys(), namespace
                             )
@@ -1129,10 +1150,10 @@ class _CloudClient(_Client):
                             )
             if len(rerun_steps) > 0:
                 has_failures = True
-                payload.update({"steps_override": rerun_steps})                
-            
+                payload.update({"steps_override": rerun_steps})
+
         return payload, has_failures
-    
+
     @v2
     def trigger_job(
         self,
@@ -1146,7 +1167,7 @@ class _CloudClient(_Client):
         trigger_on_failure_only: bool = False,
         job_run_strategy: str = 'standard',
         autoscale_delete_post_run: bool = True,
-        autoscale_job_name_slug: str = None,
+        autoscale_job_identifier: str = None,
     ):
         """Trigger a job by its ID
 
@@ -1173,7 +1194,7 @@ class _CloudClient(_Client):
                   creates a copy of the running job
             autoscale_delete_post_run (bool, optional): Only relevant when job_run_strategy = 'autoscale'
                 Remove a job replicated via autoscaling after it finishes running.
-            autoscale_job_name_slug (str, optional): Only relevant when job_run_strategy = 'autoscale'
+            autoscale_job_identifier (str, optional): Only relevant when job_run_strategy = 'autoscale'
                 append value to the existing job name when replicating the job definition.
                 If None defaults to the current timestamp on job creation
         """
@@ -1190,56 +1211,61 @@ class _CloudClient(_Client):
                 f'Status: "{status.capitalize()}", Elapsed time: {round(time, 0)}s'
                 f', View here: {url}'
             )
-        
+
         # this is here to not break existing stuff 09.26.2022
         if restart_from_failure:
             job_run_strategy = 'restart_from_failure'
 
         is_valid_strategy = self._validate_job_run_mode(job_run_strategy)
         if not is_valid_strategy:
-            raise Exception(f'strategy: {job_run_strategy} is not one of ["standard", "restart_from_failure", "autoscale"]')
+            raise Exception(
+                f'strategy: {job_run_strategy} is not one of '
+                '["standard", "restart_from_failure", "autoscale"]'
+                )
 
         if job_run_strategy == 'restart_from_failure':
             self.console.log(f'Restarting job {job_id} from last failed state.')
             payload, has_failures = self._get_restart_job_definition(
-                account_id=account_id,
-                job_id=job_id,
-                payload=payload
+                account_id=account_id, job_id=job_id, payload=payload
             )
 
             if trigger_on_failure_only and not has_failures:
                 self.console.log(
-                    f'Process triggered with trigger_on_failure_only set to True but no '
-                    'failed run steps found. Terminating.'
+                    'Process triggered with trigger_on_failure_only set to True but '
+                    'no failed run steps found. Terminating.'
                 )
                 return None
 
         elif job_run_strategy == 'autoscale':
-            self.console.log(f'Triggered with autoscaling set to True. Detecting any running instances')
+            self.console.log(
+                'Triggered with autoscaling set to True. '
+                'Detecting any running instances'
+            )
             most_recent_job_run = self.list_runs(
-                account_id=account_id,
-                job_definition_id=job_id,
-                limit=1,
-                order_by='-id'
+                account_id=account_id, job_definition_id=job_id, limit=1, order_by='-id'
             )['data'][0]
             most_recent_job_run_status = most_recent_job_run['status_humanized']
-            
-            self.console.log(f'Status for most recent run of job {job_id} is {most_recent_job_run_status}.')
+
+            self.console.log(
+                f'Status for most recent run of job {job_id} '
+                f'is {most_recent_job_run_status}.'
+            )
 
             if most_recent_job_run_status not in ['Queued', 'Starting', 'Running']:
-                self.console.log(f'autoscale set to true but base job with id {job_id} is free '
-                  'triggering base job and ignoring autoscale configuration.')
+                self.console.log(
+                    f'autoscale set to true but base job with id {job_id} is free '
+                    'triggering base job and ignoring autoscale configuration.'
+                )
                 autoscale_delete_post_run = False
-            
+
             else:
                 self.console.log(f'job_id {job_id} has an active run. Cloning job.')
-                
+
                 new_job_definition = self.clone_job(
-                    account_id=account_id,
-                    job_id=job_id
+                    account_id=account_id, job_id=job_id
                 )
                 
-                if not autoscale_job_name_slug:
+                if not autoscale_job_identifier:
                     creation_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
                     new_job_name = '-'.join([new_job_definition['name'], creation_time])
                     new_job_definition['name'] = new_job_name
@@ -1248,8 +1274,7 @@ class _CloudClient(_Client):
                     new_job_definition['name'] = new_job_name
 
                 job_id = self.create_job(
-                    account_id=account_id,
-                    payload=new_job_definition
+                    account_id=account_id, payload=new_job_definition
                 )['data']['id']
 
                 self.console.log(f'Created new job with job_id: {job_id}')
@@ -1259,7 +1284,7 @@ class _CloudClient(_Client):
             method='post',
             json=payload,
         )
-        
+
         if not run['status']['is_success']:
             self.console.log(f'Run NOT triggered for job {job_id}.  See run response.')
             return run
@@ -1301,7 +1326,7 @@ class _CloudClient(_Client):
             payload (dict): Dictionary representing the connection to update
         """
         return self._simple_request(
-            f'accounts/{account_id}/projects/{project_id}/connections/{connection_id}/',
+            f'accounts/{account_id}/projects/{project_id}/connections/{connection_id}/',  # noqa: E501
             method='post',
             json=payload,
         )
@@ -1319,7 +1344,7 @@ class _CloudClient(_Client):
             payload (dict): Dictionary representing the credentials to update
         """
         return self._simple_request(
-            f'accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/',  # noqa: E50
+            f'accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/',  # noqa: E501
             method='post',
             json=payload,
         )
