@@ -12,17 +12,21 @@ import requests
 # first party
 from dbtc.client.base import _Client
 <<<<<<< HEAD
+<<<<<<< HEAD
 from dbtc.client.cloud.configs.enums import JobRunStatus, JobRunStrategies
 from dbtc.client.cloud.configs.dbt_cloud_api import dbtCloudAPIRequestFactory
 =======
 from dbtc.client.cloud import models
 >>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
+=======
+from dbtc.client.cloud import models
+>>>>>>> feat/model-validation
 from dbtc.client.cloud.configs.dbt_core_cli import (
     global_cli_args,
     run_commands,
     sub_command_cli_args,
 )
-from dbtc.client.cloud.configs.enums import JobRunModes, JobRunStatus
+from dbtc.client.cloud.configs.enums import JobRunStrategies, JobRunStatus
 
 
 def _version_decorator(func, version):
@@ -135,6 +139,7 @@ class _CloudClient(_Client):
             obj = None
         return obj
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     def _validate_job_run_strategy(self, job_run_strategy):
         if job_run_strategy not in JobRunStrategies:
@@ -143,6 +148,11 @@ class _CloudClient(_Client):
     def _validate_job_run_mode(self, mode):
         if mode not in JobRunModes:
 >>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
+=======
+    
+    def _validate_job_run_strategy(self, job_run_strategy):
+        if job_run_strategy not in JobRunStrategies:
+>>>>>>> feat/model-validation
             return False
 
         return True
@@ -1178,7 +1188,7 @@ class _CloudClient(_Client):
         trigger_on_failure_only: bool = False,
         job_run_strategy: str = 'standard',
         autoscale_delete_post_run: bool = True,
-        autoscale_job_name_slug: str = None,
+        autoscale_job_identifier: str = None,
     ):
         """Trigger a job by its ID
 
@@ -1197,6 +1207,9 @@ class _CloudClient(_Client):
                 the job when the prior invocation was not successful. Otherwise, the
                 function will exit prior to triggering the job.
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> feat/model-validation
             job_run_strategy (str, optional): Must be one of ['standard', 'restart_from_failure', 
                 'autoscaling']. 
                 - standard strategy triggers the job to run as-is.
@@ -1205,6 +1218,7 @@ class _CloudClient(_Client):
                 - autoscale checks whether the job_id is actively running. If so,
                   creates a copy of the running job
             autoscale_delete_post_run (bool, optional): Only relevant when job_run_strategy = 'autoscale'
+<<<<<<< HEAD
 =======
             mode (str, optional): Must be one of ['standard', 'restart_from_failure',
                 'autoscaling'].
@@ -1216,8 +1230,10 @@ class _CloudClient(_Client):
             autoscale_delete_post_run (bool, optional): Only relevant when
                 mode = 'autoscale'
 >>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
+=======
+>>>>>>> feat/model-validation
                 Remove a job replicated via autoscaling after it finishes running.
-            autoscale_job_name_slug (str, optional): Only relevant when job_run_strategy = 'autoscale'
+            autoscale_job_identifier (str, optional): Only relevant when job_run_strategy = 'autoscale'
                 append value to the existing job name when replicating the job definition.
                 If None defaults to the current timestamp on job creation
         """
@@ -1240,17 +1256,26 @@ class _CloudClient(_Client):
             job_run_strategy = 'restart_from_failure'
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         is_valid_strategy = self._validate_job_run_mode(job_run_strategy)
         if not is_valid_strategy:
             raise Exception(f'strategy: {job_run_strategy} is not one of ["standard", "restart_from_failure", "autoscale"]')
 =======
         mode_is_valid = self._validate_job_run_mode(mode)
         if not mode_is_valid:
+=======
+        is_valid_strategy = self._validate_job_run_mode(job_run_strategy)
+        if not is_valid_strategy:
+>>>>>>> feat/model-validation
             raise Exception(
-                f'mode: {mode} is not one of '
+                f'strategy: {job_run_strategy} is not one of '
                 '["standard", "restart_from_failure", "autoscale"]'
+<<<<<<< HEAD
             )
 >>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
+=======
+                )
+>>>>>>> feat/model-validation
 
         if job_run_strategy == 'restart_from_failure':
             self.console.log(f'Restarting job {job_id} from last failed state.')
@@ -1266,15 +1291,22 @@ class _CloudClient(_Client):
                 return None
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         elif job_run_strategy == 'autoscale':
             self.console.log(f'Triggered with autoscaling set to True. Detecting any running instances')
 =======
         elif mode == 'autoscale':
+=======
+        elif job_run_strategy == 'autoscale':
+>>>>>>> feat/model-validation
             self.console.log(
                 'Triggered with autoscaling set to True. '
                 'Detecting any running instances'
             )
+<<<<<<< HEAD
 >>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
+=======
+>>>>>>> feat/model-validation
             most_recent_job_run = self.list_runs(
                 account_id=account_id, job_definition_id=job_id, limit=1, order_by='-id'
             )['data'][0]
@@ -1299,8 +1331,11 @@ class _CloudClient(_Client):
                     account_id=account_id, job_id=job_id
                 )
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> feat/model-validation
                 
-                if not autoscale_job_name_slug:
+                if not autoscale_job_identifier:
                     creation_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
                     new_job_name = '-'.join([new_job_definition['name'], creation_time])
                     new_job_definition['name'] = new_job_name
@@ -1308,6 +1343,7 @@ class _CloudClient(_Client):
                     new_job_name = '-'.join([new_job_definition['name'], autoscale_job_name_slug])
                     new_job_definition['name'] = new_job_name
 
+<<<<<<< HEAD
 =======
 
                 # TODO: need to figure out the best way to disambiguate replicated jobs.
@@ -1315,6 +1351,8 @@ class _CloudClient(_Client):
                 new_job_name = '-'.join([new_job_definition['name'], creation_time])
                 new_job_definition['name'] = new_job_name
 >>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
+=======
+>>>>>>> feat/model-validation
                 job_id = self.create_job(
                     account_id=account_id, payload=new_job_definition
                 )['data']['id']
@@ -1347,17 +1385,23 @@ class _CloudClient(_Client):
                 ]:
                     break
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> feat/model-validation
             
         if job_run_strategy == 'autoscale' and autoscale_delete_post_run:
             self.delete_job(
                 account_id=account_id,
                 job_id=job_id
             )
+<<<<<<< HEAD
 =======
 
         if mode == 'autoscale' and autoscale_delete_post_run:
             self.delete_job(account_id=account_id, job_id=job_id)
 >>>>>>> ccea05c462706133260a7fbd7e2b9d45aa2b16a6
+=======
+>>>>>>> feat/model-validation
 
         return run
 
