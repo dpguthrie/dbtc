@@ -1,12 +1,11 @@
 # stdlib
 import argparse
-from asyncore import poll
+import json
 import shlex
 import time
 from datetime import datetime
 from functools import partial, wraps
-from typing import Dict, Iterable, List
-from xxlimited import new
+from typing import Dict, Iterable, List, Union
 
 # third party
 import requests
@@ -898,7 +897,7 @@ class _CloudClient(_Client):
         order_by: str = None,
         offset: int = None,
         limit: int = None,
-        status: str = None,
+        status: Union[str, List[str]] = None,
     ) -> Dict:
         """List runs in an account.
 
@@ -916,15 +915,21 @@ class _CloudClient(_Client):
                 Use with limit to paginate results.
             limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
-            status (str, optional): The status to apply when listing runs.
+            status (str or list, optional): The status to apply when listing runs.
                 Options include queued, starting, running, success, error, and
                 cancelled
         """
         if status is not None:
             try:
-                status = getattr(JobRunStatus, status.upper()).value
+                if isinstance(status, list):
+                    status = [getattr(JobRunStatus, s.upper()).value for s in status]
+                else:
+                    status = [getattr(JobRunStatus, status.upper()).value]
             except AttributeError:
-                pass
+                raise
+            else:
+                status = json.dumps(status)
+
         return self._simple_request(
             f'accounts/{account_id}/runs',
             params={
@@ -933,7 +938,7 @@ class _CloudClient(_Client):
                 'order_by': order_by,
                 'offset': offset,
                 'limit': limit,
-                'status': status,
+                'status__in': status,
             },
         )
 
@@ -1181,9 +1186,6 @@ class _CloudClient(_Client):
                 append value to the existing job name when replicating the job definition.
                 If None defaults to the current timestamp on job creation
         """
-        
-        is_new_job_created = False 
-
         self.console.log(
             'Triggered with autoscaling set to True. '
             'Detecting any running instances'
@@ -1206,54 +1208,31 @@ class _CloudClient(_Client):
 
         else:
             self.console.log(f'job_id {job_id} has an active run. Cloning job.')
-            optional_fields = [k for k,v in models.Job.__fields__.items() if not v.required]
-            required_fields = [k for k,v in models.Job.__fields__.items() if v.required]
-            existing_job_defintion = self.get_job(
-                account_id=account_id, job_id=job_id
-            )['data']
+            job_definition = self.get_job(account_id=account_id, job_id=job_id)['data']
 
-            new_job_definition = {k:v for k,v in existing_job_defintion.items() if k in required_fields}
-            
             if not autoscale_job_identifier:
                 creation_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-                new_job_name = '-'.join([new_job_definition['name'], creation_time])
-                new_job_definition['name'] = new_job_name
+                new_job_name = '-'.join([job_definition['name'], creation_time])
             else:
-                new_job_name = '-'.join([new_job_definition['name'], autoscale_job_identifier])
-                new_job_definition['name'] = new_job_name
-            
+                new_job_name = '-'.join([job_definition['name'], autoscale_job_identifier])
+
             # make sure the id is none on the new job
-            new_job_definition['id'] = None
-            job_id = self.create_job(
-                account_id=account_id, payload=new_job_definition
-            )['data']['id']
-
-            # fill in optional fields on the job if present in the source
-            for field in optional_fields:
-                new_job_definition[field] = existing_job_defintion.get(field)
-            
-            # set the ID in the update request
-            new_job_definition['id'] = job_id
-            self.console.log(new_job_definition)
-            job_id = self.update_job(
-                account_id=account_id, job_id=job_id, payload=new_job_definition
-            )['data']['id']
-
-            is_new_job_created = True
-
+            job_definition['id'] = None
+            job_definition['name'] = new_job_name
+            job = self.create_job(account_id=account_id, payload=job_definition)
             self.console.log(f'Created new job with job_id: {job_id}')
 
 
         self.console.log(f'Triggering new job with job_id: {job_id}')
         run = self.trigger_job(
             account_id=account_id,
-            job_id=job_id,
+            job_id=job['data']['id'],
             payload=payload,
             should_poll=should_poll,
             poll_interval=poll_interval
         )
         
-        if is_new_job_created and autoscale_delete_post_run:
+        if job['status'] == 201 and autoscale_delete_post_run:
             self.console.log(f'Deleting autoscaled job with job_id: {job_id} post run')
             self.delete_job(
                 account_id=account_id,
