@@ -144,6 +144,37 @@ def test_list_runs(dbtc_client):
         account_id=pytest.account_id,
         job_definition_id=pytest.job_id,
     )
+    
+    
+@pytest.mark.dependency(depends=['test_list_jobs'])
+def test_list_runs_list_status(dbtc_client):
+    _test_cloud_method(
+        dbtc_client,
+        'list_runs',
+        job_definition_id=pytest.job_id,
+        status=['error', 'success']
+    )
+
+    
+@pytest.mark.dependency(depends=['test_list_jobs'])
+def test_list_runs_str_status(dbtc_client):
+    _test_cloud_method(
+        dbtc_client,
+        'list_runs',
+        job_definition_id=pytest.job_id,
+        status='success'
+    )
+
+
+@pytest.mark.dependency(depends=['test_list_jobs'])
+def test_list_runs_bad_status(dbtc_client):
+    with pytest.raises(AttributeError):
+        _test_cloud_method(
+            dbtc_client,
+            'list_runs',
+            job_definition_id=pytest.job_id,
+            status='successs'
+        )
 
 
 @pytest.mark.dependency(depends=['test_list_jobs'])
