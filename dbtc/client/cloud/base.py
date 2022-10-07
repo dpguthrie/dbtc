@@ -1353,7 +1353,7 @@ class _CloudClient(_Client):
 
         # this is here to not break existing stuff 09.26.2022
         if restart_from_failure:
-            run = self.restart_job_from_failure(
+            run = self.trigger_job_restart_from_failure(
                 account_id=account_id,
                 job_id=job_id,
                 payload=payload
