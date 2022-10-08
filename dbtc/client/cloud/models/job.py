@@ -31,6 +31,7 @@ class Job(BaseModel):
 
     # Required
     account_id: int
+    dbt_version: str
     environment_id: int
     execution: _JobExecution
     generate_docs: bool
@@ -43,7 +44,6 @@ class Job(BaseModel):
     state: Literal[1, 2]
 
     # Optional
-    dbt_version: Optional[str]
     deactivated: Optional[bool] = False
     deferring_job_definition_id: Optional[int]
     execute_steps: Optional[List[str]]
