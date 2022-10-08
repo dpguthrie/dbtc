@@ -61,17 +61,21 @@ class _CloudClient(_Client):
         return 'api_key'
 
     def _clone_resource(self, resource: str, account_id: int, **kwargs):
-        create_args = kwargs.pop('create_args', None)
-        payload = getattr(self, f'get_{resource}')(**kwargs)['data']
+        payload = getattr(self, f'get_{resource}')(account_id=account_id, **kwargs)['data']
+        resource_fields = getattr(models, resource.capitalize()).__fields__
+
+        for k in list(payload):
+            # only map the fields we're aware of
+            if k not in resource_fields:
+                payload.pop(k, None)
+            
+            # for optional fields, don't copy them if none in the source payload
+            elif not resource_fields[k].required and payload[k] is None:
+                payload.pop(k, None)
 
         # Can't recreate a resource with an ID
-        payload.pop('id', None)
-        if create_args is not None:
-            payload = {k: v for k, v in kwargs.items() if k in create_args}
-        kwargs['payload'] = payload
-        kwargs['account_id'] = account_id
-
-        return getattr(self, f'create_{resource}')(**kwargs)
+        payload['id'] = None
+        return payload
 
     def _make_request(
         self, path: str, *, method: str = 'get', **kwargs
@@ -1186,19 +1190,37 @@ class _CloudClient(_Client):
                 append value to the existing job name when replicating the job definition.
                 If None defaults to the current timestamp on job creation
         """
+        autoscale_job_created = False
         self.console.log(
             'Triggered with autoscaling set to True. '
             'Detecting any running instances'
         )
-        most_recent_job_run = self.list_runs(
-            account_id=account_id, job_definition_id=job_id, limit=1, order_by='-id'
-        )['data'][0]
-        most_recent_job_run_status = most_recent_job_run['status_humanized']
 
-        self.console.log(
-            f'Status for most recent run of job {job_id} '
-            f'is {most_recent_job_run_status}.'
-        )
+        # dbt Cloud API will remove jobs that are queued mid-run if a DELETE is issued.
+        # we don't want this behavior so do some config validation
+        if autoscale_delete_post_run and not should_poll:
+            self.console.log(
+            'autoscale_delete_post_run set to True and should_poll set to False. '
+            'This has the effect that, after a new dbt Cloud job replica is created, '
+            'it will be removed before the run completes, so this configuration is disallowed. '
+            )
+            raise Exception('Invalid configuration')
+
+        try:
+            most_recent_job_run = self.list_runs(
+                account_id=account_id, job_definition_id=job_id, limit=1, order_by='-id'
+            )['data'][0]
+            most_recent_job_run_status = most_recent_job_run['status_humanized']
+            self.console.log(
+                f'Status for most recent run of job {job_id} '
+                f'is {most_recent_job_run_status}.'
+            )   
+        except IndexError:
+            self.console.log(
+                f'Failed to get status for most recent run of job: {job_id} '
+                f'This happens for jobs that have not previously run. '
+                f'Triggering a new run for this job'
+            )
 
         if most_recent_job_run_status not in ['Queued', 'Starting', 'Running']:
             self.console.log(
@@ -1208,31 +1230,37 @@ class _CloudClient(_Client):
 
         else:
             self.console.log(f'job_id {job_id} has an active run. Cloning job.')
-            job_definition = self.get_job(account_id=account_id, job_id=job_id)['data']
+            job_definition = self._clone_resource(
+                'job',
+                account_id=account_id,
+                job_id=job_id
+            )
 
             if not autoscale_job_identifier:
                 creation_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
                 new_job_name = '-'.join([job_definition['name'], creation_time])
             else:
                 new_job_name = '-'.join([job_definition['name'], autoscale_job_identifier])
-
-            # make sure the id is none on the new job
-            job_definition['id'] = None
+            
             job_definition['name'] = new_job_name
             job = self.create_job(account_id=account_id, payload=job_definition)
-            self.console.log(f'Created new job with job_id: {job_id}')
+            job_id = job['data']['id']
+            self.console.log(f'Created new job: {job_id}')
+            autoscale_job_created = True
 
-
-        self.console.log(f'Triggering new job with job_id: {job_id}')
+        self.console.log(f'Triggering job: {job_id}')
         run = self.trigger_job(
             account_id=account_id,
-            job_id=job['data']['id'],
+            job_id=job_id,
             payload=payload,
             should_poll=should_poll,
             poll_interval=poll_interval
         )
         
-        if job['status'] == 201 and autoscale_delete_post_run:
+        if run['status']['code'] in [200, 201] \
+            and autoscale_delete_post_run \
+                and autoscale_job_created:
+            
             self.console.log(f'Deleting autoscaled job with job_id: {job_id} post run')
             self.delete_job(
                 account_id=account_id,
