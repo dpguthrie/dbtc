@@ -620,7 +620,7 @@ class _CloudClient(_Client):
             parameter described below.
             
         !!! warning
-            If requesting a non JSON artifact, the result will be a `string`
+            If requesting a non JSON artifact, the result will be a `str`
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
