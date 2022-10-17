@@ -4,7 +4,7 @@ import enum
 import shlex
 import time
 from functools import partial, wraps
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Union
 
 # third party
 import requests
@@ -605,7 +605,7 @@ class _CloudClient(_Client):
         path: str,
         *,
         step: int = None,
-    ) -> Dict:
+    ) -> Union[str, Dict]:
         """Fetch artifacts from a completed run.
 
         Once a run has completed, you can use this endpoint to download the
@@ -618,6 +618,9 @@ class _CloudClient(_Client):
             By default, this endpoint returns artifacts from the last step in the
             run. To list artifacts from other steps in the run, use the step query
             parameter described below.
+            
+        !!! warning
+            If requesting a non JSON artifact, the result will be a `string`
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
@@ -630,10 +633,13 @@ class _CloudClient(_Client):
                 parameter is omitted, then this endpoint will return the artifacts
                 compiled for the last step in the run.
         """
-        return self._simple_request(
-            f'accounts/{account_id}/runs/{run_id}/artifacts/{path}',
-            params={'step': step},
-        )
+        url_path = f'accounts/{account_id}/runs/{run_id}/artifacts/{path}'
+        params = {'step': step}
+        if path[-5:] == '.json':
+            return self._simple_request(url_path, params=params)
+        
+        response = self._make_request(url_path, params=params)
+        return response.text
 
     @v3
     def get_run_timing_details(
