@@ -188,3 +188,13 @@ def test_get_run_artifact(dbtc_client):
         account_id=pytest.account_id, run_id=pytest.run_id, path='run_results.json'
     )
     assert 'results' in data.keys()
+
+
+@pytest.mark.dependency(depends=['test_list_run_artifacts'])
+def test_get_run_artifact_sql(dbtc_client):
+    data = dbtc_client.cloud.get_run_artifact(
+        account_id=pytest.account_id,
+        run_id=pytest.run_id,
+        path='compiled/tpch/models/marts/intermediate/order_items.sql',
+    )
+    assert isinstance(data, str)

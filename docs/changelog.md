@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.4] - 2022-10-17
+
+### Fixed
+- Non json artifacts are now able to be retrieved from `get_run_artifact`
+
+## [0.2.3] - 2022-09-16
+
+### Fixed
+- Bad url configuration for `create_job` method
+
 ## [0.2.2] - 2022-09-15
 
 ### Fixed
