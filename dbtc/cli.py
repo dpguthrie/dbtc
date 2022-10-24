@@ -907,6 +907,11 @@ def list_runs(
         None, '--status', help='Status to apply when listing runs'
     ),
 ):
+    if status is not None:
+        try:
+            status = json.loads(status)
+        except ValueError:
+            pass
     """List runs for a specific account."""
     _dbt_cloud_request(
         ctx,
