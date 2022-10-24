@@ -111,7 +111,7 @@ dbtc trigger-job \
     --account-id 1
     --job-id 1
     --payload '{"cause": "Restarting from failure"}' \
-    --restart_from_failure \
+    --restart-from-failure \
     --no-should-poll
 ```
 
