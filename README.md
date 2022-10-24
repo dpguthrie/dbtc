@@ -108,8 +108,8 @@ The CLI example below will map to the python cloud example above:
 
 ```bash
 dbtc trigger-job \
-    --account-id 1
-    --job-id 1
+    --account-id 1 \
+    --job-id 1 \
     --payload '{"cause": "Restarting from failure"}' \
     --restart-from-failure \
     --no-should-poll
