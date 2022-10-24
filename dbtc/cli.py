@@ -995,6 +995,20 @@ def trigger_job(
             'job.'
         ),
     ),
+    mode: str = typer.Option(
+        'standard',
+        help=(
+            'Possible values are ["standard", "restart_from_failure", "autoscale"] '
+            'standard: runs existing job as-is '
+            'restart_from_failure: determine whether the last run of the target job '
+            '    exited with an error. If yes, restart from the point of failure '
+            'autoscale: determine with the target job is currently running '
+            '    If yes, create and then run the clone.'
+        ),
+    ),
+    autoscale_delete_post_run: bool = typer.Option(
+        True, help=('Delete job created via autoscaling after it finishes running')
+    ),
 ):
     """Trigger job to run."""
     _dbt_cloud_request(
@@ -1007,6 +1021,8 @@ def trigger_job(
         poll_interval=poll_interval,
         restart_from_failure=restart_from_failure,
         trigger_on_failure_only=trigger_on_failure_only,
+        mode=mode,
+        autoscale_delete_post_run=autoscale_delete_post_run,
     )
 
 

@@ -1,8 +1,8 @@
 # stdlib
 import argparse
-import enum
 import shlex
 import time
+from datetime import datetime
 from functools import partial, wraps
 from typing import Dict, Iterable, List, Union
 
@@ -11,32 +11,13 @@ import requests
 
 # first party
 from dbtc.client.base import _Client
-
-
-class JobRunStatus(enum.IntEnum):
-    QUEUED = 1
-    STARTING = 2
-    RUNNING = 3
-    SUCCESS = 10
-    ERROR = 20
-    CANCELLED = 30
-
-
-RUN_COMMANDS = ['build', 'run', 'test', 'seed', 'snapshot']
-GLOBAL_CLI_ARGS = {
-    'warn_error': {'flags': ('--warn-error',), 'action': 'store_true'},
-    'use_experimental_parser': {
-        'flags': ('--use-experimental-parser',),
-        'action': 'store_true',
-    },
-}
-SUB_COMMAND_CLI_ARGS = {
-    'vars': {'flags': ('--vars',)},
-    'args': {'flags': ('--args',)},
-    'fail_fast': {'flags': ('-x', '--fail-fast'), 'action': 'store_true'},
-    'full_refresh': {'flags': ('--full-refresh',), 'action': 'store_true'},
-    'store_failures': {'flags': ('--store-failures',), 'action': 'store_true'},
-}
+from dbtc.client.cloud import models
+from dbtc.client.cloud.configs.dbt_core_cli import (
+    global_cli_args,
+    run_commands,
+    sub_command_cli_args,
+)
+from dbtc.client.cloud.configs.enums import JobRunModes, JobRunStatus
 
 
 def _version_decorator(func, version):
@@ -49,6 +30,7 @@ def _version_decorator(func, version):
     return wrapper
 
 
+# Version Decorators
 v2 = partial(_version_decorator, version='v2')
 v3 = partial(_version_decorator, version='v3')
 v4 = partial(_version_decorator, version='v4')
@@ -60,7 +42,7 @@ class _CloudClient(_Client):
         self.session = requests.Session()
         self.session.headers = self.headers
         self.parser = argparse.ArgumentParser()
-        all_cli_args = {**GLOBAL_CLI_ARGS, **SUB_COMMAND_CLI_ARGS}
+        all_cli_args = {**global_cli_args, **sub_command_cli_args}
         for arg_specs in all_cli_args.values():
             flags = arg_specs['flags']
             self.parser.add_argument(
@@ -77,10 +59,28 @@ class _CloudClient(_Client):
 
         return 'api_key'
 
+    def _clone_resource(self, resource: str, **kwargs):
+        create_args = kwargs.pop('create_args', None)
+        payload = getattr(self, f'get_{resource}')(**kwargs)['data']
+
+        # Can't recreate a resource with an ID
+        payload.pop('id', None)
+        if create_args is not None:
+            kwargs = {k: v for k, v in kwargs.items() if k in create_args}
+        kwargs['payload'] = payload
+        return getattr(self, f'create_{resource}')(**kwargs)
+
     def _make_request(
         self, path: str, *, method: str = 'get', **kwargs
     ) -> requests.Response:
         """Make request to API."""
+
+        # Model is not an argument that the request method accepts, needs to be removed
+        model = kwargs.pop('model', None)
+        if model is not None:
+
+            # This will validate the payload as well as add any optional fields
+            kwargs['json'] = model(**kwargs['json']).dict()
         full_url = self.full_url(path)
         response = self.session.request(method=method, url=full_url, **kwargs)
         return response
@@ -129,6 +129,12 @@ class _CloudClient(_Client):
         except IndexError:
             obj = None
         return obj
+
+    def _validate_job_run_mode(self, mode):
+        if mode not in JobRunModes:
+            return False
+
+        return True
 
     @v3
     def assign_group_permissions(
@@ -192,6 +198,27 @@ class _CloudClient(_Client):
         return self._simple_request(
             f'accounts/{account_id}/runs/{run_id}/cancel',
             method='post',
+        )
+
+    @v2
+    def clone_job(
+        self,
+        account_id: int,
+        job_id: int,
+    ):
+
+        """Create a job using the configuration of another
+
+        !!! tip
+            If a job is currently running, replicate the job definition to a new job,
+            and trigger
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            job_id (int): Numeric ID of the job to trigger
+        """
+        return self._clone_resource(
+            'job', account_id=account_id, job_id=job_id, create_args=['account_id']
         )
 
     @v3
@@ -291,6 +318,7 @@ class _CloudClient(_Client):
             f'accounts/{account_id}/jobs/',
             method='post',
             json=payload,
+            model=models.Job,
         )
 
     @v3
@@ -302,7 +330,10 @@ class _CloudClient(_Client):
             payload (dict): Dictionary representing the project to create
         """
         return self._simple_request(
-            f'accounts/{account_id}/projects/', method='post', json=payload
+            f'accounts/{account_id}/projects/',
+            method='post',
+            json=payload,
+            model=models.Project,
         )
 
     @v3
@@ -802,7 +833,11 @@ class _CloudClient(_Client):
 
     @v2
     def list_jobs(
-        self, account_id: int, *, order_by: str = None, project_id: int = None
+        self,
+        account_id: int,
+        *,
+        order_by: str = None,
+        project_id: int = None,
     ) -> Dict:
         """List jobs in an account or specific project.
 
@@ -1009,6 +1044,123 @@ class _CloudClient(_Client):
         )
 
     @v2
+    def _get_restart_job_definition(
+        self,
+        account_id: int,
+        job_id: int,
+        payload: Dict,
+    ):
+
+        """Identifies whether there was a failure on the previous run of the job.
+           When failures are identified, returns an updated job definition to
+           restart from the point of failure.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            job_id (int): Numeric ID of the job to trigger
+            payload (dict): Payload required for post request
+        """
+
+        def parse_args(cli_args: Iterable[str], namespace: argparse.Namespace):
+            string = ''
+            for arg in cli_args:
+                value = getattr(namespace, arg, None)
+                if value:
+                    arg = arg.replace('_', '-')
+                    if isinstance(value, bool):
+                        string += f' --{arg}'
+                    else:
+                        string += f" --{arg} '{value}'"
+            return string
+
+        has_failures = False
+
+        last_run_data = self.list_runs(
+            account_id=account_id,
+            include_related=['run_steps'],
+            job_definition_id=job_id,
+            order_by='-id',
+            limit=1,
+        )['data'][0]
+
+        last_run_status = last_run_data['status_humanized'].lower()
+        last_run_id = last_run_data['id']
+
+        if last_run_status == 'error':
+            rerun_steps = []
+
+            for run_step in last_run_data['run_steps']:
+                status = run_step['status_humanized'].lower()
+                # Skipping cloning, profile setup, and dbt deps - always
+                # the first three steps in any run
+                if run_step['index'] <= 3 or status == 'success':
+                    self.console.log(
+                        f'Skipping rerun for command "{run_step["name"]}" '
+                        'as it does not need to be repeated.'
+                    )
+
+                else:
+
+                    # get the dbt command used within this step
+                    command = run_step['name'].partition('`')[2].partition('`')[0]
+                    namespace, remaining = self.parser.parse_known_args(
+                        shlex.split(command)
+                    )
+                    sub_command = remaining[1]
+
+                    if (
+                        sub_command not in run_commands
+                        and status in ['error', 'cancelled', 'skipped']
+                    ) or (sub_command in run_commands and status == 'skipped'):
+                        rerun_steps.append(command)
+
+                    # errors and failures are when we need to inspect to figure
+                    # out the point of failure
+                    else:
+
+                        # get the run results scoped to the step which had an error
+                        # an error here indicates that either:
+                        # 1) the fail-fast flag was set, in which case
+                        #    the run_results.json file was never created; or
+                        # 2) there was a problem on dbt Cloud's side saving
+                        #    this artifact
+                        try:
+                            step_results = self.get_run_artifact(
+                                account_id=account_id,
+                                run_id=last_run_id,
+                                path='run_results.json',
+                                step=run_step['index'],
+                            )['results']
+
+                        # If the artifact isn't found, the API returns a 404 with
+                        # no json.  The ValueError will catch the JSONDecodeError
+                        except ValueError:
+                            rerun_steps.append(command)
+                        else:
+                            rerun_nodes = ' '.join(
+                                [
+                                    record['unique_id'].split('.')[2]
+                                    for record in step_results
+                                    if record['status'] in ['error', 'skipped', 'fail']
+                                ]
+                            )
+                            global_args = parse_args(global_cli_args.keys(), namespace)
+                            sub_command_args = parse_args(
+                                sub_command_cli_args.keys(), namespace
+                            )
+                            modified_command = f'dbt{global_args} {sub_command} -s {rerun_nodes}{sub_command_args}'  # noqa: E501
+                            rerun_steps.append(modified_command)
+                            self.console.log(
+                                f'Modifying command "{command}" as an error '
+                                'or failure was encountered.'
+                            )
+            if len(rerun_steps) > 0:
+                has_failures = True
+                payload.update({"steps_override": rerun_steps})
+
+        return payload, has_failures
+
+    @v2
     def trigger_job(
         self,
         account_id: int,
@@ -1019,6 +1171,8 @@ class _CloudClient(_Client):
         poll_interval: int = 10,
         restart_from_failure: bool = False,
         trigger_on_failure_only: bool = False,
+        mode: str = 'standard',
+        autoscale_delete_post_run: bool = True,
     ):
         """Trigger a job by its ID
 
@@ -1036,7 +1190,16 @@ class _CloudClient(_Client):
                 restart_from_failure to True.  This has the effect of only triggering
                 the job when the prior invocation was not successful. Otherwise, the
                 function will exit prior to triggering the job.
-
+            mode (str, optional): Must be one of ['standard', 'restart_from_failure',
+                'autoscaling'].
+                - standard mode triggers the job to run as-is.
+                - restart_from_failure checks for errors on the prior invocation and,
+                  if found, restarts failed models only.
+                - autoscale checks whether the job_id is actively running. If so,
+                  creates a copy of the running job
+            autoscale_delete_post_run (bool, optional): Only relevant when
+                mode = 'autoscale'
+                Remove a job replicated via autoscaling after it finishes running.
         """
 
         def run_status_formatted(run: Dict, time: float) -> str:
@@ -1052,125 +1215,75 @@ class _CloudClient(_Client):
                 f', View here: {url}'
             )
 
-        def parse_args(cli_args: Iterable[str], namespace: argparse.Namespace):
-            string = ''
-            for arg in cli_args:
-                value = getattr(namespace, arg, None)
-                if value:
-                    arg = arg.replace('_', '-')
-                    if isinstance(value, bool):
-                        string += f' --{arg}'
-                    else:
-                        string += f" --{arg} '{value}'"
-            return string
-
+        # this is here to not break existing stuff 09.26.2022
         if restart_from_failure:
+            mode = 'restart_from_failure'
+
+        mode_is_valid = self._validate_job_run_mode(mode)
+        if not mode_is_valid:
+            raise Exception(
+                f'mode: {mode} is not one of '
+                '["standard", "restart_from_failure", "autoscale"]'
+            )
+
+        if mode == 'restart_from_failure':
             self.console.log(f'Restarting job {job_id} from last failed state.')
-            last_run_data = self.list_runs(
-                account_id=account_id,
-                include_related=['run_steps'],
-                job_definition_id=job_id,
-                order_by='-id',
-                limit=1,
-            )['data'][0]
+            payload, has_failures = self._get_restart_job_definition(
+                account_id=account_id, job_id=job_id, payload=payload
+            )
 
-            last_run_status = last_run_data['status_humanized'].lower()
-            last_run_id = last_run_data['id']
-
-            if last_run_status == 'error':
-                rerun_steps = []
-
-                for run_step in last_run_data['run_steps']:
-
-                    status = run_step['status_humanized'].lower()
-                    # Skipping cloning, profile setup, and dbt deps - always
-                    # the first three steps in any run
-                    if run_step['index'] <= 3 or status == 'success':
-                        self.console.log(
-                            f'Skipping rerun for command "{run_step["name"]}" '
-                            'as it does not need to be repeated.'
-                        )
-
-                    else:
-
-                        # get the dbt command used within this step
-                        command = run_step['name'].partition('`')[2].partition('`')[0]
-                        namespace, remaining = self.parser.parse_known_args(
-                            shlex.split(command)
-                        )
-                        sub_command = remaining[1]
-
-                        if (
-                            sub_command not in RUN_COMMANDS
-                            and status in ['error', 'cancelled', 'skipped']
-                        ) or (sub_command in RUN_COMMANDS and status == 'skipped'):
-                            rerun_steps.append(command)
-
-                        # errors and failures are when we need to inspect to figure
-                        # out the point of failure
-                        else:
-
-                            # get the run results scoped to the step which had an error
-                            # an error here indicates that either:
-                            # 1) the fail-fast flag was set, in which case
-                            #    the run_results.json file was never created; or
-                            # 2) there was a problem on dbt Cloud's side saving
-                            #    this artifact
-                            try:
-                                step_results = self.get_run_artifact(
-                                    account_id=account_id,
-                                    run_id=last_run_id,
-                                    path='run_results.json',
-                                    step=run_step['index'],
-                                )['results']
-
-                            # If the artifact isn't found, the API returns a 404 with
-                            # no json.  The ValueError will catch the JSONDecodeError
-                            except ValueError:
-                                rerun_steps.append(command)
-                            else:
-                                rerun_nodes = ' '.join(
-                                    [
-                                        record['unique_id'].split('.')[2]
-                                        for record in step_results
-                                        if record['status']
-                                        in ['error', 'skipped', 'fail']
-                                    ]
-                                )
-                                global_args = parse_args(
-                                    GLOBAL_CLI_ARGS.keys(), namespace
-                                )
-                                sub_command_args = parse_args(
-                                    SUB_COMMAND_CLI_ARGS.keys(), namespace
-                                )
-                                modified_command = f'dbt{global_args} {sub_command} -s {rerun_nodes}{sub_command_args}'  # noqa: E501
-                                rerun_steps.append(modified_command)
-                                self.console.log(
-                                    f'Modifying command "{command}" as an error '
-                                    'or failure was encountered.'
-                                )
-
-                payload.update({"steps_override": rerun_steps})
+            if trigger_on_failure_only and not has_failures:
                 self.console.log(
-                    f'Triggering modified job to re-run failed steps: {rerun_steps}'
+                    'Process triggered with trigger_on_failure_only set to True but '
+                    'no failed run steps found. Terminating.'
                 )
+                return None
+
+        elif mode == 'autoscale':
+            self.console.log(
+                'Triggered with autoscaling set to True. '
+                'Detecting any running instances'
+            )
+            most_recent_job_run = self.list_runs(
+                account_id=account_id, job_definition_id=job_id, limit=1, order_by='-id'
+            )['data'][0]
+            most_recent_job_run_status = most_recent_job_run['status_humanized']
+
+            self.console.log(
+                f'Status for most recent run of job {job_id} '
+                f'is {most_recent_job_run_status}.'
+            )
+
+            if most_recent_job_run_status not in ['Queued', 'Starting', 'Running']:
+                self.console.log(
+                    f'autoscale set to true but base job with id {job_id} is free '
+                    'triggering base job and ignoring autoscale configuration.'
+                )
+                autoscale_delete_post_run = False
 
             else:
-                self.console.log(
-                    'Process triggered with restart_from_failure set to True but no '
-                    'failed run steps found.'
+                self.console.log(f'job_id {job_id} has an active run. Cloning job.')
+
+                new_job_definition = self.clone_job(
+                    account_id=account_id, job_id=job_id
                 )
-                if trigger_on_failure_only:
-                    self.console.log(
-                        'Not triggering job because prior run was successful.'
-                    )
-                    return
+
+                # TODO: need to figure out the best way to disambiguate replicated jobs.
+                creation_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+                new_job_name = '-'.join([new_job_definition['name'], creation_time])
+                new_job_definition['name'] = new_job_name
+                job_id = self.create_job(
+                    account_id=account_id, payload=new_job_definition
+                )['data']['id']
+
+                self.console.log(f'Created new job with job_id: {job_id}')
 
         run = self._simple_request(
             f'accounts/{account_id}/jobs/{job_id}/run/',
             method='post',
             json=payload,
         )
+
         if not run['status']['is_success']:
             self.console.log(f'Run NOT triggered for job {job_id}.  See run response.')
             return run
@@ -1191,6 +1304,9 @@ class _CloudClient(_Client):
                 ]:
                     break
 
+        if mode == 'autoscale' and autoscale_delete_post_run:
+            self.delete_job(account_id=account_id, job_id=job_id)
+
         return run
 
     @v3
@@ -1206,7 +1322,7 @@ class _CloudClient(_Client):
             payload (dict): Dictionary representing the connection to update
         """
         return self._simple_request(
-            f'accounts/{account_id}/projects/{project_id}/connections/{connection_id}/',
+            f'accounts/{account_id}/projects/{project_id}/connections/{connection_id}/',  # noqa: E501
             method='post',
             json=payload,
         )
@@ -1224,7 +1340,7 @@ class _CloudClient(_Client):
             payload (dict): Dictionary representing the credentials to update
         """
         return self._simple_request(
-            f'accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/',  # noqa: E50
+            f'accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/',  # noqa: E501
             method='post',
             json=payload,
         )
