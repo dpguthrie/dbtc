@@ -1,6 +1,7 @@
 # stdlib
 import argparse
 import enum
+import json
 import shlex
 import time
 from functools import partial, wraps
@@ -11,6 +12,7 @@ import requests
 
 # first party
 from dbtc.client.base import _Client
+from dbtc.utils import listify
 
 
 class JobRunStatus(enum.IntEnum):
@@ -871,7 +873,7 @@ class _CloudClient(_Client):
         order_by: str = None,
         offset: int = None,
         limit: int = None,
-        status: str = None,
+        status: Union[List[str], str] = None,
     ) -> Dict:
         """List runs in an account.
 
@@ -889,15 +891,17 @@ class _CloudClient(_Client):
                 Use with limit to paginate results.
             limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
-            status (str, optional): The status to apply when listing runs.
+            status (str or list, optional): The status to apply when listing runs.
                 Options include queued, starting, running, success, error, and
                 cancelled
         """
         if status is not None:
             try:
-                status = getattr(JobRunStatus, status.upper()).value
+                status = [getattr(JobRunStatus, s.upper()) for s in listify(status)]
             except AttributeError:
-                pass
+                raise
+            else:
+                status = json.dumps(status)
         return self._simple_request(
             f'accounts/{account_id}/runs',
             params={
@@ -906,7 +910,7 @@ class _CloudClient(_Client):
                 'order_by': order_by,
                 'offset': offset,
                 'limit': limit,
-                'status': status,
+                'status__in': status,
             },
         )
 
