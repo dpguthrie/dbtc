@@ -983,8 +983,69 @@ def trigger_job(
     poll_interval: int = typer.Option(
         10, '--poll-interval', help='Number of seconds to wait in between polling.'
     ),
-    restart_from_failure: bool = typer.Option(
-        False, help='Restart your job from the point of failure'
+):
+    """Trigger job to run."""
+    _dbt_cloud_request(
+        ctx,
+        'trigger_job',
+        account_id,
+        job_id,
+        json.loads(payload),
+        should_poll=should_poll,
+        poll_interval=poll_interval,
+    )
+    
+
+@app.command 
+def trigger_autoscaling_ci_job(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    job_id: int = JOB_ID,
+    payload: str = PAYLOAD,
+    pull_request_id: int = typer.Option(
+        None,
+        '--pull-request-id',
+        help='ID of Pull Request'
+    ),
+    should_poll: bool = typer.Option(
+        True,
+        help='Poll until job completion (status is one of success, failure, or '
+        'cancelled)',
+    ),
+    poll_interval: int = typer.Option(
+        10, '--poll-interval', help='Number of seconds to wait in between polling.'
+    ),
+    delete_cloned_job: bool = typer.Option(
+        True, help='Indicate whether cloned job should be deleted after triggering'
+    )
+):
+    """Trigger an autoscaling CI job to run."""
+    _dbt_cloud_request(
+        ctx,
+        'trigger_autoscaling_ci_job',
+        account_id,
+        job_id,
+        json.loads(payload),
+        pull_request_id=pull_request_id,
+        should_poll=should_poll,
+        poll_interval=poll_interval,
+        delete_cloned_job=delete_cloned_job,
+    )
+
+
+@app.command()
+def trigger_job_from_failure(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    job_id: int = JOB_ID,
+    payload: str = PAYLOAD,
+    should_poll: bool = typer.Option(
+        True,
+        help='Poll until job completion (status is one of success, failure, or '
+        'cancelled)',
+    ),
+    poll_interval: int = typer.Option(
+        10, '--poll-interval', help='Number of seconds to wait in between polling.'
     ),
     trigger_on_failure_only: bool = typer.Option(
         False,
@@ -996,16 +1057,15 @@ def trigger_job(
         ),
     ),
 ):
-    """Trigger job to run."""
+    """Trigger job from point of failure."""
     _dbt_cloud_request(
         ctx,
-        'trigger_job',
+        'trigger_job_from_failure',
         account_id,
         job_id,
         json.loads(payload),
         should_poll=should_poll,
         poll_interval=poll_interval,
-        restart_from_failure=restart_from_failure,
         trigger_on_failure_only=trigger_on_failure_only,
     )
 
