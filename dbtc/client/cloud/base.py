@@ -22,9 +22,8 @@ class JobRunStatus(enum.IntEnum):
     SUCCESS = 10
     ERROR = 20
     CANCELLED = 30
-    
 
-IN_PROGRESS_STATUSES = (1, 2, 3)
+
 PULL_REQUESTS = (
     'github_pull_request_id',
     'gitlab_merge_request_id',
@@ -628,7 +627,7 @@ class _CloudClient(_Client):
             By default, this endpoint returns artifacts from the last step in the
             run. To list artifacts from other steps in the run, use the step query
             parameter described below.
-            
+
         !!! warning
             If requesting a non JSON artifact, the result will be a `str`
 
@@ -647,7 +646,7 @@ class _CloudClient(_Client):
         params = {'step': step}
         if path[-5:] == '.json':
             return self._simple_request(url_path, params=params)
-        
+
         response = self._make_request(url_path, params=params)
         return response.text
 
@@ -1019,45 +1018,66 @@ class _CloudClient(_Client):
         return self._simple_request(
             f'accounts/{account_id}/connections/test/', method='post', json=payload
         )
-        
+
     @v2
-    def trigger_autoscaling_job(
+    def trigger_autoscaling_ci_job(
         self,
         account_id: int,
         job_id: int,
+        payload: Dict,
         *,
         pull_request_id: int = None,
-        payload: Dict = {'cause': 'Autoscaling Job'},
         should_poll: bool = True,
         poll_interval: int = 10,
+        delete_cloned_job: bool = True,
     ):
-        """Restart a job from the point of failure
+        """Trigger an autoscaling CI job
+
+        Summary:
+            In the event your CI job is already running, do the following:
+            - If a new commit is created for the currently running job, cancel the
+              job and then trigger again
+            - If this is an entirely new pull request, clone the job and trigger
+            - This will also check to see if your account has met or exceeded the
+              allotted run slots.  In the event you have, a cloned job will
+              not be created and the existing job will be triggered.
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
             job_id (int): Numeric ID of the job to trigger
+            payload (dict): Payload required in triggering a job
             pull_request_id (int, optional): Pull Request ID used in checking against
                 an in progress run.  If this is provided and matches the
                 pull_request_id on the Run, this will cancel the existing run
-            payload (dict, optional): Payload required in triggering a job
             should_poll (bool, optional): Poll until completion if `True`, completion
                 is one of success, failure, or cancelled
             poll_interval (int, optional): Number of seconds to wait in between
                 polling
+            delete_cloned_job (bool, optional): Indicate if job should be deleted after
+                being triggered (default True)
         """
         self.console.log('Finding any in progress runs...')
+        cloned_job = None
         in_progress_runs = self.list_runs(
             account_id,
-            job_definition_id=job_id,
-            status=IN_PROGRESS_STATUSES,
+            status=['queued', 'starting', 'running'],
+            include_related=['trigger'],
         )['data']
-        has_in_progress_run = len(in_progress_runs) > 0
-        if has_in_progress_run:
+        in_progress_job_runs = [
+            r for r in in_progress_runs if r['job_definition_id'] == job_id
+        ]
+        has_in_progress_job_run = len(in_progress_job_runs) > 0
+        if has_in_progress_job_run:
             self.console.log('Found an in progress run.')
-            run = in_progress_runs[0]
-            current_pull_request_id = next(
-                i for i in [run['trigger'][p] for p in PULL_REQUESTS] if i is not None
-            )
+            run = in_progress_job_runs[0]
+            try:
+                current_pull_request_id = next(
+                    i
+                    for i in [run['trigger'][p] for p in PULL_REQUESTS]
+                    if i is not None
+                )
+            except StopIteration:
+                current_pull_request_id = -1
             if current_pull_request_id == pull_request_id:
                 self.console.log(
                     f'Canceling current running job for PR {pull_request_id} '
@@ -1065,12 +1085,13 @@ class _CloudClient(_Client):
                 )
                 _ = self.cancel_run(account_id, run['id'])
             else:
-                acct = self.get_account(account_id)['data']
-                run_slots = acct['run_slots']
+                acct = self.get_account(account_id).get('data', {})
+                run_slots = acct.get('run_slots', 0)
                 if run_slots > len(in_progress_runs):
                     self.console.log(
-                        f'Current running job is for PR {current_pull_request_id} and not '
-                        'PR {pull_request_id}.  Now cloning job {job_id} and triggering.'
+                        f'Current running job is for PR {current_pull_request_id} and '
+                        f' not PR {pull_request_id}.  Now cloning job {job_id} and '
+                        'triggering.'
                     )
                     current_job = self.get_job(account_id, job_id)['data']
                     current_job.pop('is_deferrable')
@@ -1084,14 +1105,17 @@ class _CloudClient(_Client):
                         'number of run slots and will not be able to execute even a '
                         'cloned CI job.'
                     )
-        self.trigger_job(
+        run = self.trigger_job(
             account_id,
             job_id,
             payload,
             should_poll=should_poll,
             poll_interval=poll_interval,
         )
-        
+        if cloned_job is not None and delete_cloned_job:
+            self.delete_job(account_id, job_id)
+        return run
+
     @v2
     def trigger_job_from_failure(
         self,
@@ -1118,6 +1142,7 @@ class _CloudClient(_Client):
                 the job when the prior invocation was not successful. Otherwise, the
                 function will exit prior to triggering the job.
         """
+
         def parse_args(cli_args: Iterable[str], namespace: argparse.Namespace):
             string = ''
             for arg in cli_args:
@@ -1144,7 +1169,9 @@ class _CloudClient(_Client):
 
         if last_run_status == 'error':
             rerun_steps = []
-
+            job_info = self.get_job(account_id, job_id)['data']
+            generate_docs = job_info.get('generate_docs', False)
+            generate_sources = job_info.get('generate_sources', False)
             for run_step in last_run_data['run_steps']:
 
                 status = run_step['status_humanized'].lower()
@@ -1162,15 +1189,25 @@ class _CloudClient(_Client):
                     # get the dbt command used within this step
                     # Example:  Get dbt build from "Invoke dbt with `dbt build`"
                     command = run_step['name'].partition('`')[2].partition('`')[0]
+                    freshness_in_command = (
+                        'dbt source snapshot-freshness' in command
+                        or 'dbt source freshness' in command
+                    )
+                    if 'dbt docs generate' in command and generate_docs:
+                        continue
+                    elif freshness_in_command and generate_sources:
+                        continue
+
                     namespace, remaining = self.parser.parse_known_args(
                         shlex.split(command)
                     )
                     sub_command = remaining[1]
-
-                    if (
-                        sub_command not in RUN_COMMANDS
-                        and status in ['error', 'cancelled', 'skipped']
-                    ) or (sub_command in RUN_COMMANDS and status == 'skipped'):
+                    is_run_command = sub_command in RUN_COMMANDS
+                    is_not_success = status in ('error', 'skipped', 'cancelled')
+                    is_skipped = status == 'skipped'
+                    if (not is_run_command and is_not_success) or (
+                        is_run_command and is_skipped
+                    ):
                         rerun_steps.append(command)
 
                     # errors and failures are when we need to inspect to figure
@@ -1197,16 +1234,11 @@ class _CloudClient(_Client):
                             rerun_steps.append(command)
                         else:
                             rerun_nodes = ' '.join(
-                                [
-                                    record['unique_id'].split('.')[2]
-                                    for record in step_results
-                                    if record['status']
-                                    in ['error', 'skipped', 'fail']
-                                ]
+                                record['unique_id'].split('.')[2]
+                                for record in step_results
+                                if record['status'] in ['error', 'skipped', 'fail']
                             )
-                            global_args = parse_args(
-                                GLOBAL_CLI_ARGS.keys(), namespace
-                            )
+                            global_args = parse_args(GLOBAL_CLI_ARGS.keys(), namespace)
                             sub_command_args = parse_args(
                                 SUB_COMMAND_CLI_ARGS.keys(), namespace
                             )
@@ -1228,11 +1260,9 @@ class _CloudClient(_Client):
                 'failed run steps found.'
             )
             if trigger_on_failure_only:
-                self.console.log(
-                    'Not triggering job because prior run was successful.'
-                )
+                self.console.log('Not triggering job because prior run was successful.')
                 return
-        self.trigger_job(
+        return self.trigger_job(
             account_id,
             job_id,
             payload,

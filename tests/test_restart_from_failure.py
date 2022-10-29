@@ -41,12 +41,11 @@ ACCOUNT_ID = 43786
 
 
 def _test_job(dbtc_client, job_id: int):
-    run_id = dbtc_client.cloud.trigger_job(
+    run_id = dbtc_client.cloud.trigger_job_from_failure(
         ACCOUNT_ID,
         job_id,
         payload={'cause': 'Testing dbtc'},
         should_poll=False,
-        restart_from_failure=True,
     )['data']['id']
     steps_override = dbtc_client.cloud.get_run(
         ACCOUNT_ID, run_id, include_related=['trigger']

@@ -994,18 +994,16 @@ def trigger_job(
         should_poll=should_poll,
         poll_interval=poll_interval,
     )
-    
 
-@app.command 
+
+@app.command()
 def trigger_autoscaling_ci_job(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
     job_id: int = JOB_ID,
     payload: str = PAYLOAD,
     pull_request_id: int = typer.Option(
-        None,
-        '--pull-request-id',
-        help='ID of Pull Request'
+        None, '--pull-request-id', help='ID of Pull Request'
     ),
     should_poll: bool = typer.Option(
         True,
@@ -1017,7 +1015,7 @@ def trigger_autoscaling_ci_job(
     ),
     delete_cloned_job: bool = typer.Option(
         True, help='Indicate whether cloned job should be deleted after triggering'
-    )
+    ),
 ):
     """Trigger an autoscaling CI job to run."""
     _dbt_cloud_request(
