@@ -4,6 +4,7 @@ import enum
 import json
 import shlex
 import time
+from datetime import datetime
 from functools import partial, wraps
 from typing import Dict, Iterable, List, Union
 
@@ -1095,7 +1096,8 @@ class _CloudClient(_Client):
                     # Alter the current job definition so it can be cloned
                     current_job.pop('is_deferrable')
                     current_job['id'] = None
-                    current_job['name'] = current_job['name'] + ' [CLONED]'
+                    now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+                    current_job['name'] = current_job['name'] + f' [CLONED {now}]'
                     cloned_job = self.create_job(account_id, current_job)['data']
 
                     # Modify the should_poll argument - this needs to be `True`
