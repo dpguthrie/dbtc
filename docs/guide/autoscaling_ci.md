@@ -1,43 +1,42 @@
-# Restart From Failure
+# Autoscaling CI
 
 !!! tip "Thank You!"
 
-    All credit, for both the words below as well as the code that enables this functionality, should be directed to [@matt-winkler](https://github.com/matt-winkler).  The initial work for this started with his incredible [gist](https://gist.github.com/matt-winkler/dcd3004e714648420e0e3bd550222a9d).
+    As with the [restart from failure](/restart_from_failure.md) functionality, a lot of credit goes to [@matt-winkler](https://github.com/matt-winkler) for developing this feature.
 
 ## Intro
 
-<div style="position: relative; padding-bottom: 77.41935483870968%; height: 0;"><iframe src="https://www.loom.com/embed/1c1dcf65ba684c5d8ed4607e954c0f4c" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+<div style="position: relative; padding-bottom: 57.78491171749599%; height: 0;"><iframe src="https://www.loom.com/embed/5f63e40c356145489a741dac87b47595" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
 
 ## Summary
 
-This library offers a convenient interface to restart your jobs from the point of failure.  At a high level, it will do the following:
+This library offers a convenient interface to create, what we call, an autoscaling CI job.  As of the time of this writing (11/5/22), dbt Cloud does not allow a job to have concurrent runs.  This largely makes sense in the context of regularly scheduled jobs - you would never want your daily job to be run in a concurrent fashion.  However, this feature starts to become a limitation in the context of continuous integration (CI) jobs.  Take the following scenarios:
 
-- Inspect the `run_results.json` artifacts from the previous run to understand which nodes succeeded / failed
-- Any steps that succeeded on the previous run are skipped
-- Any steps that were skipped on the previous run (e.g. because they followed a failed / errored step) are repeated as-is
+- Adding a commit to an existing pull request that already has a job running
+- Opening a separate pull request in the same repo that already has a running CI job
 
-## Background
+In both of these instances, we'll have to wait until the existing job has completed before that same CI job can move from a queued state.
 
-dbt Cloud offers users the ability to run and monitor their data pipelines remotely via API endpoints. Each pipeline run produces metadata artifacts that provide rich information on the models run, success/failure status for each, timing, and more.
+## How it Works
 
-## Why Pipelines Might Fail
+In the event your CI job is already running, this package, through the `trigger_autoscaling_ci_job` method, will do the following:
 
-There are a few scenarios in which the need to restart a job from failure occurs in practice:
+- If a new commit is created for the pull request linked to the existing run for the referenced job, cancel the run and trigger again.
+- If this is an entirely new pull request, clone the job definition and trigger the clone.  It's important to note that the cloned job will be deleted by default after the run (you can change this through an argument to the function).  Deleting the cloned job will also force the execution into a polling state (e.g. the function won't return a `Run` until it has encountered a completed state).
+- This will also check to see if your account has met or exceeded the allotted run slots.  In the event you have, a cloned job will not be created and the existing job will be triggered.
 
-- Database permission errors
-- Code merged to production isn't properly tested (a related-but-separate problem with a distinct set of solutions)
-- Data content changes (e.g. due to a problem in a raw data feed that wasn't historically present)
-- Timeouts
+## Recommended Use
 
-Despite our best intentions, the above can and will happen.
+This method is best suited to be used within a Github Action, Gitlab CI Pipeline, or an Azure Pipeline.  The example below shows how you can use it within a Github Action.
 
-## How can we Respond to Failures
+## Considerations
 
-When responding to failures in a particular area of the DAG, it's often expedient to avoid reprocessing data that's already been run, in particular for maintaining trust with stakeholders when pipelines are "behind." In order to achieve this most efficiently and reliably, the solution should be programmatic, and contained with dbt's capabilities, versus expecting users to:
+In order to mimic the native Slim CI behavior within dbt Cloud, it's important to pass the appropriate payload.  The payload should consist of the following (this is in the context of running against a github repository but it will be very similar across Gitlab and ADO).
 
-- Inspect the results of a run to identify the (potentially multiple) roots of failure points (e.g. the earliest failed dbt models or sources for a given run).
-- Modify a job command (or create a new job) with the failure points from 1 and including the + syntax to run it's children.
-- Ensure the job isn't triggered on an ongoing basis or otherwise put into the orchestration flow unintentionally.
+- `schema_override` - `"dbt_cloud_pr_"$JOB_ID"_"$PULL_REQUEST_ID`
+- `github_pull_request_id` - `${{ github.event.number }}`
+- `git_sha` - `${{ github.event.pull_request.head.sha }}`
+- `cause` - Put whatever you want here
 
 ## Examples
 
@@ -51,19 +50,25 @@ When responding to failures in a particular area of the DAG, it's often expedien
 
     account_id = 1
     job_id = 1
-    payload = {'cause': 'Restarting from failure'}
+    payload = {
+        'cause': 'Autoscaling CI',
+        'schema_override': 'dbt_cloud_pr_1_50',
+        'github_pull_request_id': 50,
+        'git_sha': 'jkafjdkfjallakjf'
+    }
 
-    run = client.cloud.trigger_job_from_failure(account_id, job_id, payload)
+    run = client.cloud.trigger_autoscaling_ci_job(account_id, job_id, payload)
     ```
 
 === "CLI"
 
-    Assuming that `DBT_CLOUD_SERVICE_TOKEN` environment variable has been set.
+    Assuming that `DBT_CLOUD_SERVICE_TOKEN` and `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
     ```bash
-    dbtc trigger-job-from-failure \
-        --account-id 1 \
-        --job-id 1 \
-        --payload '{"cause": "Restarting from failure"}'
+    dbtc trigger-autoscaling-ci-job \
+        --job-id=$JOB_ID \
+        --payload='{"cause": "Autoscaling Slim CI!","git_sha":"'$GIT_SHA'","schema_override":"'$SO'","github_pull_request_id":"'$PULL_REQUEST_ID'"}' \
+        --pull-request-id=$PULL_REQUEST_ID \
+        --no-should-poll)
     ```
 
 === "Github Action"
@@ -72,33 +77,36 @@ When responding to failures in a particular area of the DAG, it's often expedien
 
 
     ```yaml
-    name: Restart from Failure
+    name: Autoscaling dbt Cloud CI
     on:
-      workflow_dispatch:
+      pull_request:
+        branches:
+          - main
 
     jobs:
-      restart:
+      autoscaling:
         runs-on: ubuntu-latest
         env:
           DBT_CLOUD_SERVICE_TOKEN: ${{ secrets.DBT_CLOUD_SERVICE_TOKEN }}
-          DBT_CLOUD_ACCOUNT_ID: 1
-          JOB_ID: 1
-        # Optional if statement to gate this to a particular user or users
-        if: github.actor == 'dpguthrie'
+          DBT_CLOUD_ACCOUNT_ID: 43786
+          JOB_ID: 73797
+          PULL_REQUEST_ID: ${{ github.event.number }}
+          GIT_SHA: ${{ github.event.pull_request.head.sha }}
+
         steps:
           - uses: actions/checkout@v2
           - uses: actions/setup-python@v2
             with:
               python-version: "3.9.x"
 
-          - name: Restart Job from Failure
+          - name: Trigger Autoscaling CI Job
             run: |
-              pip install dbtc==0.2.0
-              dbtc trigger-job \
-                  --job-id=$JOB_ID \
-                  --payload='{"cause": "Restarting job from failure"}' \
-                  --no-should-poll \
-                  --restart-from-failure
+              pip install dbtc==0.3.0
+              SO="dbt_cloud_pr_"$JOB_ID"_"$PULL_REQUEST_ID
+              run=$(dbtc trigger-autoscaling-ci-job \
+                --job-id=$JOB_ID \
+                --payload='{"cause": "Autoscaling Slim CI!","git_sha":"'$GIT_SHA'","schema_override":"'$SO'","github_pull_request_id":"'$PULL_REQUEST_ID'"}' \
+                --no-should-poll)
     ```
 
 === "Response"
