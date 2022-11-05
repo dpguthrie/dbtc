@@ -1002,9 +1002,6 @@ def trigger_autoscaling_ci_job(
     account_id: int = ACCOUNT_ID,
     job_id: int = JOB_ID,
     payload: str = PAYLOAD,
-    pull_request_id: int = typer.Option(
-        None, '--pull-request-id', help='ID of Pull Request'
-    ),
     should_poll: bool = typer.Option(
         True,
         help='Poll until job completion (status is one of success, failure, or '
@@ -1024,7 +1021,6 @@ def trigger_autoscaling_ci_job(
         account_id,
         job_id,
         json.loads(payload),
-        pull_request_id=pull_request_id,
         should_poll=should_poll,
         poll_interval=poll_interval,
         delete_cloned_job=delete_cloned_job,
