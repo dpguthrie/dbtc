@@ -1027,7 +1027,7 @@ class _CloudClient(_Client):
         payload: Dict,
         *,
         pull_request_id: int = None,
-        should_poll: bool = True,
+        should_poll: bool = False,
         poll_interval: int = 10,
         delete_cloned_job: bool = True,
     ):
@@ -1074,7 +1074,7 @@ class _CloudClient(_Client):
                 # Only 1 of these 3 pull request IDs will be populated
                 current_pull_request_id = next(
                     i
-                    for i in [run['trigger'][p] for p in PULL_REQUESTS]
+                    for i in [run['trigger'].get(p, None) for p in PULL_REQUESTS]
                     if i is not None
                 )
             except StopIteration:
@@ -1091,9 +1091,9 @@ class _CloudClient(_Client):
                 run_slots = acct.get('run_slots', 0)
                 if run_slots > len(in_progress_runs):
                     self.console.log(
-                        f'Current running job is for PR {current_pull_request_id} and '
-                        f' not PR {pull_request_id}.  Now cloning job {job_id} and '
-                        'triggering.'
+                        f'Job {job_id} is currently being used in run {run["id"]}. '
+                        'This job definition will be cloned and then triggered for '
+                        f'pull request #{current_pull_request_id}.'
                     )
                     current_job = self.get_job(account_id, job_id).get('data', {})
 
