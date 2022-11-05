@@ -1062,21 +1062,23 @@ class _CloudClient(_Client):
             account_id,
             status=['queued', 'starting', 'running'],
             include_related=['trigger'],
-        )['data']
+        ).get('data', [])
         in_progress_job_runs = [
-            r for r in in_progress_runs if r['job_definition_id'] == job_id
+            r for r in in_progress_runs if r.get('job_definition_id', -1) == job_id
         ]
         has_in_progress_job_run = len(in_progress_job_runs) > 0
         if has_in_progress_job_run:
             self.console.log('Found an in progress run.')
             run = in_progress_job_runs[0]
             try:
+                # Only 1 of these 3 pull request IDs will be populated
                 current_pull_request_id = next(
                     i
                     for i in [run['trigger'][p] for p in PULL_REQUESTS]
                     if i is not None
                 )
             except StopIteration:
+                # Set to -1 so if statement below will always evaluate to `False`
                 current_pull_request_id = -1
             if current_pull_request_id == pull_request_id:
                 self.console.log(
@@ -1093,7 +1095,7 @@ class _CloudClient(_Client):
                         f' not PR {pull_request_id}.  Now cloning job {job_id} and '
                         'triggering.'
                     )
-                    current_job = self.get_job(account_id, job_id)['data']
+                    current_job = self.get_job(account_id, job_id).get('data', {})
 
                     # Alter the current job definition so it can be cloned
                     current_job.pop('is_deferrable')
@@ -1102,8 +1104,10 @@ class _CloudClient(_Client):
                     cloned_job = self.create_job(account_id, current_job)['data']
 
                     # Modify the should_poll argument - this needs to be `True`
-                    # so the run can complete before the cloned job is deleted
-                    should_poll = True
+                    # if we're deleting the cloned job.  Otherwise, dbt Cloud
+                    # will cancel the run because it can't find an associated job
+                    if delete_cloned_job:
+                        should_poll = True
                     job_id = cloned_job['id']
                 else:
                     self.console.log(
@@ -1111,6 +1115,8 @@ class _CloudClient(_Client):
                         'number of run slots and will not be able to execute even a '
                         'cloned CI job.'
                     )
+        else:
+            self.console.log('No in progress job run found.  Triggering as normal')
         run = self.trigger_job(
             account_id,
             job_id,
