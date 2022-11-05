@@ -96,8 +96,10 @@ nav:
   - User Guide:
     - guide/intro.md
     - guide/cloud.md
-    - guide/restart_from_failure.md
     - guide/metadata.md
+  - Advanced:
+    - guide/autoscaling_ci.md
+    - guide/restart_from_failure.md
   - changelog.md
 
 # Plugins
