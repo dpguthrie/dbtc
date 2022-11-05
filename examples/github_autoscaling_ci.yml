@@ -1,6 +1,3 @@
-# Set up your slim CI job exactly as the documentation states
-# EXCEPT for checking the checkbox for Run on Pull Request
-
 name: Autoscaling dbt Cloud CI
 on:
   pull_request:
@@ -8,28 +5,27 @@ on:
       - main
 
 jobs:
-  restart:
+  autoscaling:
     runs-on: ubuntu-latest
     env:
       DBT_CLOUD_SERVICE_TOKEN: ${{ secrets.DBT_CLOUD_SERVICE_TOKEN }}
       DBT_CLOUD_ACCOUNT_ID: 43786
-      JOB_ID: 73796
+      JOB_ID: 73797
       PULL_REQUEST_ID: ${{ github.event.number }}
       GIT_SHA: ${{ github.event.pull_request.head.sha }}
-      
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: "3.9.x"
-      
+
       - name: Trigger Autoscaling CI Job
-        env:
-          SCHEMA_OVERRIDE: "dbt_cloud_pr_"$JOB_ID"_"$PULL_REQUEST_ID 
         run: |
-          pip install dbtc
-          run=$(dbtc trigger-autoscaling-job \
+          pip install dbtc==0.3.0
+          SO="dbt_cloud_pr_"$JOB_ID"_"$PULL_REQUEST_ID
+          run=$(dbtc trigger-autoscaling-ci-job \
             --job-id=$JOB_ID \
+            --payload='{"cause": "Autoscaling Slim CI!","git_sha":"'$GIT_SHA'","schema_override":"'$SO'","github_pull_request_id":"'$PULL_REQUEST_ID'"}' \
             --pull-request-id=$PULL_REQUEST_ID \
-            --payload='{"cause": "Autoscaling Slim CI!","git_sha":"'$GIT_SHA'","schema_override":"'$SCHEMA_OVERRIDE'"}' \
             --no-should-poll)
