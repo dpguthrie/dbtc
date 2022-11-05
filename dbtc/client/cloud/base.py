@@ -1094,10 +1094,16 @@ class _CloudClient(_Client):
                         'triggering.'
                     )
                     current_job = self.get_job(account_id, job_id)['data']
+
+                    # Alter the current job definition so it can be cloned
                     current_job.pop('is_deferrable')
                     current_job['id'] = None
                     current_job['name'] = current_job['name'] + ' [CLONED]'
                     cloned_job = self.create_job(account_id, current_job)['data']
+
+                    # Modify the should_poll argument - this needs to be `True`
+                    # so the run can complete before the cloned job is deleted
+                    should_poll = True
                     job_id = cloned_job['id']
                 else:
                     self.console.log(
