@@ -1026,7 +1026,6 @@ class _CloudClient(_Client):
         job_id: int,
         payload: Dict,
         *,
-        pull_request_id: int = None,
         should_poll: bool = False,
         poll_interval: int = 10,
         delete_cloned_job: bool = True,
@@ -1046,9 +1045,6 @@ class _CloudClient(_Client):
             account_id (int): Numeric ID of the account to retrieve
             job_id (int): Numeric ID of the job to trigger
             payload (dict): Payload required in triggering a job
-            pull_request_id (int, optional): Pull Request ID used in checking against
-                an in progress run.  If this is provided and matches the
-                pull_request_id on the Run, this will cancel the existing run
             should_poll (bool, optional): Poll until completion if `True`, completion
                 is one of success, failure, or cancelled
             poll_interval (int, optional): Number of seconds to wait in between
@@ -1058,6 +1054,7 @@ class _CloudClient(_Client):
         """
         self.console.log('Finding any in progress runs...')
         cloned_job = None
+        existing_pr_id = None
         in_progress_runs = self.list_runs(
             account_id,
             status=['queued', 'starting', 'running'],
@@ -1070,19 +1067,17 @@ class _CloudClient(_Client):
         if has_in_progress_job_run:
             self.console.log('Found an in progress run.')
             run = in_progress_job_runs[0]
-            try:
-                # Only 1 of these 3 pull request IDs will be populated
-                current_pull_request_id = next(
-                    i
-                    for i in [run['trigger'].get(p, None) for p in PULL_REQUESTS]
-                    if i is not None
-                )
-            except StopIteration:
-                # Set to -1 so if statement below will always evaluate to `False`
-                current_pull_request_id = -1
-            if current_pull_request_id == pull_request_id:
+            for pull_request_key in PULL_REQUESTS:
+                if run.get('trigger', {}).get(pull_request_key, None) is not None:
+                    existing_pr_id = run['trigger'][pull_request_key]
+                    break
+            current_pr_id = payload.get(pull_request_key, -1)
+            self.console.log(f'Current PR ID: {current_pr_id}')
+            self.console.log(f'Existing PR ID: {existing_pr_id}')
+            is_same_pull_request = existing_pr_id == current_pr_id
+            if is_same_pull_request:
                 self.console.log(
-                    f'Canceling current running job for PR {pull_request_id} '
+                    f'Canceling current running job for PR {existing_pr_id} '
                     'and triggering again for the new commit.'
                 )
                 _ = self.cancel_run(account_id, run['id'])
@@ -1093,7 +1088,7 @@ class _CloudClient(_Client):
                     self.console.log(
                         f'Job {job_id} is currently being used in run {run["id"]}. '
                         'This job definition will be cloned and then triggered for '
-                        f'pull request #{current_pull_request_id}.'
+                        f'pull request #{current_pr_id}.'
                     )
                     current_job = self.get_job(account_id, job_id).get('data', {})
 
