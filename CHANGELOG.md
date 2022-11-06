@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0] - 2022-11-05
+
+### Added
+- `trigger_autoscaling_ci_job` method to the `cloud` property of the `dbtCloudClient` class.
+
+### Changed
+- The restart from failure functionality has now been moved to it's own separate method, `trigger_job_from_failure`.  You'll still be able to trigger a job using the `trigger_job` method.
+
 ## [0.2.4] - 2022-10-17
 
 ### Fixed

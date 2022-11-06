@@ -30,6 +30,10 @@
 
 ---
 
+## Quick Intro
+
+<div style="position: relative; padding-bottom: 62.5%; height: 0;"><iframe src="https://www.loom.com/embed/7b1a5bf7c9a7410fa970422e8455e404" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+
 ## Overview
 
 dbtc is an unaffiliated python interface to various dbt Cloud API endpoints.

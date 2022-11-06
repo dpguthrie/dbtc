@@ -71,11 +71,10 @@ account_id = 1
 job_id = 1
 payload = {'cause': 'Restarting from failure'}
 
-run = client.cloud.trigger_job(
+run = client.cloud.trigger_job_from_failure(
     account_id,
     job_id,
     payload,
-    restart_from_failure=True,
     should_poll=False,
 )
 
@@ -107,11 +106,10 @@ models['data']['models'][0]
 The CLI example below will map to the python cloud example above:
 
 ```bash
-dbtc trigger-job \
+dbtc trigger-job-from-failure \
     --account-id 1 \
     --job-id 1 \
     --payload '{"cause": "Restarting from failure"}' \
-    --restart_from_failure \
     --no-should-poll
 ```
 

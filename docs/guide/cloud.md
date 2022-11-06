@@ -723,8 +723,14 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc list-jobs
     ```
 
+### trigger_autoscaling_ci_job
+::: dbtc.client.cloud.base._CloudClient.trigger_autoscaling_ci_job
+
 ### trigger_job
 ::: dbtc.client.cloud.base._CloudClient.trigger_job
+
+### trigger_job_from_failure
+::: dbtc.client.cloud.base._CloudClient.trigger_job_from_failure
 
 ### update_job
 ::: dbtc.client.cloud.base._CloudClient.update_job
