@@ -2,7 +2,7 @@
 
 !!! tip "Thank You!"
 
-    As with the [restart from failure](/guide/restart_from_failure) functionality, a lot of credit goes to [@matt-winkler](https://github.com/matt-winkler) for developing this feature.
+    As with the [restart from failure](/latest/guide/restart_from_failure) functionality, a lot of credit goes to [@matt-winkler](https://github.com/matt-winkler) for developing this feature.
 
 ## Intro
 
