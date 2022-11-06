@@ -59,7 +59,7 @@ pip install dbtc
 
 The interface to both APIs are located in the `dbtCloudClient` class.
 
-The example below shows how you use the `cloud` property on an instance of the `dbtCloudClient` class to to access a method, `trigger_job`, that with certain arguments, allows you to restart a job from the point of failure.
+The example below shows how you use the `cloud` property on an instance of the `dbtCloudClient` class to to access a method, `trigger_job_from_failure`, that allows you to restart a job from its last point of failure.
 
 ```python
 from dbtc import dbtCloudClient
