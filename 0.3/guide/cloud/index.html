@@ -4050,17 +4050,19 @@ Use - to indicate reverse order.</p></td>
   <div class="doc doc-contents first">
   
       <p>Trigger an autoscaling CI job</p>
-
-<details class="summary">
-  <summary>Summary</summary>
-  <p>In the event your CI job is already running, do the following:
-- If a new commit is created for the currently running job, cancel the
-  job and then trigger again
-- If this is an entirely new pull request, clone the job and trigger
-- This will also check to see if your account has met or exceeded the
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>In the event your CI job is already running, this will do the following:</p>
+<ul>
+<li>If a new commit is created for the currently running job, cancel the
+  job and then trigger again</li>
+<li>If this is an entirely new pull request, clone the job and trigger</li>
+<li>This will also check to see if your account has met or exceeded the
   allotted run slots.  In the event you have, a cloned job will
-  not be created and the existing job will be triggered.</p>
-</details>
+  not be created and the existing job will be triggered.</li>
+</ul>
+</div>
+
   <p><strong>Parameters:</strong></p>
   <table>
     <thead>
