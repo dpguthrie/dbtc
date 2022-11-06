@@ -1043,6 +1043,8 @@ class _CloudClient(_Client):
             - This will also check to see if your account has met or exceeded the
               allotted run slots.  In the event you have, a cloned job will
               not be created and the existing job will be triggered.
+              
+        More info [here](/latest/guide/autoscaling_ci)
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
@@ -1139,6 +1141,8 @@ class _CloudClient(_Client):
         trigger_on_failure_only: bool = True,
     ):
         """Restart a job from the point of failure
+        
+        More info [here](/latest/guide/restart_from_failure)
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
