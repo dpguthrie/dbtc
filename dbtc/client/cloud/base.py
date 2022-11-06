@@ -1033,8 +1033,10 @@ class _CloudClient(_Client):
     ):
         """Trigger an autoscaling CI job
 
-        Summary:
-            In the event your CI job is already running, do the following:
+        !!! info
+
+            In the event your CI job is already running, this will do the following:
+
             - If a new commit is created for the currently running job, cancel the
               job and then trigger again
             - If this is an entirely new pull request, clone the job and trigger
