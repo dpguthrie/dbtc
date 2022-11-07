@@ -4100,7 +4100,16 @@ Use - to indicate reverse order.</p></td>
           <td>
                 <code>dict</code>
           </td>
-          <td><p>Payload required in triggering a job</p></td>
+          <td><p>Payload required in triggering a job.  It's important that
+the payload consists of the following keys in order to mimic the
+native behavior of dbt Cloud's Slim CI functionality:</p>
+<ul>
+<li><code>git_sha</code></li>
+<li><code>cause</code></li>
+<li><code>schema_override</code></li>
+<li>Depending on your git provider, one of <code>github_pull_request_id</code>,
+  <code>gitlab_merge_request_id</code>, or <code>azure_pull_request_id</code></li>
+</ul></td>
           <td>
               <em>required</em>
           </td>
@@ -4132,8 +4141,8 @@ polling</p></td>
           <td>
                 <code>bool</code>
           </td>
-          <td><p>Indicate if job should be deleted after
-being triggered (default True)</p></td>
+          <td><p>Indicate if cloned job should be
+deleted after being triggered</p></td>
           <td>
                 <code>True</code>
           </td>

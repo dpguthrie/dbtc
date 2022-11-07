@@ -445,15 +445,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommended-use" class="md-nav__link">
-    Recommended Use
+  <a href="#considerations" class="md-nav__link">
+    Considerations
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#considerations" class="md-nav__link">
-    Considerations
+  <a href="#recommended-use" class="md-nav__link">
+    Recommended Use
   </a>
   
 </li>
@@ -557,15 +557,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommended-use" class="md-nav__link">
-    Recommended Use
+  <a href="#considerations" class="md-nav__link">
+    Considerations
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#considerations" class="md-nav__link">
-    Considerations
+  <a href="#recommended-use" class="md-nav__link">
+    Recommended Use
   </a>
   
 </li>
@@ -617,16 +617,16 @@
 <li>If this is an entirely new pull request, clone the job definition and trigger the clone.  It's important to note that the cloned job will be deleted by default after the run (you can change this through an argument to the function).  Deleting the cloned job will also force the execution into a polling state (e.g. the function won't return a <code>Run</code> until it has encountered a completed state).</li>
 <li>This will also check to see if your account has met or exceeded the allotted run slots.  In the event you have, a cloned job will not be created and the existing job will be triggered.</li>
 </ul>
-<h2 id="recommended-use">Recommended Use<a class="headerlink" href="#recommended-use" title="Permanent link">&para;</a></h2>
-<p>This method is best suited to be used within a Github Action, Gitlab CI Pipeline, or an Azure Pipeline.  The example below shows how you can use it within a Github Action.</p>
 <h2 id="considerations">Considerations<a class="headerlink" href="#considerations" title="Permanent link">&para;</a></h2>
 <p>In order to mimic the native Slim CI behavior within dbt Cloud, it's important to pass the appropriate payload.  The payload should consist of the following (this is in the context of running against a github repository but it will be very similar across Gitlab and ADO).</p>
 <ul>
+<li><code>cause</code> - Put whatever you want here - this is a required field</li>
 <li><code>schema_override</code> - <code>"dbt_cloud_pr_"$JOB_ID"_"$PULL_REQUEST_ID</code></li>
-<li><code>github_pull_request_id</code> - <code>${{ github.event.number }}</code></li>
 <li><code>git_sha</code> - <code>${{ github.event.pull_request.head.sha }}</code></li>
-<li><code>cause</code> - Put whatever you want here</li>
+<li>Depending on your git provider, one of <code>github_pull_request_id</code>, <code>gitlab_merge_request_id</code>, or <code>azure_pull_request_id</code> (in the GH action example, set to <code>${{ github.event.number }}</code>)</li>
 </ul>
+<h2 id="recommended-use">Recommended Use<a class="headerlink" href="#recommended-use" title="Permanent link">&para;</a></h2>
+<p>This method is best suited to be used within a Github Action, Gitlab CI Pipeline, or an Azure Pipeline.  The example below shows how you can use it within a Github Action.</p>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">CLI</label><label for="__tabbed_1_3">Github Action</label><label for="__tabbed_1_4">Response</label></div>
 <div class="tabbed-content">
