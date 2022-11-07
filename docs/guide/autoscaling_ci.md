@@ -25,18 +25,18 @@ In the event your CI job is already running, this package, through the `trigger_
 - If this is an entirely new pull request, clone the job definition and trigger the clone.  It's important to note that the cloned job will be deleted by default after the run (you can change this through an argument to the function).  Deleting the cloned job will also force the execution into a polling state (e.g. the function won't return a `Run` until it has encountered a completed state).
 - This will also check to see if your account has met or exceeded the allotted run slots.  In the event you have, a cloned job will not be created and the existing job will be triggered.
 
-## Recommended Use
-
-This method is best suited to be used within a Github Action, Gitlab CI Pipeline, or an Azure Pipeline.  The example below shows how you can use it within a Github Action.
-
 ## Considerations
 
 In order to mimic the native Slim CI behavior within dbt Cloud, it's important to pass the appropriate payload.  The payload should consist of the following (this is in the context of running against a github repository but it will be very similar across Gitlab and ADO).
 
+- `cause` - Put whatever you want here - this is a required field
 - `schema_override` - `"dbt_cloud_pr_"$JOB_ID"_"$PULL_REQUEST_ID`
-- `github_pull_request_id` - `${{ github.event.number }}`
 - `git_sha` - `${{ github.event.pull_request.head.sha }}`
-- `cause` - Put whatever you want here
+- Depending on your git provider, one of `github_pull_request_id`, `gitlab_merge_request_id`, or `azure_pull_request_id` (in the GH action example, set to `${{ github.event.number }}`)
+
+## Recommended Use
+
+This method is best suited to be used within a Github Action, Gitlab CI Pipeline, or an Azure Pipeline.  The example below shows how you can use it within a Github Action.
 
 ## Examples
 

@@ -6,7 +6,7 @@ import shlex
 import time
 from datetime import datetime
 from functools import partial, wraps
-from typing import Dict, Iterable, List, Union
+from typing import Dict, Iterable, List, Optional, Union
 
 # third party
 import requests
@@ -1043,79 +1043,107 @@ class _CloudClient(_Client):
             - This will also check to see if your account has met or exceeded the
               allotted run slots.  In the event you have, a cloned job will
               not be created and the existing job will be triggered.
-              
+
         More info [here](/latest/guide/autoscaling_ci)
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
             job_id (int): Numeric ID of the job to trigger
-            payload (dict): Payload required in triggering a job
+            payload (dict): Payload required in triggering a job.  It's important that
+                the payload consists of the following keys in order to mimic the
+                native behavior of dbt Cloud's Slim CI functionality:
+
+                - `git_sha`
+                - `cause`
+                - `schema_override`
+                - Depending on your git provider, one of `github_pull_request_id`,
+                  `gitlab_merge_request_id`, or `azure_pull_request_id`
             should_poll (bool, optional): Poll until completion if `True`, completion
                 is one of success, failure, or cancelled
             poll_interval (int, optional): Number of seconds to wait in between
                 polling
-            delete_cloned_job (bool, optional): Indicate if job should be deleted after
-                being triggered (default True)
+            delete_cloned_job (bool, optional): Indicate if cloned job should be
+                deleted after being triggered
         """
         self.console.log('Finding any in progress runs...')
         cloned_job = None
-        existing_pr_id = None
+        payload_pr_id = None
+        pull_request_key: Optional[str] = None
+
+        # Get all runs in "running" state
         in_progress_runs = self.list_runs(
             account_id,
             status=['queued', 'starting', 'running'],
             include_related=['trigger'],
         ).get('data', [])
-        in_progress_job_runs = [
+
+        # Find any runs that match the job_id specified in function signature
+        in_progress_job_run = [
             r for r in in_progress_runs if r.get('job_definition_id', -1) == job_id
         ]
-        has_in_progress_job_run = len(in_progress_job_runs) > 0
-        if has_in_progress_job_run:
-            self.console.log('Found an in progress run.')
-            run = in_progress_job_runs[0]
-            for pull_request_key in PULL_REQUESTS:
-                if run.get('trigger', {}).get(pull_request_key, None) is not None:
-                    existing_pr_id = run['trigger'][pull_request_key]
-                    break
-            current_pr_id = payload.get(pull_request_key, -1)
-            self.console.log(f'Current PR ID: {current_pr_id}')
-            self.console.log(f'Existing PR ID: {existing_pr_id}')
-            is_same_pull_request = existing_pr_id == current_pr_id
-            if is_same_pull_request:
+
+        # Find the valid pull_request_key to use in pulling out relevant PR IDs
+        for pull_request_key in PULL_REQUESTS:
+            if pull_request_key in payload:
+                payload_pr_id = payload[pull_request_key]
+                break
+        else:
+            pull_request_key = None
+
+        # This will be used to identify if the PR within the payload has a run
+        # that's in a running state.
+        in_progress_pr_run = [
+            r
+            for r in in_progress_runs
+            if r.get('trigger', {}).get(pull_request_key, None) == payload_pr_id
+        ]
+
+        if in_progress_pr_run:
+
+            # A PR should only have one run in a queued, running, or starting state
+            # at any given time
+            run = in_progress_pr_run[0]
+            self.console.log(
+                f'Found an in progress run for PR #{payload_pr_id}.  Run {run["id"]} '
+                'will be canceled and a job triggered for the new commit.'
+            )
+            _ = self.cancel_run(account_id, run['id'])
+
+        if in_progress_job_run:
+            self.console.log(f'Found an in progress run for job {job_id}.')
+
+            # Job can only have one run in a queued, running, or starting state
+            run = in_progress_job_run[0]
+
+            acct = self.get_account(account_id).get('data', {})
+            run_slots = acct.get('run_slots', 0)
+            if run_slots > len(in_progress_runs):
                 self.console.log(
-                    f'Canceling current running job for PR {existing_pr_id} '
-                    'and triggering again for the new commit.'
+                    f'Job {job_id} is currently being used in run {run["id"]}. '
+                    'This job definition will be cloned and then triggered for '
+                    f'pull request #{payload_pr_id}.'
                 )
-                _ = self.cancel_run(account_id, run['id'])
+                current_job = self.get_job(account_id, job_id).get('data', {})
+
+                # Alter the current job definition so it can be cloned
+                current_job.pop('is_deferrable')
+                current_job['id'] = None
+                now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+                current_job['name'] = current_job['name'] + f' [CLONED {now}]'
+                cloned_job = self.create_job(account_id, current_job)['data']
+
+                # Modify the should_poll argument - this needs to be `True`
+                # if we're deleting the cloned job.  Otherwise, dbt Cloud
+                # will cancel the run because it can't find an associated job
+                if delete_cloned_job:
+                    should_poll = True
+                job_id = cloned_job['id']
             else:
-                acct = self.get_account(account_id).get('data', {})
-                run_slots = acct.get('run_slots', 0)
-                if run_slots > len(in_progress_runs):
-                    self.console.log(
-                        f'Job {job_id} is currently being used in run {run["id"]}. '
-                        'This job definition will be cloned and then triggered for '
-                        f'pull request #{current_pr_id}.'
-                    )
-                    current_job = self.get_job(account_id, job_id).get('data', {})
-
-                    # Alter the current job definition so it can be cloned
-                    current_job.pop('is_deferrable')
-                    current_job['id'] = None
-                    now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-                    current_job['name'] = current_job['name'] + f' [CLONED {now}]'
-                    cloned_job = self.create_job(account_id, current_job)['data']
-
-                    # Modify the should_poll argument - this needs to be `True`
-                    # if we're deleting the cloned job.  Otherwise, dbt Cloud
-                    # will cancel the run because it can't find an associated job
-                    if delete_cloned_job:
-                        should_poll = True
-                    job_id = cloned_job['id']
-                else:
-                    self.console.log(
-                        'Not cloning the job as your account has met or exceeded the '
-                        'number of run slots and will not be able to execute even a '
-                        'cloned CI job.'
-                    )
+                self.console.log(
+                    'Not cloning the job as your account has met or exceeded the '
+                    'number of run slots and will not be able to execute even a '
+                    'cloned CI job.'
+                )
         else:
             self.console.log('No in progress job run found.  Triggering as normal')
         run = self.trigger_job(
@@ -1141,7 +1169,7 @@ class _CloudClient(_Client):
         trigger_on_failure_only: bool = True,
     ):
         """Restart a job from the point of failure
-        
+
         More info [here](/latest/guide/restart_from_failure)
 
         Args:
