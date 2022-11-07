@@ -84,33 +84,37 @@ def test_list_runs():
         ['list-runs', '--account-id', pytest.account_id, '--job-id', pytest.job_id],
         'run_id',
     )
-    
-    
+
+
 @pytest.mark.dependency(depends=['test_list_jobs'])
 def test_list_runs_list_status():
-    _test_cloud_cli([
-        'list-runs',
-        '--account-id',
-        pytest.account_id,
-        '--job-id',
-        pytest.job_id,
-        '--status',
-        '["success", "error"]',
-    ])
-    
-    
+    _test_cloud_cli(
+        [
+            'list-runs',
+            '--account-id',
+            pytest.account_id,
+            '--job-id',
+            pytest.job_id,
+            '--status',
+            '["success", "error"]',
+        ]
+    )
+
+
 @pytest.mark.dependency(depends=['test_list_jobs'])
 def test_list_runs_str_status():
-    _test_cloud_cli([
-        'list-runs',
-        '--account-id',
-        pytest.account_id,
-        '--job-id',
-        pytest.job_id,
-        '--status',
-        'queued',
-    ])
-    
+    _test_cloud_cli(
+        [
+            'list-runs',
+            '--account-id',
+            pytest.account_id,
+            '--job-id',
+            pytest.job_id,
+            '--status',
+            'queued',
+        ]
+    )
+
 
 @pytest.mark.dependency(depends=['test_list_runs'])
 def test_get_run():
