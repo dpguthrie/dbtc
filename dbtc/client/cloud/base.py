@@ -1090,13 +1090,24 @@ class _CloudClient(_Client):
         else:
             pull_request_key = None
 
-        # This will be used in the event that there's an existing run for the
-        # current pull request but it's being run in a cloned job
+        # This will be used to identify if the PR within the payload has a run
+        # that's in a running state.
         in_progress_pr_run = [
             r
             for r in in_progress_runs
             if r.get('trigger', {}).get(pull_request_key, None) == payload_pr_id
         ]
+
+        if in_progress_pr_run:
+
+            # A PR should only have one run in a queued, running, or starting state
+            # at any given time
+            run = in_progress_pr_run[0]
+            self.console.log(
+                f'Found an in progress run for PR #{payload_pr_id}.  Run {run["id"]} '
+                'will be canceled and a job triggered for the new commit.'
+            )
+            _ = self.cancel_run(account_id, run['id'])
 
         if in_progress_job_run:
             self.console.log(f'Found an in progress run for job {job_id}.')
@@ -1104,56 +1115,35 @@ class _CloudClient(_Client):
             # Job can only have one run in a queued, running, or starting state
             run = in_progress_job_run[0]
 
-            # Set to -1 in the event it's not found to ensure is_same_pull_request
-            # evaluates to `False`
-            existing_pr_id = run.get('trigger', {}).get(pull_request_key, -1)
-            is_same_pull_request = existing_pr_id == payload_pr_id
-            if is_same_pull_request:
+            acct = self.get_account(account_id).get('data', {})
+            run_slots = acct.get('run_slots', 0)
+            if run_slots > len(in_progress_runs):
                 self.console.log(
-                    f'Canceling current running job for PR {existing_pr_id} '
-                    'and triggering again for the new commit.'
+                    f'Job {job_id} is currently being used in run {run["id"]}. '
+                    'This job definition will be cloned and then triggered for '
+                    f'pull request #{payload_pr_id}.'
                 )
-                _ = self.cancel_run(account_id, run['id'])
+                current_job = self.get_job(account_id, job_id).get('data', {})
+
+                # Alter the current job definition so it can be cloned
+                current_job.pop('is_deferrable')
+                current_job['id'] = None
+                now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+                current_job['name'] = current_job['name'] + f' [CLONED {now}]'
+                cloned_job = self.create_job(account_id, current_job)['data']
+
+                # Modify the should_poll argument - this needs to be `True`
+                # if we're deleting the cloned job.  Otherwise, dbt Cloud
+                # will cancel the run because it can't find an associated job
+                if delete_cloned_job:
+                    should_poll = True
+                job_id = cloned_job['id']
             else:
-                acct = self.get_account(account_id).get('data', {})
-                run_slots = acct.get('run_slots', 0)
-                if run_slots > len(in_progress_runs):
-                    self.console.log(
-                        f'Job {job_id} is currently being used in run {run["id"]}. '
-                        'This job definition will be cloned and then triggered for '
-                        f'pull request #{payload_pr_id}.'
-                    )
-                    current_job = self.get_job(account_id, job_id).get('data', {})
-
-                    # Alter the current job definition so it can be cloned
-                    current_job.pop('is_deferrable')
-                    current_job['id'] = None
-                    now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-                    current_job['name'] = current_job['name'] + f' [CLONED {now}]'
-                    cloned_job = self.create_job(account_id, current_job)['data']
-
-                    # Modify the should_poll argument - this needs to be `True`
-                    # if we're deleting the cloned job.  Otherwise, dbt Cloud
-                    # will cancel the run because it can't find an associated job
-                    if delete_cloned_job:
-                        should_poll = True
-                    job_id = cloned_job['id']
-                else:
-                    self.console.log(
-                        'Not cloning the job as your account has met or exceeded the '
-                        'number of run slots and will not be able to execute even a '
-                        'cloned CI job.'
-                    )
-        elif in_progress_pr_run:
-            self.console.log(
-                f'Found an in progress run for PR #{payload_pr_id}.  Canceling run and'
-                f'triggering existing job {job_id}'
-            )
-
-            # A PR should only have one run in a queued, running, or starting state
-            # at any given time
-            run = in_progress_pr_run[0]
-            _ = self.cancel_run(account_id, run['id'])
+                self.console.log(
+                    'Not cloning the job as your account has met or exceeded the '
+                    'number of run slots and will not be able to execute even a '
+                    'cloned CI job.'
+                )
         else:
             self.console.log('No in progress job run found.  Triggering as normal')
         run = self.trigger_job(
