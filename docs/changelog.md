@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.1] - 022-11-07
+
+### Fixed
+- In progress runs weren't properly being cancelled within the `trigger_autoscaling_ci_job` method.  In addiiton to checking if the job has an in progress run, this method will now also check if there is a run in a "running" state for the PR ID given in the payload.  This will ensure that a single PR can only have one run occuring at a given time (this wasn't the case in 0.3.0).
+
 ## [0.3.0] - 2022-11-05
 
 ### Added

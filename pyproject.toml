@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dbtc"
-version = "0.3.0"
+version = "0.3.1"
 description = "An unaffiliated python wrapper for dbt Cloud APIs"
 authors = ["Doug Guthrie <douglas.p.guthrie@gmail.com>"]
 documentation = "https://dbtc.dpguthrie.com"
