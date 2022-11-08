@@ -101,7 +101,7 @@ This method is best suited to be used within a Github Action, Gitlab CI Pipeline
 
           - name: Trigger Autoscaling CI Job
             run: |
-              pip install dbtc==0.3.0
+              pip install dbtc==0.3.2
               SO="dbt_cloud_pr_"$JOB_ID"_"$PULL_REQUEST_ID
               run=$(dbtc trigger-autoscaling-ci-job \
                 --job-id=$JOB_ID \

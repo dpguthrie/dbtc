@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.2] - 2022-11-08
+
+### Fixed
+- Finding in progress PR runs using the PR ID within the payload
+
 ## [0.3.1] - 2022-11-07
 
 ### Fixed

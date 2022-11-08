@@ -1095,7 +1095,7 @@ class _CloudClient(_Client):
         in_progress_pr_run = [
             r
             for r in in_progress_runs
-            if r.get('trigger', {}).get(pull_request_key, None) == payload_pr_id
+            if r.get('trigger', {}).get(pull_request_key, -1) == payload_pr_id
         ]
 
         if in_progress_pr_run:
