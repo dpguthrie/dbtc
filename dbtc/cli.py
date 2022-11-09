@@ -1008,7 +1008,7 @@ def trigger_autoscaling_ci_job(
     job_id: int = JOB_ID,
     payload: str = PAYLOAD,
     should_poll: bool = typer.Option(
-        True,
+        False,
         help='Poll until job completion (status is one of success, failure, or '
         'cancelled)',
     ),
