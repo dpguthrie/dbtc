@@ -64,7 +64,7 @@ v3 = partial(_version_decorator, version='v3')
 v4 = partial(_version_decorator, version='v4')
 
 
-class _CloudClient(_Client):
+class _AdminClient(_Client):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.session = requests.Session()

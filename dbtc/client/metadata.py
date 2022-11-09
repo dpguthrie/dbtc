@@ -7,7 +7,7 @@ from sgqlc.operation import Operation
 
 # first party
 from dbtc.client.base import _Client
-from dbtc.client.metadata.schema import Query
+from dbtc.client.schema import Query
 
 
 class _MetadataClient(_Client):
