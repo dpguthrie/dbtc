@@ -39,7 +39,7 @@ client = dbtCloudClient()
 
 The `dbtCloudClient` class contains two properties:
 
-- `cloud` - instance of the `_CloudClient` class, which contains methods to create, read, update, and delete dbt Cloud resources
+- `cloud` - instance of the `_AdminClient` class, which contains methods to create, read, update, and delete dbt Cloud resources
 - `metadata` - instance of the `_MetadataClient` class, which contains methods to retrieve metadata generated from a dbt Cloud job run
 
 **`cloud`**
