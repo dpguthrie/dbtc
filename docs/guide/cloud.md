@@ -6,7 +6,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 ## Account
 
 ### get_account
-::: dbtc.client.cloud.base._AdminClient.get_account
+::: dbtc.client.admin._AdminClient.get_account
 
 **Examples:**
 === "Python"
@@ -24,7 +24,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### get_account_by_name
-::: dbtc.client.cloud.base._AdminClient.get_account_by_name
+::: dbtc.client.admin._AdminClient.get_account_by_name
 
 **Examples:**
 === "Python"
@@ -41,7 +41,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### get_account_licenses
-::: dbtc.client.cloud.base._AdminClient.get_account_licenses
+::: dbtc.client.admin._AdminClient.get_account_licenses
 
 **Examples:**
 === "Python"
@@ -59,7 +59,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_accounts
-::: dbtc.client.cloud.base._AdminClient.list_accounts
+::: dbtc.client.admin._AdminClient.list_accounts
 
 **Examples:**
 === "Python"
@@ -78,7 +78,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 ## Artifact
 
 ### get_run_artifact
-::: dbtc.client.cloud.base._AdminClient.get_run_artifact
+::: dbtc.client.admin._AdminClient.get_run_artifact
 
 **Examples:**
 === "Python"
@@ -96,7 +96,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_run_artifacts
-::: dbtc.client.cloud.base._AdminClient.list_run_artifacts
+::: dbtc.client.admin._AdminClient.list_run_artifacts
 
 **Examples:**
 === "Python"
@@ -116,7 +116,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 ## Audit Log
 
 ### list_audit_logs
-::: dbtc.client.cloud.base._AdminClient.list_audit_logs
+::: dbtc.client.admin._AdminClient.list_audit_logs
 
 **Examples:**
 === "Python"
@@ -136,7 +136,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 ## Connection
 
 ### create_adapter
-::: dbtc.client.cloud.base._AdminClient.create_adapter
+::: dbtc.client.admin._AdminClient.create_adapter
 
 **Examples:**
 === "Python"
@@ -168,7 +168,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### create_connection
-::: dbtc.client.cloud.base._AdminClient.create_connection
+::: dbtc.client.admin._AdminClient.create_connection
 
 **Examples:**
 === "Python"
@@ -255,7 +255,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### delete_connection
-::: dbtc.client.cloud.base._AdminClient.delete_connection
+::: dbtc.client.admin._AdminClient.delete_connection
 
 **Examples:**
 === "Python"
@@ -274,7 +274,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_connections
-::: dbtc.client.cloud.base._AdminClient.list_connections
+::: dbtc.client.admin._AdminClient.list_connections
 
 **Examples:**
 === "Python"
@@ -294,14 +294,14 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### test_connection
-::: dbtc.client.cloud.base._AdminClient.test_connection
+::: dbtc.client.admin._AdminClient.test_connection
 ### update_connection
-::: dbtc.client.cloud.base._AdminClient.update_connection
+::: dbtc.client.admin._AdminClient.update_connection
 
 ## Credentials
 
 ### create_credentials
-::: dbtc.client.cloud.base._AdminClient.create_credentials
+::: dbtc.client.admin._AdminClient.create_credentials
 
 **Examples:**
 === "Python"
@@ -333,7 +333,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_credentials
-::: dbtc.client.cloud.base._AdminClient.list_credentials
+::: dbtc.client.admin._AdminClient.list_credentials
 
 **Examples:**
 === "Python"
@@ -352,14 +352,14 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### update_credentials
-::: dbtc.client.cloud.base._AdminClient.update_credentials
+::: dbtc.client.admin._AdminClient.update_credentials
 
 ## Environment
 
 ### create_environment
-::: dbtc.client.cloud.base._AdminClient.create_environment
+::: dbtc.client.admin._AdminClient.create_environment
 ### delete_environment
-::: dbtc.client.cloud.base._AdminClient.delete_environment
+::: dbtc.client.admin._AdminClient.delete_environment
 
 **Examples:**
 === "Python"
@@ -378,7 +378,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_environments
-::: dbtc.client.cloud.base._AdminClient.list_environments
+::: dbtc.client.admin._AdminClient.list_environments
 
 **Examples:**
 === "Python"
@@ -397,12 +397,12 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### update_environment
-::: dbtc.client.cloud.base._AdminClient.update_environment
+::: dbtc.client.admin._AdminClient.update_environment
 
 ## Environment Variables
 
 ### create_environment_variables
-::: dbtc.client.cloud.base._AdminClient.create_environment_variables
+::: dbtc.client.admin._AdminClient.create_environment_variables
 
 **Examples:**
 === "Python"
@@ -436,7 +436,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### delete_environment_variables
-::: dbtc.client.cloud.base._AdminClient.delete_environment_variables
+::: dbtc.client.admin._AdminClient.delete_environment_variables
 
 **Examples:**
 === "Python"
@@ -465,7 +465,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 ## Feature Flags
 
 ### list_feature_flags
-::: dbtc.client.cloud.base._AdminClient.list_feature_flags
+::: dbtc.client.admin._AdminClient.list_feature_flags
 
 **Examples:**
 === "Python"
@@ -485,7 +485,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 ## Group
 
 ### assign_group_permissions
-::: dbtc.client.cloud.base._AdminClient.assign_group_permissions
+::: dbtc.client.admin._AdminClient.assign_group_permissions
 
 **Examples:**
 === "Python"
@@ -520,7 +520,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### assign_user_to_group
-::: dbtc.client.cloud.base._AdminClient.assign_user_to_group
+::: dbtc.client.admin._AdminClient.assign_user_to_group
 
 **Examples:**
 === "Python"
@@ -548,7 +548,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### create_user_group
-::: dbtc.client.cloud.base._AdminClient.create_user_group
+::: dbtc.client.admin._AdminClient.create_user_group
 
 **Examples:**
 === "Python"
@@ -577,7 +577,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### delete_user_group
-::: dbtc.client.cloud.base._AdminClient.delete_user_group
+::: dbtc.client.admin._AdminClient.delete_user_group
 
 **Examples:**
 === "Python"
@@ -595,7 +595,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_groups
-::: dbtc.client.cloud.base._AdminClient.list_groups
+::: dbtc.client.admin._AdminClient.list_groups
 
 **Examples:**
 === "Python"
@@ -615,7 +615,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 ## Job
 
 ### create_job
-::: dbtc.client.cloud.base._AdminClient.create_job
+::: dbtc.client.admin._AdminClient.create_job
 
 **Examples:**
 === "Python"
@@ -670,7 +670,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### delete_job
-::: dbtc.client.cloud.base._AdminClient.delete_job
+::: dbtc.client.admin._AdminClient.delete_job
 
 **Examples:**
 === "Python"
@@ -688,7 +688,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### get_job
-::: dbtc.client.cloud.base._AdminClient.get_job
+::: dbtc.client.admin._AdminClient.get_job
 
 **Examples:**
 === "Python"
@@ -706,7 +706,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_jobs
-::: dbtc.client.cloud.base._AdminClient.list_jobs
+::: dbtc.client.admin._AdminClient.list_jobs
 
 **Examples:**
 === "Python"
@@ -724,21 +724,21 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### trigger_autoscaling_ci_job
-::: dbtc.client.cloud.base._AdminClient.trigger_autoscaling_ci_job
+::: dbtc.client.admin._AdminClient.trigger_autoscaling_ci_job
 
 ### trigger_job
-::: dbtc.client.cloud.base._AdminClient.trigger_job
+::: dbtc.client.admin._AdminClient.trigger_job
 
 ### trigger_job_from_failure
-::: dbtc.client.cloud.base._AdminClient.trigger_job_from_failure
+::: dbtc.client.admin._AdminClient.trigger_job_from_failure
 
 ### update_job
-::: dbtc.client.cloud.base._AdminClient.update_job
+::: dbtc.client.admin._AdminClient.update_job
 
 ## Repository
 
 ### create_repository
-::: dbtc.client.cloud.base._AdminClient.create_repository
+::: dbtc.client.admin._AdminClient.create_repository
 
 **Examples:**
 === "Python"
@@ -770,7 +770,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### delete_repository
-::: dbtc.client.cloud.base._AdminClient.delete_repository
+::: dbtc.client.admin._AdminClient.delete_repository
 
 **Examples:**
 === "Python"
@@ -789,7 +789,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_repositories
-::: dbtc.client.cloud.base._AdminClient.list_repositories
+::: dbtc.client.admin._AdminClient.list_repositories
 
 **Examples:**
 === "Python"
@@ -808,12 +808,12 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### update_repository
-::: dbtc.client.cloud.base._AdminClient.update_repository
+::: dbtc.client.admin._AdminClient.update_repository
 
 ## Run
 
 ### cancel_run
-::: dbtc.client.cloud.base._AdminClient.cancel_run
+::: dbtc.client.admin._AdminClient.cancel_run
 
 **Examples:**
 === "Python"
@@ -831,7 +831,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc cancel-run --account-id=1 --run-id=1
 
 ### get_run
-::: dbtc.client.cloud.base._AdminClient.get_run
+::: dbtc.client.admin._AdminClient.get_run
 
 **Examples:**
 === "Python"
@@ -849,7 +849,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### get_run_timing_details
-::: dbtc.client.cloud.base._AdminClient.get_run_timing_details
+::: dbtc.client.admin._AdminClient.get_run_timing_details
 
 **Examples:**
 === "Python"
@@ -868,7 +868,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### get_run_v4
-::: dbtc.client.cloud.base._AdminClient.get_run_v4
+::: dbtc.client.admin._AdminClient.get_run_v4
 
 **Examples:**
 === "Python"
@@ -886,7 +886,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_runs
-::: dbtc.client.cloud.base._AdminClient.list_runs
+::: dbtc.client.admin._AdminClient.list_runs
 
 **Examples:**
 === "Python"
@@ -904,7 +904,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_runs_v4
-::: dbtc.client.cloud.base._AdminClient.list_runs_v4
+::: dbtc.client.admin._AdminClient.list_runs_v4
 
 **Examples:**
 === "Python"
@@ -924,7 +924,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 ## Project
 
 ### create_project
-::: dbtc.client.cloud.base._AdminClient.create_project
+::: dbtc.client.admin._AdminClient.create_project
 
 **Examples:**
 === "Python"
@@ -955,7 +955,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### delete_project
-::: dbtc.client.cloud.base._AdminClient.delete_project
+::: dbtc.client.admin._AdminClient.delete_project
 
 **Examples:**
 === "Python"
@@ -974,7 +974,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### get_project
-::: dbtc.client.cloud.base._AdminClient.get_project
+::: dbtc.client.admin._AdminClient.get_project
 
 **Examples:**
 === "Python"
@@ -993,7 +993,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### get_project_by_name
-::: dbtc.client.cloud.base._AdminClient.get_project_by_name
+::: dbtc.client.admin._AdminClient.get_project_by_name
 
 **Examples:**
 === "Python"
@@ -1011,7 +1011,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_projects
-::: dbtc.client.cloud.base._AdminClient.list_projects
+::: dbtc.client.admin._AdminClient.list_projects
 
 **Examples:**
 === "Python"
@@ -1029,12 +1029,12 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### update_project
-::: dbtc.client.cloud.base._AdminClient.update_project
+::: dbtc.client.admin._AdminClient.update_project
 
 ## Service Token
 
 ### assign_service_token_permissions
-::: dbtc.client.cloud.base._AdminClient.assign_service_token_permissions
+::: dbtc.client.admin._AdminClient.assign_service_token_permissions
 
 **Examples:**
 === "Python"
@@ -1067,7 +1067,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### create_service_token
-::: dbtc.client.cloud.base._AdminClient.create_service_token
+::: dbtc.client.admin._AdminClient.create_service_token
 
 **Examples:**
 === "Python"
@@ -1110,7 +1110,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### get_service_token
-::: dbtc.client.cloud.base._AdminClient.get_service_token
+::: dbtc.client.admin._AdminClient.get_service_token
 
 **Examples:**
 === "Python"
@@ -1128,7 +1128,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_service_tokens
-::: dbtc.client.cloud.base._AdminClient.list_service_tokens
+::: dbtc.client.admin._AdminClient.list_service_tokens
 
 **Examples:**
 === "Python"
@@ -1146,7 +1146,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_service_token_permissions
-::: dbtc.client.cloud.base._AdminClient.list_service_token_permissions
+::: dbtc.client.admin._AdminClient.list_service_token_permissions
 
 **Examples:**
 === "Python"
@@ -1166,7 +1166,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 ## User
 
 ### deactivate_user_license
-::: dbtc.client.cloud.base._AdminClient.deactivate_user_license
+::: dbtc.client.admin._AdminClient.deactivate_user_license
 
 **Examples:**
 === "Python"
@@ -1282,7 +1282,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### get_user
-::: dbtc.client.cloud.base._AdminClient.get_user
+::: dbtc.client.admin._AdminClient.get_user
 
 **Examples:**
 === "Python"
@@ -1300,7 +1300,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_invited_users
-::: dbtc.client.cloud.base._AdminClient.list_invited_users
+::: dbtc.client.admin._AdminClient.list_invited_users
 
 **Examples:**
 === "Python"
@@ -1318,7 +1318,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### list_users
-::: dbtc.client.cloud.base._AdminClient.list_users
+::: dbtc.client.admin._AdminClient.list_users
 
 **Examples:**
 === "Python"
