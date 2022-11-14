@@ -1109,7 +1109,7 @@ class _AdminClient(_Client):
             )
             _ = self.cancel_run(account_id, run['id'])
 
-        if in_progress_job_run:
+        if in_progress_job_run and not in_progress_pr_run:
             self.console.log(f'Found an in progress run for job {job_id}.')
 
             # Job can only have one run in a queued, running, or starting state
