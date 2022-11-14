@@ -652,8 +652,7 @@
 <p>Assuming that <code>DBT_CLOUD_SERVICE_TOKEN</code> and <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.
 <div class="highlight"><pre><span></span><code>dbtc trigger-autoscaling-ci-job <span class="se">\</span>
     --job-id<span class="o">=</span><span class="nv">$JOB_ID</span> <span class="se">\</span>
-    --payload<span class="o">=</span><span class="s1">&#39;{&quot;cause&quot;: &quot;Autoscaling Slim CI!&quot;,&quot;git_sha&quot;:&quot;&#39;</span><span class="nv">$GIT_SHA</span><span class="s1">&#39;&quot;,&quot;schema_override&quot;:&quot;&#39;</span><span class="nv">$SO</span><span class="s1">&#39;&quot;,&quot;github_pull_request_id&quot;:&quot;&#39;</span><span class="nv">$PULL_REQUEST_ID</span><span class="s1">&#39;&quot;}&#39;</span> <span class="se">\</span>
-    --pull-request-id<span class="o">=</span><span class="nv">$PULL_REQUEST_ID</span> <span class="se">\</span>
+    --payload<span class="o">=</span><span class="s1">&#39;{&quot;cause&quot;: &quot;Autoscaling Slim CI!&quot;,&quot;git_sha&quot;:&quot;&#39;</span><span class="s2">&quot;</span><span class="nv">$GIT_SHA</span><span class="s2">&quot;</span><span class="s1">&#39;&quot;,&quot;schema_override&quot;:&quot;&#39;</span><span class="s2">&quot;</span><span class="nv">$SO</span><span class="s2">&quot;</span><span class="s1">&#39;&quot;,&quot;github_pull_request_id&quot;:&#39;</span><span class="s2">&quot;</span><span class="nv">$PULL_REQUEST_ID</span><span class="s2">&quot;</span><span class="s1">&#39;}&#39;</span> <span class="se">\</span>
     --no-should-poll<span class="o">)</span>
 </code></pre></div></p>
 </div>
@@ -687,7 +686,7 @@
 <span class="w">          </span><span class="no">SO=&quot;dbt_cloud_pr_&quot;$JOB_ID&quot;_&quot;$PULL_REQUEST_ID</span><span class="w"></span>
 <span class="w">          </span><span class="no">run=$(dbtc trigger-autoscaling-ci-job \</span><span class="w"></span>
 <span class="w">            </span><span class="no">--job-id=$JOB_ID \</span><span class="w"></span>
-<span class="w">            </span><span class="no">--payload=&#39;{&quot;cause&quot;: &quot;Autoscaling Slim CI!&quot;,&quot;git_sha&quot;:&quot;&#39;$GIT_SHA&#39;&quot;,&quot;schema_override&quot;:&quot;&#39;$SO&#39;&quot;,&quot;github_pull_request_id&quot;:&quot;&#39;$PULL_REQUEST_ID&#39;&quot;}&#39; \</span><span class="w"></span>
+<span class="w">            </span><span class="no">--payload=&#39;{&quot;cause&quot;: &quot;Autoscaling Slim CI!&quot;,&quot;git_sha&quot;:&quot;&#39;&quot;$GIT_SHA&quot;&#39;&quot;,&quot;schema_override&quot;:&quot;&#39;&quot;$SO&quot;&#39;&quot;,&quot;github_pull_request_id&quot;:&#39;&quot;$PULL_REQUEST_ID&quot;&#39;}&#39; \</span><span class="w"></span>
 <span class="w">            </span><span class="no">--no-should-poll)</span><span class="w"></span>
 </code></pre></div>
 </div>
