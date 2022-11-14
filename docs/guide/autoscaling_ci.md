@@ -27,6 +27,18 @@ In the event your CI job is already running, this package, through the `trigger_
 
 ## Considerations
 
+### dbt Cloud
+
+Normally, when you configure a [dbt Cloud CI job](https://docs.getdbt.com/docs/deploy/cloud-ci-job#slim-ci), you'll do the following:
+
+- Defer to another job
+- Include a command with a `state:modified+` selector
+- And, trigger it via pull request
+
+To use this functionality, you want to follow all of the steps above **EXCEPT** the trigger piece.  The action that you setup in your repo will take care of triggering the dbt Cloud job, so if you also check that checkbox, you'll be triggering this job in two different places.
+
+### Payload
+
 In order to mimic the native Slim CI behavior within dbt Cloud, it's important to pass the appropriate payload.  The payload should consist of the following (this is in the context of running against a github repository but it will be very similar across Gitlab and ADO).
 
 - `cause` - Put whatever you want here - this is a required field

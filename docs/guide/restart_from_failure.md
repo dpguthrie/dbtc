@@ -93,8 +93,8 @@ When responding to failures in a particular area of the DAG, it's often expedien
 
           - name: Restart Job from Failure
             run: |
-              pip install dbtc==0.2.0
-              dbtc trigger-job \
+              pip install dbtc==0.3.3
+              dbtc trigger-job-from-failure \
                   --job-id=$JOB_ID \
                   --payload='{"cause": "Restarting job from failure"}' \
                   --no-should-poll \
