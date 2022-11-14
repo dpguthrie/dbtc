@@ -66,8 +66,7 @@ This method is best suited to be used within a Github Action, Gitlab CI Pipeline
     ```bash
     dbtc trigger-autoscaling-ci-job \
         --job-id=$JOB_ID \
-        --payload='{"cause": "Autoscaling Slim CI!","git_sha":"'$GIT_SHA'","schema_override":"'$SO'","github_pull_request_id":"'$PULL_REQUEST_ID'"}' \
-        --pull-request-id=$PULL_REQUEST_ID \
+        --payload='{"cause": "Autoscaling Slim CI!","git_sha":"'"$GIT_SHA"'","schema_override":"'"$SO"'","github_pull_request_id":'"$PULL_REQUEST_ID"'}' \
         --no-should-poll)
     ```
 
