@@ -1102,48 +1102,55 @@ class _AdminClient(_Client):
 
             # A PR should only have one run in a queued, running, or starting state
             # at any given time
-            run = in_progress_pr_run[0]
+            pr_run = in_progress_pr_run[0]
             self.console.log(
-                f'Found an in progress run for PR #{payload_pr_id}.  Run {run["id"]} '
-                'will be canceled and a job triggered for the new commit.'
+                f'Found an in progress run for PR #{payload_pr_id}.  Run '
+                f'{pr_run["id"]} will be canceled and a job triggered for the new '
+                'commit.'
             )
-            _ = self.cancel_run(account_id, run['id'])
+            _ = self.cancel_run(account_id, pr_run['id'])
+        else:
+            pr_run = {}
 
         if in_progress_job_run:
-            self.console.log(f'Found an in progress run for job {job_id}.')
 
             # Job can only have one run in a queued, running, or starting state
-            run = in_progress_job_run[0]
+            job_run = in_progress_job_run[0]
+            job_run_is_pr_run = pr_run.get('id', None) == job_run['id']
 
-            acct = self.get_account(account_id).get('data', {})
-            run_slots = acct.get('run_slots', 0)
-            if run_slots > len(in_progress_runs):
-                self.console.log(
-                    f'Job {job_id} is currently being used in run {run["id"]}. '
-                    'This job definition will be cloned and then triggered for '
-                    f'pull request #{payload_pr_id}.'
-                )
-                current_job = self.get_job(account_id, job_id).get('data', {})
+            # Only clone the job if this job run isn't the same as the PR run we just
+            # cancelled above
+            if not job_run_is_pr_run:
 
-                # Alter the current job definition so it can be cloned
-                current_job.pop('is_deferrable')
-                current_job['id'] = None
-                now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-                current_job['name'] = current_job['name'] + f' [CLONED {now}]'
-                cloned_job = self.create_job(account_id, current_job)['data']
+                acct = self.get_account(account_id).get('data', {})
+                run_slots = acct.get('run_slots', 0)
+                if run_slots > len(in_progress_runs):
+                    self.console.log(
+                        f'Job {job_id} is currently being used in run {job_run["id"]}. '
+                        'This job definition will be cloned and then triggered for '
+                        f'pull request #{payload_pr_id}.'
+                    )
+                    current_job = self.get_job(account_id, job_id).get('data', {})
 
-                # Modify the should_poll argument - this needs to be `True`
-                # if we're deleting the cloned job.  Otherwise, dbt Cloud
-                # will cancel the run because it can't find an associated job
-                if delete_cloned_job:
-                    should_poll = True
-                job_id = cloned_job['id']
-            else:
-                self.console.log(
-                    'Not cloning the job as your account has met or exceeded the '
-                    'number of run slots and will not be able to execute even a '
-                    'cloned CI job.'
-                )
+                    # Alter the current job definition so it can be cloned
+                    current_job.pop('is_deferrable')
+                    current_job['id'] = None
+                    now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+                    current_job['name'] = current_job['name'] + f' [CLONED {now}]'
+                    cloned_job = self.create_job(account_id, current_job)['data']
+
+                    # Modify the should_poll argument - this needs to be `True`
+                    # if we're deleting the cloned job.  Otherwise, dbt Cloud
+                    # will cancel the run because it can't find an associated job
+                    if delete_cloned_job:
+                        should_poll = True
+                    job_id = cloned_job['id']
+                else:
+                    self.console.log(
+                        'Not cloning the job as your account has met or exceeded the '
+                        'number of run slots and will not be able to execute even a '
+                        'cloned CI job.'
+                    )
         else:
             self.console.log('No in progress job run found.  Triggering as normal')
         run = self.trigger_job(

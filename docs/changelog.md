@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.3] - 2022-11-14
+
+### Fixed
+- Autoscaling CI jobs were being improperly cloned when adding a commit to the same PR.
+
 ## [0.3.2] - 2022-11-08
 
 ### Fixed
