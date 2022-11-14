@@ -683,7 +683,7 @@
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Trigger Autoscaling CI Job</span><span class="w"></span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
-<span class="w">          </span><span class="no">pip install dbtc==0.3.0</span><span class="w"></span>
+<span class="w">          </span><span class="no">pip install dbtc==0.3.3</span><span class="w"></span>
 <span class="w">          </span><span class="no">SO=&quot;dbt_cloud_pr_&quot;$JOB_ID&quot;_&quot;$PULL_REQUEST_ID</span><span class="w"></span>
 <span class="w">          </span><span class="no">run=$(dbtc trigger-autoscaling-ci-job \</span><span class="w"></span>
 <span class="w">            </span><span class="no">--job-id=$JOB_ID \</span><span class="w"></span>
