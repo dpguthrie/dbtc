@@ -449,6 +449,26 @@
     Considerations
   </a>
   
+    <nav class="md-nav" aria-label="Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dbt-cloud" class="md-nav__link">
+    dbt Cloud
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payload" class="md-nav__link">
+    Payload
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -561,6 +581,26 @@
     Considerations
   </a>
   
+    <nav class="md-nav" aria-label="Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dbt-cloud" class="md-nav__link">
+    dbt Cloud
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payload" class="md-nav__link">
+    Payload
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -618,6 +658,15 @@
 <li>This will also check to see if your account has met or exceeded the allotted run slots.  In the event you have, a cloned job will not be created and the existing job will be triggered.</li>
 </ul>
 <h2 id="considerations">Considerations<a class="headerlink" href="#considerations" title="Permanent link">&para;</a></h2>
+<h3 id="dbt-cloud">dbt Cloud<a class="headerlink" href="#dbt-cloud" title="Permanent link">&para;</a></h3>
+<p>Normally, when you configure a <a href="https://docs.getdbt.com/docs/deploy/cloud-ci-job#slim-ci">dbt Cloud CI job</a>, you'll do the following:</p>
+<ul>
+<li>Defer to another job</li>
+<li>Include a command with a <code>state:modified+</code> selector</li>
+<li>And, trigger it via pull request</li>
+</ul>
+<p>To use this functionality, you want to follow all of the steps above <strong>EXCEPT</strong> the trigger piece.  The action that you setup in your repo will take care of triggering the dbt Cloud job, so if you also check that checkbox, you'll be triggering this job in two different places.</p>
+<h3 id="payload">Payload<a class="headerlink" href="#payload" title="Permanent link">&para;</a></h3>
 <p>In order to mimic the native Slim CI behavior within dbt Cloud, it's important to pass the appropriate payload.  The payload should consist of the following (this is in the context of running against a github repository but it will be very similar across Gitlab and ADO).</p>
 <ul>
 <li><code>cause</code> - Put whatever you want here - this is a required field</li>
