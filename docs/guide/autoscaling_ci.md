@@ -93,6 +93,11 @@ This method is best suited to be used within a Github Action, Gitlab CI Pipeline
       pull_request:
         branches:
           - main
+        types:
+          - opened
+          - reopened
+          - synchronize
+          - ready_for_review
 
     jobs:
       autoscaling:
