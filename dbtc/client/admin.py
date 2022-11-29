@@ -571,7 +571,7 @@ class _AdminClient(_Client):
         if account_id is None and account_name is None:
             accounts = self.list_accounts()
             for account in accounts['data']:
-                projects = self.list_projects(account['id'])
+                projects = self.list_projects(account['data']['id'])
                 project = self._get_by_name(projects['data'], project_name)
                 if project is not None:
                     break
@@ -581,7 +581,7 @@ class _AdminClient(_Client):
                 account = self.get_account(account_id)
             else:
                 account = self.get_account_by_name(account_name)
-            projects = self.list_projects(account['id'])
+            projects = self.list_projects(account['data']['id'])
             project = self._get_by_name(projects['data'], project_name)
 
         if project is not None:
