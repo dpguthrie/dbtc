@@ -101,7 +101,7 @@ This method is best suited to be used within a Github Action, Gitlab CI Pipeline
 
     jobs:
       autoscaling:
-        if: ! github.event.pull_request.draft
+        if: github.event.pull_request.draft == false
         runs-on: ubuntu-latest
         env:
           DBT_CLOUD_SERVICE_TOKEN: ${{ secrets.DBT_CLOUD_SERVICE_TOKEN }}
