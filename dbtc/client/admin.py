@@ -13,7 +13,7 @@ import requests
 
 # first party
 from dbtc.client.base import _Client
-from dbtc.utils import listify
+from dbtc.utils import json_listify, listify
 
 
 class JobRunStatus(enum.IntEnum):
@@ -815,19 +815,40 @@ class _AdminClient(_Client):
 
     @v2
     def list_jobs(
-        self, account_id: int, *, order_by: str = None, project_id: int = None
+        self,
+        account_id: int,
+        *,
+        environment_id: int = None,
+        project_id: Union[int, List[int]] = None,
+        state: int = None,
+        offset: int = None,
+        limit: int = None,
+        order_by: str = None,
     ) -> Dict:
         """List jobs in an account or specific project.
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
+            environment_id (int): Numeric ID of the environment to retrieve
+            project_id (int or list, optional): The project ID or IDs
+            state (int, optional): 1 = active, 2 = deleted
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
             order_by (str, optional): Field to order the result by.
                 Use - to indicate reverse order.
-            project_id (int, optional): Numeric ID of the project containing jobs
         """
         return self._simple_request(
             f'accounts/{account_id}/jobs/',
-            params={'order_by': order_by, 'project_id': project_id},
+            params={
+                'environment_id': environment_id,
+                'project_id__in': json_listify(project_id),
+                'state': state,
+                'offset': offset,
+                'limit': limit,
+                'order_by': order_by,
+            },
         )
 
     @v3
@@ -854,7 +875,7 @@ class _AdminClient(_Client):
         return self._simple_request(
             f'accounts/{account_id}/projects',
             params={
-                'pk__in': listify(project_id),
+                'pk__in': json_listify(project_id),
                 'state': state,
                 'offset': offset,
                 'limit': limit,

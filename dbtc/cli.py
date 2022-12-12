@@ -91,6 +91,7 @@ RUN_ID_OPTIONAL = typer.Option(
 SERVICE_TOKEN_ID = typer.Option(
     ..., '--service-token-id', '-t', help='Numeric ID of the service token.'
 )
+STATE = typer.Option(None, '--state', help='1 = active, 2 = deleted')
 TOKEN = typer.Option(
     None,
     '--token',
@@ -843,9 +844,18 @@ def list_invited_users(ctx: typer.Context, account_id: int = ACCOUNT_ID):
 def list_jobs(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    project_id: int = typer.Option(
-        None, '--project-id', '-p', help='Numeric ID of the project to retrieve.'
+    environment_id: int = typer.Option(
+        None,
+        '--environment-id',
+        '-e',
+        help='Numeric ID of the environment to retrieve',
     ),
+    project_id: str = typer.Option(
+        None, '--project-id', '-p', help='The project ID or IDs'
+    ),
+    state: str = STATE,
+    offset: int = OFFSET,
+    limit: int = LIMIT,
     order_by: str = ORDER_BY,
 ):
     """List jobs in an account or specific project"""
@@ -853,15 +863,36 @@ def list_jobs(
         ctx,
         'list_jobs',
         account_id,
+        environment_id=environment_id,
+        project_id=json.loads(project_id) if project_id else project_id,
+        state=state,
+        offset=offset,
+        limit=limit,
         order_by=order_by,
-        project_id=project_id,
     )
 
 
 @app.command()
-def list_projects(ctx: typer.Context, account_id: int = ACCOUNT_ID):
+def list_projects(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    project_id: str = typer.Option(
+        None, '--project-id', '-p', help='The project ID or IDs'
+    ),
+    state: str = STATE,
+    offset: int = OFFSET,
+    limit: int = LIMIT,
+):
     """List projects for a specified account"""
-    _dbt_cloud_request(ctx, 'list_projects', account_id)
+    _dbt_cloud_request(
+        ctx,
+        'list_projects',
+        account_id,
+        project_id=json.loads(project_id) if project_id else project_id,
+        state=state,
+        offset=offset,
+        limit=limit,
+    )
 
 
 @app.command()
