@@ -831,13 +831,35 @@ class _AdminClient(_Client):
         )
 
     @v3
-    def list_projects(self, account_id: int) -> Dict:
+    def list_projects(
+        self,
+        account_id: int,
+        *,
+        project_id: Union[int, List[int]] = None,
+        state: int = None,
+        offset: int = None,
+        limit: int = None,
+    ) -> Dict:
         """List projects for a specified account.
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
+            project_id (int or list, optional): The project ID or IDs
+            state (int, optional): 1 = active, 2 = deleted
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
         """
-        return self._simple_request(f'accounts/{account_id}/projects')
+        return self._simple_request(
+            f'accounts/{account_id}/projects',
+            params={
+                'pk__in': listify(project_id),
+                'state': state,
+                'offset': offset,
+                'limit': limit,
+            },
+        )
 
     @v3
     def list_repositories(self, account_id: int, project_id: int) -> Dict:
