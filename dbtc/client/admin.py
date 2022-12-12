@@ -521,7 +521,7 @@ class _AdminClient(_Client):
         if account is not None:
             return self.get_account(account['id'])
 
-        raise Exception(f'"{account_name}" was not found')
+        raise Exception(f'Account "{account_name}" was not found')
 
     @v2
     def get_account_licenses(self, account_id: int) -> Dict:
@@ -581,13 +581,16 @@ class _AdminClient(_Client):
                 account = self.get_account(account_id)
             else:
                 account = self.get_account_by_name(account_name)
-            projects = self.list_projects(account['id'])
-            project = self._get_by_name(projects['data'], project_name)
+            if account.get('data', None) is not None:
+                projects = self.list_projects(account['data']['id'])
+                project = self._get_by_name(projects['data'], project_name)
+            else:
+                project = None
 
         if project is not None:
-            return self.get_project(project['account_id'], project['id'])
+            return project
 
-        raise Exception(f'"{project_name}" was not found.')
+        raise Exception(f'Project "{project_name}" was not found.')
 
     @v2
     def get_run(
