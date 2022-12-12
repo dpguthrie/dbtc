@@ -13,7 +13,7 @@ import requests
 
 # first party
 from dbtc.client.base import _Client
-from dbtc.utils import listify
+from dbtc.utils import json_listify, listify
 
 
 class JobRunStatus(enum.IntEnum):
@@ -843,7 +843,7 @@ class _AdminClient(_Client):
             f'accounts/{account_id}/jobs/',
             params={
                 'environment_id': environment_id,
-                'project_id__in': listify(project_id),
+                'project_id__in': json_listify(project_id),
                 'state': state,
                 'offset': offset,
                 'limit': limit,
@@ -875,7 +875,7 @@ class _AdminClient(_Client):
         return self._simple_request(
             f'accounts/{account_id}/projects',
             params={
-                'pk__in': listify(project_id),
+                'pk__in': json_listify(project_id),
                 'state': state,
                 'offset': offset,
                 'limit': limit,
