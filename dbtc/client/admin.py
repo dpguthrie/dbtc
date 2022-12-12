@@ -588,7 +588,7 @@ class _AdminClient(_Client):
                 project = None
 
         if project is not None:
-            return project
+            return self.get_project(project['account_id'], project['id'])
 
         raise Exception(f'Project "{project_name}" was not found.')
 
