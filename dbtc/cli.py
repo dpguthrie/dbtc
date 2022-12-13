@@ -1,6 +1,6 @@
 # stdlib
 import json
-from typing import List, Optional
+from typing import Optional
 
 # third party
 import typer
@@ -112,6 +112,12 @@ def _dbt_api_request(ctx: typer.Context, property: str, method: str, *args, **kw
 
 
 def _dbt_cloud_request(ctx: typer.Context, method: str, *args, **kwargs):
+    if kwargs.get('include_related', None) is not None:
+        try:
+            include_related = kwargs['include_related']
+            kwargs['include_related'] = json.loads(include_related)
+        except ValueError as e:
+            raise ValueError(f'"{include_related}" is not a valid JSON string') from e
     _dbt_api_request(ctx, 'cloud', method, *args, **kwargs)
 
 
@@ -668,7 +674,7 @@ def get_run(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
     run_id: int = RUN_ID,
-    include_related: List[str] = INCLUDE_RELATED,
+    include_related: str = INCLUDE_RELATED,
 ):
     """Get run by ID for a specific account."""
     _dbt_cloud_request(
@@ -927,7 +933,7 @@ def list_run_artifacts(
 def list_runs(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    include_related: List[str] = INCLUDE_RELATED,
+    include_related: str = INCLUDE_RELATED,
     job_id: int = typer.Option(
         None, '--job-id', '-j', help='Numeric ID of job to retrieve'
     ),
