@@ -112,6 +112,12 @@ def _dbt_api_request(ctx: typer.Context, property: str, method: str, *args, **kw
 
 
 def _dbt_cloud_request(ctx: typer.Context, method: str, *args, **kwargs):
+    if kwargs.get('include_related', None) is not None:
+        try:
+            include_related = kwargs['include_related']
+            kwargs['include_related'] = json.loads(include_related)
+        except ValueError as e:
+            raise ValueError(f'"{include_related}" is not a valid JSON string') from e
     _dbt_api_request(ctx, 'cloud', method, *args, **kwargs)
 
 
