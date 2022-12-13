@@ -1,6 +1,6 @@
 # stdlib
 import json
-from typing import List, Optional
+from typing import Optional
 
 # third party
 import typer
@@ -668,7 +668,7 @@ def get_run(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
     run_id: int = RUN_ID,
-    include_related: List[str] = INCLUDE_RELATED,
+    include_related: str = INCLUDE_RELATED,
 ):
     """Get run by ID for a specific account."""
     _dbt_cloud_request(
@@ -927,7 +927,7 @@ def list_run_artifacts(
 def list_runs(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    include_related: List[str] = INCLUDE_RELATED,
+    include_related: str = INCLUDE_RELATED,
     job_id: int = typer.Option(
         None, '--job-id', '-j', help='Numeric ID of job to retrieve'
     ),
