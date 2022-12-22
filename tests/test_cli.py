@@ -130,6 +130,17 @@ def test_get_run():
 
 
 @pytest.mark.dependency(depends=['test_list_runs'])
+def test_get_most_recent_run():
+    _test_cloud_cli(
+        [
+            'get-most-recent-run',
+            '--account-id',
+            pytest.account_id,
+        ],
+    )
+
+
+@pytest.mark.dependency(depends=['test_list_runs'])
 def test_list_run_artifacts():
     _test_cloud_cli(
         [
@@ -153,5 +164,18 @@ def test_get_run_artifact():
             pytest.run_id,
             '--path',
             'run_results.json',
+        ],
+    )
+
+
+@pytest.mark.dependency(depends=['test_list_runs'])
+def test_get_most_recent_run_artifact():
+    _test_cloud_cli(
+        [
+            'get-most-recent-run-artifact',
+            '--account-id',
+            pytest.account_id,
+            '--path',
+            'manifest.json',
         ],
     )
