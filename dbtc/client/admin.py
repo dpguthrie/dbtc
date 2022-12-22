@@ -593,6 +593,48 @@ class _AdminClient(_Client):
         raise Exception(f'Project "{project_name}" was not found.')
 
     @v2
+    def get_most_recent_run(
+        self,
+        account_id: int,
+        *,
+        include_related: List[str] = None,
+        job_definition_id: int = None,
+        offset: int = None,
+        status: Union[List[str], str] = None,
+    ) -> Dict:
+        runs = self.list_runs(
+            account_id,
+            include_related=include_related,
+            job_definition_id=job_definition_id,
+            order_by='-id',
+            offset=offset,
+            limit=1,
+            status=status,
+        )
+        try:
+            runs['data'] = runs.get('data', [])[0]
+        except IndexError:
+            runs['data'] = {}
+        return runs
+
+    @v2
+    def get_most_recent_run_artifact(
+        self,
+        account_id: int,
+        path: str,
+        *,
+        job_definition_id: int = None,
+        step: int = None,
+    ):
+        runs = self.get_most_recent_run(account_id, job_definition_id=job_definition_id)
+        try:
+            run = runs.get('data', [])[0]
+        except IndexError:
+            raise Exception('A run could not be found with the provided arguments.')
+        else:
+            return self.get_run_artifact(account_id, run['id'], path, step=step)
+
+    @v2
     def get_run(
         self, account_id: int, run_id: int, *, include_related: List[str] = None
     ) -> Dict:
