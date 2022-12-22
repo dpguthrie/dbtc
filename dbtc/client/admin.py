@@ -626,13 +626,17 @@ class _AdminClient(_Client):
         job_definition_id: int = None,
         step: int = None,
     ):
-        runs = self.get_most_recent_run(account_id, job_definition_id=job_definition_id)
+        runs = self.get_most_recent_run(
+            account_id,
+            job_definition_id=job_definition_id,
+            status='success',
+        )
         try:
-            run = runs.get('data', [])[0]
-        except IndexError:
+            run_id = runs.get('data', {})['id']
+        except KeyError:
             raise Exception('A run could not be found with the provided arguments.')
         else:
-            return self.get_run_artifact(account_id, run['id'], path, step=step)
+            return self.get_run_artifact(account_id, run_id, path, step=step)
 
     @v2
     def get_run(
