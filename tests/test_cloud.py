@@ -186,6 +186,11 @@ def test_get_run(dbtc_client):
     _test_cloud_method(dbtc_client, 'get_run', run_id=pytest.run_id)
 
 
+@pytest.mark.dependency(depends=['test_list_runs'])
+def test_get_most_recent_run(dbtc_client):
+    _test_cloud_method(dbtc_client, 'get_most_recent_run')
+
+
 @pytest.mark.dependency(dpeends=['test_list_runs'])
 def test_get_run_timing_details(dbtc_client):
     _test_cloud_method(
@@ -218,6 +223,14 @@ def test_get_run_artifact(dbtc_client):
         account_id=pytest.account_id, run_id=pytest.run_id, path='run_results.json'
     )
     assert 'results' in data.keys()
+
+
+@pytest.mark.dependency(depends=['test_list_run_artifacts'])
+def test_get_most_recent_run_artifacts(dbtc_client):
+    data = dbtc_client.cloud.get_most_recent_run_artifact(
+        account_id=pytest.account_id, path='manifest.json'
+    )
+    assert 'nodes' in data.keys()
 
 
 @pytest.mark.dependency(depends=['test_list_run_artifacts'])

@@ -533,6 +533,58 @@ def get_models(
 
 
 @app.command()
+def get_most_recent_run(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    include_related: str = INCLUDE_RELATED,
+    job_id: int = typer.Option(
+        None, '--job-id', '-j', help='Numeric ID of job to retrieve'
+    ),
+    status: str = typer.Option(
+        None, '--status', help='Status to apply when listing runs'
+    ),
+):
+    if status is not None:
+        try:
+            status = json.loads(status)
+        except ValueError:
+            pass
+
+    _dbt_cloud_request(
+        ctx,
+        'get_most_recent_run',
+        account_id,
+        include_related=include_related,
+        job_definition_id=job_id,
+        status=status,
+    )
+
+
+@app.command()
+def get_most_recent_run_artifact(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    path: str = typer.Option(
+        ..., '--path', '-f', help='Name of artifact to retrieve (e.g. manifest.json)'
+    ),
+    job_id: int = typer.Option(
+        None, '--job-id', '-j', help='Numeric ID of job to retrieve'
+    ),
+    step: int = typer.Option(
+        None, '--step', '-s', help='Index of the step in the run to retrieve'
+    ),
+):
+    _dbt_cloud_request(
+        ctx,
+        'get_most_recent_run_artifact',
+        account_id,
+        path,
+        job_definition_id=job_id,
+        step=step,
+    )
+
+
+@app.command()
 def get_seed(
     ctx: typer.Context,
     job_id: int = JOB_ID,
