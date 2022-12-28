@@ -819,18 +819,48 @@ class _AdminClient(_Client):
         return self._simple_request(f'accounts/{account_id}/environments/')
 
     @v3
-    def list_environments(self, account_id: int, project_id: int = None) -> Dict:
-        """List environments for a specific account and project
+    def list_environments(
+        self,
+        account_id: int,
+        *,
+        project_id: Union[int, List[int]] = None,
+        dbt_version: Union[str, List[str]] = None,
+        name: str = None,
+        type: str = None,
+        state: int = None,
+        offset: int = None,
+        limit: int = None,
+        order_by: str = None,
+    ) -> Dict:
+        """List environments for a specific account
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
             project_id (int, optional): Numeric ID of the project to retrieve
+            dbt_version (str or list, optional): The version of dbt the environment
+                is using
+            name (str, optional): Name of the environment to retrieve
+            type (str, optional): Type of the environment (deployment or development)
+            state (int, optional): 1 = active, 2 = deleted
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+            order_by (str, optional): Field to order the result by.
         """
-        uri = f'accounts/{account_id}/'
-        if project_id is not None:
-            uri += f'projects/{project_id}/'
-        uri += 'environments/'
-        return self._simple_request(uri)
+        return self._simple_request(
+            f'accounts/{account_id}/environments/',
+            params={
+                'project_id__in': json_listify(project_id),
+                'dbt_version__in': json_listify(dbt_version),
+                'name': name,
+                'type': type,
+                'state': state,
+                'offset': offset,
+                'limit': limit,
+                'order_by': order_by,
+            },
+        )
 
     @v3
     def list_feature_flags(self, account_id: int) -> Dict:

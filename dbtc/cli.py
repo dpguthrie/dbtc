@@ -874,10 +874,48 @@ def list_credentials(
 def list_environments(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    project_id: int = PROJECT_ID,
+    project_id: str = typer.Option(
+        None, '--project-id', '-p', help='The project ID or IDs'
+    ),
+    dbt_version: str = typer.Option(
+        None,
+        '--dbt-version',
+        help='The dbt version(s) used in the environment',
+    ),
+    name: str = typer.Option(
+        None,
+        '--name',
+        help='The name of the environment',
+    ),
+    type: str = typer.Option(
+        None,
+        '--type',
+        help='The type of environment (deployment or development)',
+    ),
+    state: str = STATE,
+    offset: int = OFFSET,
+    limit: int = LIMIT,
+    order_by: str = ORDER_BY,
 ):
-    """List environments for a specific account and project."""
-    _dbt_cloud_request(ctx, 'list_environments', account_id, project_id)
+    """List environments in an account"""
+    try:
+        dbt_version = json.loads(dbt_version)
+    except (ValueError, TypeError):
+        pass
+
+    _dbt_cloud_request(
+        ctx,
+        'list_environments',
+        account_id,
+        project_id=json.loads(project_id) if project_id else project_id,
+        dbt_version=dbt_version,
+        name=name,
+        type=type,
+        state=state,
+        offset=offset,
+        limit=limit,
+        order_by=order_by,
+    )
 
 
 @app.command()
