@@ -28,6 +28,14 @@ class _MetadataClient(_Client):
             **{k: v for k, v in arguments.items() if v is not None}  # type: ignore
         ).__fields__()
         data = self._endpoint(op)
+        if not self.do_not_track:
+            self._track(
+                self._anonymous_id,
+                'Metadata API',
+                {
+                    'method': 'get_{obj}',
+                },
+            )
         return data
 
     def get_exposure(self, job_id: int, name: str, *, run_id: int = None) -> Dict:
