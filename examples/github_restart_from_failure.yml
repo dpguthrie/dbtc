@@ -19,7 +19,7 @@ jobs:
 
       - name: Restart Job from Failure
         run: |
-          pip install dbtc==0.3.2
+          pip install dbtc==0.3.3
           dbtc trigger-job-from-failure \
               --job-id=$JOB_ID \
               --payload='{"cause": "Restarting job from failure"}' \
