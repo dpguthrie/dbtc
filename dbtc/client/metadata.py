@@ -33,7 +33,7 @@ class _MetadataClient(_Client):
                 self._anonymous_id,
                 'Metadata API',
                 {
-                    'method': 'get_{obj}',
+                    'method': f'get_{obj}',
                 },
             )
         return data
