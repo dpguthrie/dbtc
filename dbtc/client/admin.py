@@ -54,7 +54,7 @@ def _version_decorator(func, version):
     def wrapper(self, *args, **kwargs):
         self._path = f'/api/{version}/'
         result = func(self, *args, **kwargs)
-        addl_properties = {k: v for k, v in kwargs.items() if '_id' not in k}
+        addl_properties = {k: v for k, v in kwargs.items() if not k.endswith('_id')}
         if not self.do_not_track:
             self._track(
                 self._anonymous_id,
