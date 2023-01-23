@@ -599,15 +599,19 @@ class _AdminClient(_Client):
         *,
         include_related: List[str] = None,
         job_definition_id: int = None,
-        offset: int = None,
+        environment_id: int = None,
+        project_id: int = None,
+        deferring_run_id: int = None,
         status: Union[List[str], str] = None,
     ) -> Dict:
         runs = self.list_runs(
             account_id,
             include_related=include_related,
             job_definition_id=job_definition_id,
+            environment_id=environment_id,
+            project_id=json_listify(project_id),
+            deferring_run_id=deferring_run_id,
             order_by='-id',
-            offset=offset,
             limit=1,
             status=status,
         )
@@ -624,11 +628,17 @@ class _AdminClient(_Client):
         path: str,
         *,
         job_definition_id: int = None,
+        environment_id: int = None,
+        project_id: int = None,
+        deferring_run_id: int = None,
         step: int = None,
     ):
         runs = self.get_most_recent_run(
             account_id,
             job_definition_id=job_definition_id,
+            environment_id=environment_id,
+            project_id=json_listify(project_id),
+            deferring_run_id=deferring_run_id,
             status='success',
         )
         try:
@@ -1000,10 +1010,13 @@ class _AdminClient(_Client):
         *,
         include_related: List[str] = None,
         job_definition_id: int = None,
+        environment_id: int = None,
+        project_id: int = None,
+        deferring_run_id: int = None,
+        status: Union[List[str], str] = None,
         order_by: str = None,
         offset: int = None,
         limit: int = None,
-        status: Union[List[str], str] = None,
     ) -> Dict:
         """List runs in an account.
 
@@ -1037,6 +1050,9 @@ class _AdminClient(_Client):
             params={
                 'include_related': ','.join(include_related or []),
                 'job_definition_id': job_definition_id,
+                'environment_id': environment_id,
+                'project_id__in': json_listify(project_id),
+                'deferring_run_id': deferring_run_id,
                 'order_by': order_by,
                 'offset': offset,
                 'limit': limit,

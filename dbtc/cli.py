@@ -540,6 +540,15 @@ def get_most_recent_run(
     job_id: int = typer.Option(
         None, '--job-id', '-j', help='Numeric ID of job to retrieve'
     ),
+    environment_id: int = typer.Option(
+        None, '--environment-id', '-e', help='Numeric ID of environment to retrieve'
+    ),
+    project_id: str = typer.Option(
+        None, '--project-id', '-p', help='The project ID or IDs'
+    ),
+    deferring_run_id: int = typer.Option(
+        None, '--deferring-run-id', help='The deferring run ID'
+    ),
     status: str = typer.Option(
         None, '--status', help='Status to apply when listing runs'
     ),
@@ -556,6 +565,9 @@ def get_most_recent_run(
         account_id,
         include_related=include_related,
         job_definition_id=job_id,
+        environment_id=environment_id,
+        project_id=json.loads(project_id) if project_id else project_id,
+        deferring_run_id=deferring_run_id,
         status=status,
     )
 
@@ -570,6 +582,15 @@ def get_most_recent_run_artifact(
     job_id: int = typer.Option(
         None, '--job-id', '-j', help='Numeric ID of job to retrieve'
     ),
+    environment_id: int = typer.Option(
+        None, '--environment-id', '-e', help='Numeric ID of environment to retrieve'
+    ),
+    project_id: str = typer.Option(
+        None, '--project-id', '-p', help='The project ID or IDs'
+    ),
+    deferring_run_id: int = typer.Option(
+        None, '--deferring-run-id', help='The deferring run ID'
+    ),
     step: int = typer.Option(
         None, '--step', '-s', help='Index of the step in the run to retrieve'
     ),
@@ -580,6 +601,9 @@ def get_most_recent_run_artifact(
         account_id,
         path,
         job_definition_id=job_id,
+        environment_id=environment_id,
+        project_id=json.loads(project_id) if project_id else project_id,
+        deferring_run_id=deferring_run_id,
         step=step,
     )
 
@@ -1027,12 +1051,21 @@ def list_runs(
     job_id: int = typer.Option(
         None, '--job-id', '-j', help='Numeric ID of job to retrieve'
     ),
-    order_by: str = ORDER_BY,
-    offset: int = OFFSET,
-    limit: int = LIMIT,
+    environment_id: int = typer.Option(
+        None, '--environment-id', '-e', help='Numeric ID of environment to retrieve'
+    ),
+    project_id: str = typer.Option(
+        None, '--project-id', '-p', help='The project ID or IDs'
+    ),
+    deferring_run_id: int = typer.Option(
+        None, '--deferring-run-id', help='The deferring run ID'
+    ),
     status: str = typer.Option(
         None, '--status', help='Status to apply when listing runs'
     ),
+    order_by: str = ORDER_BY,
+    offset: int = OFFSET,
+    limit: int = LIMIT,
 ):
     if status is not None:
         try:
@@ -1046,6 +1079,9 @@ def list_runs(
         account_id,
         include_related=include_related,
         job_definition_id=job_id,
+        environment_id=environment_id,
+        project_id=json.loads(project_id) if project_id else project_id,
+        deferring_run_id=deferring_run_id,
         order_by=order_by,
         offset=offset,
         limit=limit,
