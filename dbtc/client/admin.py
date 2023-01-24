@@ -609,7 +609,7 @@ class _AdminClient(_Client):
             include_related=include_related,
             job_definition_id=job_definition_id,
             environment_id=environment_id,
-            project_id=json_listify(project_id),
+            project_id=project_id,
             deferring_run_id=deferring_run_id,
             order_by='-id',
             limit=1,
@@ -637,7 +637,7 @@ class _AdminClient(_Client):
             account_id,
             job_definition_id=job_definition_id,
             environment_id=environment_id,
-            project_id=json_listify(project_id),
+            project_id=project_id,
             deferring_run_id=deferring_run_id,
             status='success',
         )
