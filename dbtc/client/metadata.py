@@ -1,18 +1,23 @@
 # stdlib
-from typing import Dict
+import operator
+from typing import Any, Dict, List
 
 # third party
+import requests
 from sgqlc.endpoint.http import HTTPEndpoint
 from sgqlc.operation import Operation
 
 # first party
 from dbtc.client.base import _Client
 from dbtc.client.schema import Query
+from dbtc.utils import camel_to_snake
 
 
 class _MetadataClient(_Client):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.session = requests.Session()
+        self.session.headers = self.headers
 
     _header_property = 'service_token'
     _default_domain = 'metadata.cloud.getdbt.com'
@@ -22,15 +27,55 @@ class _MetadataClient(_Client):
     def _endpoint(self) -> HTTPEndpoint:
         return HTTPEndpoint(self.full_url(), self.headers)
 
-    def _make_request(self, obj: str, arguments: Dict = None) -> Dict:
+    def _get_nested_field(self, nested_field: List[str], field_dict: Dict):
+        value = nested_field[-1]
+        key = '.'.join(nested_field[:-1])
+        if key not in field_dict:
+            field_dict[key] = []
+        field_dict[key].append(value)
+        return field_dict
+
+    def _get_field_dict(self, fields: List[str]):
+        field_dict: Dict = {'top_level': []}
+        for field in fields:
+            nested_field = [camel_to_snake(f) for f in field.split('.')]
+            if len(nested_field) == 1:
+                field_dict['top_level'].append(nested_field[0])
+            else:
+                field_dict = self._get_nested_field(nested_field, field_dict)
+        return field_dict
+
+    def _make_request(
+        self, obj: str, arguments: Dict = None, fields: List[str] = None
+    ) -> Dict:
         op = Operation(Query)
-        getattr(op, obj)(  # noqa: F841
-            **{k: v for k, v in arguments.items() if v is not None}  # type: ignore
-        ).__fields__()
+        if fields is not None:
+            query = getattr(op, obj)(  # noqa: F841
+                **{k: v for k, v in arguments.items() if v is not None}  # type: ignore
+            )
+            field_dict = self._get_field_dict(fields)
+            for k, v in field_dict.items():
+                if k == 'top_level':
+                    query.__fields__(*v)
+                else:
+                    operator.attrgetter(k)(query).__fields__(*v)
+        else:
+            getattr(op, obj)(  # noqa: F841
+                **{k: v for k, v in arguments.items() if v is not None}  # type: ignore
+            ).__fields__()
         data = self._endpoint(op)
         return data
 
-    def get_exposure(self, job_id: int, name: str, *, run_id: int = None) -> Dict:
+    def query(self, query: str, variables: Dict = None):
+        payload: Dict[str, Any] = {'query': query}
+        if variables:
+            payload.update({'variables': variables})
+        response = self.session.post(self.full_url(), json=payload)
+        return response.json()
+
+    def get_exposure(
+        self, job_id: int, name: str, *, run_id: int = None, fields: List[str] = None
+    ) -> Dict:
         """
         The exposure object allows you to query information about a particular
             exposure. You can learn more about exposures [here](
@@ -42,6 +87,10 @@ class _MetadataClient(_Client):
             name (str): The name of this particular exposure
             run_id (int, optional): The run ID of the run in dbt Cloud that this
                 exposure was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -50,6 +99,7 @@ class _MetadataClient(_Client):
         return self._make_request(
             "exposure",
             {"job_id": job_id, "name": name, "run_id": run_id},
+            fields,
         )
 
     def get_exposures(
@@ -57,6 +107,7 @@ class _MetadataClient(_Client):
         job_id: int,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The exposures object allows you to query information about all exposures in a
@@ -68,6 +119,10 @@ class _MetadataClient(_Client):
                 generated for
             run_id (int, optional): The run ID of the run in dbt Cloud that this
                 exposure was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -76,6 +131,7 @@ class _MetadataClient(_Client):
         return self._make_request(
             "exposures",
             {"job_id": job_id, "run_id": run_id},
+            fields,
         )
 
     def get_macro(
@@ -84,6 +140,7 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The macro object allows you to query information about a particular macro in a
@@ -95,6 +152,10 @@ class _MetadataClient(_Client):
             unique_id (str): The unique ID of this particular macro
             run_id (int, optional): The run ID of the run in dbt Cloud that this macro
                 was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -103,6 +164,7 @@ class _MetadataClient(_Client):
         return self._make_request(
             "macro",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
+            fields,
         )
 
     def get_macros(
@@ -110,6 +172,7 @@ class _MetadataClient(_Client):
         job_id: int,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The macros object allows you to query information about all macros in a
@@ -120,12 +183,18 @@ class _MetadataClient(_Client):
                 generated for
             run_id (int, optional): The run ID of the run in dbt Cloud that this macro
                 was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
         """
-        return self._make_request("macros", {"job_id": job_id, "run_id": run_id})
+        return self._make_request(
+            "macros", {"job_id": job_id, "run_id": run_id}, fields
+        )
 
     def get_metric(
         self,
@@ -133,6 +202,7 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The metric object allows you to query information about [metrics](
@@ -144,6 +214,10 @@ class _MetadataClient(_Client):
             unique_id (str): The unique ID of this particular metric
             run_id (int, optional): The run ID of the run in dbt Cloud that this metric
                 was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -152,6 +226,7 @@ class _MetadataClient(_Client):
         return self._make_request(
             "metric",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
+            fields,
         )
 
     def get_metrics(
@@ -159,6 +234,7 @@ class _MetadataClient(_Client):
         job_id: int,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The metrics object allows you to query information about [metrics](
@@ -169,12 +245,18 @@ class _MetadataClient(_Client):
                 generated for
             run_id (int, optional): The run ID of the run in dbt Cloud that this metric
                 was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
         """
-        return self._make_request("metrics", {"job_id": job_id, "run_id": run_id})
+        return self._make_request(
+            "metrics", {"job_id": job_id, "run_id": run_id}, fields
+        )
 
     def get_model(
         self,
@@ -182,6 +264,7 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The model object allows you to query information about a particular model in a
@@ -193,6 +276,10 @@ class _MetadataClient(_Client):
             unique_id (str): The unique ID of this particular model
             run_id (int, optional): The run ID of the run in dbt Cloud that this model
                 was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -201,6 +288,7 @@ class _MetadataClient(_Client):
         return self._make_request(
             "model",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
+            fields,
         )
 
     def get_model_by_environment(
@@ -209,6 +297,7 @@ class _MetadataClient(_Client):
         unique_id: str,
         last_run_count: int = 10,
         with_catalog: bool = False,
+        fields: List[str] = None,
     ):
         """The model by environment object allows you to query information about a
         particular model based on environment_id
@@ -223,6 +312,10 @@ class _MetadataClient(_Client):
                 was built to return (max of 10). Defaults to 10.
             with_catalog (bool, optional): If true, return only runs that have catalog
                 information for this model. Defaults to False.
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -236,6 +329,7 @@ class _MetadataClient(_Client):
                 "last_run_count": last_run_count,
                 "with_catalog": with_catalog,
             },
+            fields,
         )
 
     def get_models(
@@ -246,6 +340,7 @@ class _MetadataClient(_Client):
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The models object allows you to query information about all models in a given
@@ -259,6 +354,10 @@ class _MetadataClient(_Client):
             database (str, optional): The database where this table/view lives
             schema (str, optional): The schema where this table/view lives
             identifier (str, optional): The identifier of this table/view
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -273,6 +372,7 @@ class _MetadataClient(_Client):
                 "identifier": identifier,
                 "run_id": run_id,
             },
+            fields,
         )
 
     def get_seed(
@@ -281,6 +381,7 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The seed object allows you to query information about a particular seed in a
@@ -292,14 +393,17 @@ class _MetadataClient(_Client):
             unique_id (str): The unique ID of this particular seed
             run_id (int, optional): The run ID of the run in dbt Cloud that this seed
                 was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
         """
         return self._make_request(
-            "seed",
-            {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
+            "seed", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}, fields
         )
 
     def get_seeds(
@@ -307,6 +411,7 @@ class _MetadataClient(_Client):
         job_id: int,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The seeds object allows you to query information about a all seeds in a given
@@ -317,15 +422,16 @@ class _MetadataClient(_Client):
                 generated for
             run_id (int, optional): The run ID of the run in dbt Cloud that this seed
                 was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
         """
-        return self._make_request(
-            "seeds",
-            {"job_id": job_id, "run_id": run_id},
-        )
+        return self._make_request("seeds", {"job_id": job_id, "run_id": run_id}, fields)
 
     def get_snapshot(
         self,
@@ -333,6 +439,7 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The snapshot object allows you to query information about a particular
@@ -344,6 +451,10 @@ class _MetadataClient(_Client):
             unique_id (str): The unique ID of this particular snapshot
             run_id (int, optional): The run ID of the run in dbt Cloud that this
                 snapshot was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -352,6 +463,7 @@ class _MetadataClient(_Client):
         return self._make_request(
             "snapshot",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
+            fields,
         )
 
     def get_snapshots(
@@ -359,6 +471,7 @@ class _MetadataClient(_Client):
         job_id: int,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The snapshots object allows you to query information about all snapshots in a
@@ -369,6 +482,10 @@ class _MetadataClient(_Client):
                 generated for
             run_id (int, optional): The run ID of the run in dbt Cloud that this
                 snapshot was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -381,6 +498,7 @@ class _MetadataClient(_Client):
                 "job_id": job_id,
                 "run_id": run_id,
             },
+            fields,
         )
 
     def get_source(
@@ -389,6 +507,7 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The source object allows you to query information about a particular source in
@@ -400,6 +519,10 @@ class _MetadataClient(_Client):
             unique_id (str): The unique ID of this particular source
             run_id (int, optional): The run ID of the run in dbt Cloud that this source
                 was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -408,6 +531,7 @@ class _MetadataClient(_Client):
         return self._make_request(
             "source",
             {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
+            fields,
         )
 
     def get_sources(
@@ -418,6 +542,7 @@ class _MetadataClient(_Client):
         schema: str = None,
         identifier: str = None,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The snapshots object allows you to query information about all snapshots in a
@@ -431,6 +556,10 @@ class _MetadataClient(_Client):
             database (str, optional): The database where this table/view lives
             schema (str, optional): The schema where this table/view lives
             identifier (str, optional): The identifier of this table/view
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -445,6 +574,7 @@ class _MetadataClient(_Client):
                 "identifier": identifier,
                 "run_id": run_id,
             },
+            fields,
         )
 
     def get_test(
@@ -453,6 +583,7 @@ class _MetadataClient(_Client):
         unique_id: str,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The test object allows you to query information about a particular test.
@@ -463,13 +594,19 @@ class _MetadataClient(_Client):
             unique_id (str): The unique ID of this particular test
             run_id (int, optional): The run ID of the run in dbt Cloud that this test
                 was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
             the specified job.
         """
         return self._make_request(
-            "test", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}
+            "test",
+            {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
+            fields,
         )
 
     def get_tests(
@@ -477,6 +614,7 @@ class _MetadataClient(_Client):
         job_id: int,
         *,
         run_id: int = None,
+        fields: List[str] = None,
     ) -> Dict:
         """
         The tests object allows you to query information about all tests in a given
@@ -487,6 +625,10 @@ class _MetadataClient(_Client):
                 generated for
             run_id (int, optional): The run ID of the run in dbt Cloud that this test
                 was generated for
+            fields (list, optional): The list of fields to include in the response.
+                The field can either be in snake_case or camelCase (e.g. run_id and
+                runId will be evaluated similarly).  Nested fields can be accessed
+                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
 
         !!! note
             If you do not include a run_id, it will default to the most recent run of
@@ -498,4 +640,5 @@ class _MetadataClient(_Client):
                 "job_id": job_id,
                 "run_id": run_id,
             },
+            fields,
         )
