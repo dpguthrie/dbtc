@@ -3,7 +3,6 @@
 ## [0.3.4] - 2023-01-27
 
 ### Added
-- Ability to track what methods are being used.  Important to note that you can opt out of this by passing `do_not_track=True` to the `dbtCloudClient` class.  Additionally, nothing identifiable, like IDs, will be tracked - simply a way to understand what methods of the package are being used.
 - Additional keyword arguments to filter the `list_projects` endpoint by - `project_id`, `state`, `offset`, and `limit`.  The `offset` will be useful if an account has greater than 100 (the max projects that can be returned) projects.
 - Additional keyword arguments to filter the `list_jobs` endpoint by - `environment_id`, `state`, `offset`, and `limit`.  Important to note that the `project_id` can either be a single project_id integer or a list of project_ids
 - Convenience methods to return the most recent run, `get_most_recent_run`, and the recent run artifact, `get_most_recent_run_artifact`.

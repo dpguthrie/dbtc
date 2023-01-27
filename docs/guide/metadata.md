@@ -334,3 +334,17 @@ The video below provides some more detail.
     ```bash
     dbtc get-tests --job-id=12345
     ```
+
+## query
+::: dbtc.client.metadata._MetadataClient.query
+
+**Examples:**
+=== "Python"
+
+    Assuming that `client` is an instance of `dbtCloudClient`
+    ```py
+
+    query = '{models(jobId: 1) {uniqueId}}'
+
+    client.metadata.query(query)
+    ```
