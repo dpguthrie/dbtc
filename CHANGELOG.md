@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.3.4] - 2023-01-27
+
+### Added
+- Ability to track what methods are being used.  Important to note that you can opt out of this by passing `do_not_track=True` to the `dbtCloudClient` class.  Additionally, nothing identifiable, like IDs, will be tracked - simply a way to understand what methods of the package are being used.
+- Additional keyword arguments to filter the `list_projects` endpoint by - `project_id`, `state`, `offset`, and `limit`.  The `offset` will be useful if an account has greater than 100 (the max projects that can be returned) projects.
+- Additional keyword arguments to filter the `list_jobs` endpoint by - `environment_id`, `state`, `offset`, and `limit`.  Important to note that the `project_id` can either be a single project_id integer or a list of project_ids
+- Convenience methods to return the most recent run, `get_most_recent_run`, and the recent run artifact, `get_most_recent_run_artifact`.
+- Additional keyword arguments to filter the `list_environments` endpoint by - `dbt_version`, `name`, `type`, `state`, `offset`, and `limit`.  Important to note that the `project_id` can either be a single project_id integer or a list of project_ids.
+- `fields` argument to the methods on the `metadata` property.  This allows you to limit the data returned from the Metadata API while still not having to write any GraphQL!
+- `query` method on the `metadata` property.  This allows you to write a GraphQL query and supply variables
+
+### Fixed
+- A bug in `get_project_by_name`
+- A bug in the CLI related to any methods that accept the `include_related` argument.  This is now valid syntax `'["debug_logs", "run_steps"]'`.
+
 ## [0.3.3] - 2022-11-14
 
 ### Fixed
