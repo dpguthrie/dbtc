@@ -8,14 +8,6 @@ def _test_cloud_method(dbtc_client, method: str, **kwargs):
     assert data['status']['code'] == 200
 
 
-def _test_cloud_v4_method(dbtc_client, method: str, multiple: bool = True, **kwargs):
-    data = getattr(dbtc_client.cloud, method)(account_id=pytest.account_id, **kwargs)
-    if multiple:
-        assert isinstance(data, list)
-    else:
-        assert 'data' in data.keys()
-
-
 def _test_and_set(dbtc_client, method: str, variable: str, **kwargs):
     response = getattr(dbtc_client.cloud, method)(**kwargs)
     setattr(pytest, variable, response['data'][0]['id'])
@@ -176,11 +168,6 @@ def test_list_runs_bad_status(dbtc_client):
         )
 
 
-@pytest.mark.dependency(depends=['test_list_jobs'])
-def test_list_runs_v4(dbtc_client):
-    _test_cloud_v4_method(dbtc_client, 'list_runs_v4', status='CANCELED')
-
-
 @pytest.mark.dependency(depends=['test_list_runs'])
 def test_get_run(dbtc_client):
     _test_cloud_method(dbtc_client, 'get_run', run_id=pytest.run_id)
@@ -198,13 +185,6 @@ def test_get_run_timing_details(dbtc_client):
         'get_run_timing_details',
         project_id=pytest.project_id,
         run_id=pytest.run_id,
-    )
-
-
-@pytest.mark.dependency(depends=['test_list_runs'])
-def test_get_run_v4(dbtc_client):
-    _test_cloud_v4_method(
-        dbtc_client, 'get_run_v4', multiple=False, run_id=pytest.run_id
     )
 
 
