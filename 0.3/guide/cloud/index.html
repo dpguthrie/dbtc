@@ -800,6 +800,20 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#get_most_recent_run" class="md-nav__link">
+    get_most_recent_run
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_most_recent_run_artifact" class="md-nav__link">
+    get_most_recent_run_artifact
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#get_run" class="md-nav__link">
     get_run
   </a>
@@ -1549,6 +1563,20 @@
           <li class="md-nav__item">
   <a href="#cancel_run" class="md-nav__link">
     cancel_run
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_most_recent_run" class="md-nav__link">
+    get_most_recent_run
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_most_recent_run_artifact" class="md-nav__link">
+    get_most_recent_run_artifact
   </a>
   
 </li>
@@ -3036,7 +3064,7 @@ environment variables have been set.
 
   <div class="doc doc-contents first">
   
-      <p>List environments for a specific account and project</p>
+      <p>List environments for a specific account</p>
 
   <p><strong>Parameters:</strong></p>
   <table>
@@ -3065,6 +3093,79 @@ environment variables have been set.
                 <code>int</code>
           </td>
           <td><p>Numeric ID of the project to retrieve</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>dbt_version</code></td>
+          <td>
+                <code>str or list</code>
+          </td>
+          <td><p>The version of dbt the environment
+is using</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Name of the environment to retrieve</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Type of the environment (deployment or development)</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>state</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>1 = active, 2 = deleted</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>offset</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The offset to apply when listing runs.
+Use with limit to paginate results.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>limit</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The limit to apply when listing runs.
+Use with offset to paginate results.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>order_by</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Field to order the result by.</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -4000,12 +4101,11 @@ Use - to indicate reverse order.</p></td>
           </td>
         </tr>
         <tr>
-          <td><code>order_by</code></td>
+          <td><code>environment_id</code></td>
           <td>
-                <code>str</code>
+                <code>int</code>
           </td>
-          <td><p>Field to order the result by.
-Use - to indicate reverse order.</p></td>
+          <td><p>Numeric ID of the environment to retrieve</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -4013,9 +4113,52 @@ Use - to indicate reverse order.</p></td>
         <tr>
           <td><code>project_id</code></td>
           <td>
+                <code>int or list</code>
+          </td>
+          <td><p>The project ID or IDs</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>state</code></td>
+          <td>
                 <code>int</code>
           </td>
-          <td><p>Numeric ID of the project containing jobs</p></td>
+          <td><p>1 = active, 2 = deleted</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>offset</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The offset to apply when listing runs.
+Use with limit to paginate results.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>limit</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The limit to apply when listing runs.
+Use with offset to paginate results.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>order_by</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Field to order the result by.
+Use - to indicate reverse order.</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -4740,6 +4883,58 @@ dbtc cancel-run --account-id=1 --run-id=1</p>
 </div>
 </div>
 </div>
+<h3 id="get_most_recent_run">get_most_recent_run<a class="headerlink" href="#get_most_recent_run" title="Permanent link">&para;</a></h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+  <div class="doc doc-contents first">
+
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="32:2"><input checked="checked" id="__tabbed_32_1" name="__tabbed_32" type="radio" /><input id="__tabbed_32_2" name="__tabbed_32" type="radio" /><div class="tabbed-labels"><label for="__tabbed_32_1">Python</label><label for="__tabbed_32_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_most_recent_run</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.
+<div class="highlight"><pre><span></span><code>dbtc get-most-recent-run
+</code></pre></div></p>
+</div>
+</div>
+</div>
+<h3 id="get_most_recent_run_artifact">get_most_recent_run_artifact<a class="headerlink" href="#get_most_recent_run_artifact" title="Permanent link">&para;</a></h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+  <div class="doc doc-contents first">
+
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="33:2"><input checked="checked" id="__tabbed_33_1" name="__tabbed_33" type="radio" /><input id="__tabbed_33_2" name="__tabbed_33" type="radio" /><div class="tabbed-labels"><label for="__tabbed_33_1">Python</label><label for="__tabbed_33_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">cloud</span><span class="o">.</span><span class="n">get_most_recent_run_artifact</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<p>Assuming that <code>DBT_CLOUD_ACCOUNT_ID</code> environment variable has been set.
+<div class="highlight"><pre><span></span><code>dbtc get-most-recent-run-artifact --path manifest.json
+</code></pre></div></p>
+</div>
+</div>
+</div>
 <h3 id="get_run">get_run<a class="headerlink" href="#get_run" title="Permanent link">&para;</a></h3>
 
 
@@ -4800,7 +4995,7 @@ fields to pull with the run. Valid values are <code>trigger</code>, <code>job</c
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="32:2"><input checked="checked" id="__tabbed_32_1" name="__tabbed_32" type="radio" /><input id="__tabbed_32_2" name="__tabbed_32" type="radio" /><div class="tabbed-labels"><label for="__tabbed_32_1">Python</label><label for="__tabbed_32_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="34:2"><input checked="checked" id="__tabbed_34_1" name="__tabbed_34" type="radio" /><input id="__tabbed_34_2" name="__tabbed_34" type="radio" /><div class="tabbed-labels"><label for="__tabbed_34_1">Python</label><label for="__tabbed_34_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -4862,7 +5057,7 @@ fields to pull with the run. Valid values are <code>trigger</code>, <code>job</c
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="33:2"><input checked="checked" id="__tabbed_33_1" name="__tabbed_33" type="radio" /><input id="__tabbed_33_2" name="__tabbed_33" type="radio" /><div class="tabbed-labels"><label for="__tabbed_33_1">Python</label><label for="__tabbed_33_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="35:2"><input checked="checked" id="__tabbed_35_1" name="__tabbed_35" type="radio" /><input id="__tabbed_35_2" name="__tabbed_35" type="radio" /><div class="tabbed-labels"><label for="__tabbed_35_1">Python</label><label for="__tabbed_35_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -4925,7 +5120,7 @@ environment variables have been set.
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="34:2"><input checked="checked" id="__tabbed_34_1" name="__tabbed_34" type="radio" /><input id="__tabbed_34_2" name="__tabbed_34" type="radio" /><div class="tabbed-labels"><label for="__tabbed_34_1">Python</label><label for="__tabbed_34_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="36:2"><input checked="checked" id="__tabbed_36_1" name="__tabbed_36" type="radio" /><input id="__tabbed_36_2" name="__tabbed_36" type="radio" /><div class="tabbed-labels"><label for="__tabbed_36_1">Python</label><label for="__tabbed_36_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5046,7 +5241,7 @@ cancelled</p></td>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="35:2"><input checked="checked" id="__tabbed_35_1" name="__tabbed_35" type="radio" /><input id="__tabbed_35_2" name="__tabbed_35" type="radio" /><div class="tabbed-labels"><label for="__tabbed_35_1">Python</label><label for="__tabbed_35_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="37:2"><input checked="checked" id="__tabbed_37_1" name="__tabbed_37" type="radio" /><input id="__tabbed_37_2" name="__tabbed_37" type="radio" /><div class="tabbed-labels"><label for="__tabbed_37_1">Python</label><label for="__tabbed_37_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5153,7 +5348,7 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="36:2"><input checked="checked" id="__tabbed_36_1" name="__tabbed_36" type="radio" /><input id="__tabbed_36_2" name="__tabbed_36" type="radio" /><div class="tabbed-labels"><label for="__tabbed_36_1">Python</label><label for="__tabbed_36_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="38:2"><input checked="checked" id="__tabbed_38_1" name="__tabbed_38" type="radio" /><input id="__tabbed_38_2" name="__tabbed_38" type="radio" /><div class="tabbed-labels"><label for="__tabbed_38_1">Python</label><label for="__tabbed_38_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5216,7 +5411,7 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="37:3"><input checked="checked" id="__tabbed_37_1" name="__tabbed_37" type="radio" /><input id="__tabbed_37_2" name="__tabbed_37" type="radio" /><input id="__tabbed_37_3" name="__tabbed_37" type="radio" /><div class="tabbed-labels"><label for="__tabbed_37_1">Python</label><label for="__tabbed_37_2">CLI</label><label for="__tabbed_37_3">Payload</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="39:3"><input checked="checked" id="__tabbed_39_1" name="__tabbed_39" type="radio" /><input id="__tabbed_39_2" name="__tabbed_39" type="radio" /><input id="__tabbed_39_3" name="__tabbed_39" type="radio" /><div class="tabbed-labels"><label for="__tabbed_39_1">Python</label><label for="__tabbed_39_2">CLI</label><label for="__tabbed_39_3">Payload</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5289,7 +5484,7 @@ Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"</p></td>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="38:2"><input checked="checked" id="__tabbed_38_1" name="__tabbed_38" type="radio" /><input id="__tabbed_38_2" name="__tabbed_38" type="radio" /><div class="tabbed-labels"><label for="__tabbed_38_1">Python</label><label for="__tabbed_38_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="40:2"><input checked="checked" id="__tabbed_40_1" name="__tabbed_40" type="radio" /><input id="__tabbed_40_2" name="__tabbed_40" type="radio" /><div class="tabbed-labels"><label for="__tabbed_40_1">Python</label><label for="__tabbed_40_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5352,7 +5547,7 @@ environment variables have been set.
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="39:2"><input checked="checked" id="__tabbed_39_1" name="__tabbed_39" type="radio" /><input id="__tabbed_39_2" name="__tabbed_39" type="radio" /><div class="tabbed-labels"><label for="__tabbed_39_1">Python</label><label for="__tabbed_39_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="41:2"><input checked="checked" id="__tabbed_41_1" name="__tabbed_41" type="radio" /><input id="__tabbed_41_2" name="__tabbed_41" type="radio" /><div class="tabbed-labels"><label for="__tabbed_41_1">Python</label><label for="__tabbed_41_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5425,7 +5620,7 @@ environment variables have been set.
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="40:2"><input checked="checked" id="__tabbed_40_1" name="__tabbed_40" type="radio" /><input id="__tabbed_40_2" name="__tabbed_40" type="radio" /><div class="tabbed-labels"><label for="__tabbed_40_1">Python</label><label for="__tabbed_40_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="42:2"><input checked="checked" id="__tabbed_42_1" name="__tabbed_42" type="radio" /><input id="__tabbed_42_2" name="__tabbed_42" type="radio" /><div class="tabbed-labels"><label for="__tabbed_42_1">Python</label><label for="__tabbed_42_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5471,13 +5666,55 @@ environment variables have been set.
               <em>required</em>
           </td>
         </tr>
+        <tr>
+          <td><code>project_id</code></td>
+          <td>
+                <code>int or list</code>
+          </td>
+          <td><p>The project ID or IDs</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>state</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>1 = active, 2 = deleted</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>offset</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The offset to apply when listing runs.
+Use with limit to paginate results.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>limit</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The limit to apply when listing runs.
+Use with offset to paginate results.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="41:2"><input checked="checked" id="__tabbed_41_1" name="__tabbed_41" type="radio" /><input id="__tabbed_41_2" name="__tabbed_41" type="radio" /><div class="tabbed-labels"><label for="__tabbed_41_1">Python</label><label for="__tabbed_41_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="43:2"><input checked="checked" id="__tabbed_43_1" name="__tabbed_43" type="radio" /><input id="__tabbed_43_2" name="__tabbed_43" type="radio" /><div class="tabbed-labels"><label for="__tabbed_43_1">Python</label><label for="__tabbed_43_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5607,7 +5844,7 @@ environment variables have been set.
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="42:3"><input checked="checked" id="__tabbed_42_1" name="__tabbed_42" type="radio" /><input id="__tabbed_42_2" name="__tabbed_42" type="radio" /><input id="__tabbed_42_3" name="__tabbed_42" type="radio" /><div class="tabbed-labels"><label for="__tabbed_42_1">Python</label><label for="__tabbed_42_2">CLI</label><label for="__tabbed_42_3">Payload</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="44:3"><input checked="checked" id="__tabbed_44_1" name="__tabbed_44" type="radio" /><input id="__tabbed_44_2" name="__tabbed_44" type="radio" /><input id="__tabbed_44_3" name="__tabbed_44" type="radio" /><div class="tabbed-labels"><label for="__tabbed_44_1">Python</label><label for="__tabbed_44_2">CLI</label><label for="__tabbed_44_3">Payload</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5691,7 +5928,7 @@ documentation for more information.</p>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="43:3"><input checked="checked" id="__tabbed_43_1" name="__tabbed_43" type="radio" /><input id="__tabbed_43_2" name="__tabbed_43" type="radio" /><input id="__tabbed_43_3" name="__tabbed_43" type="radio" /><div class="tabbed-labels"><label for="__tabbed_43_1">Python</label><label for="__tabbed_43_2">CLI</label><label for="__tabbed_43_3">Payload</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="45:3"><input checked="checked" id="__tabbed_45_1" name="__tabbed_45" type="radio" /><input id="__tabbed_45_2" name="__tabbed_45" type="radio" /><input id="__tabbed_45_3" name="__tabbed_45" type="radio" /><div class="tabbed-labels"><label for="__tabbed_45_1">Python</label><label for="__tabbed_45_2">CLI</label><label for="__tabbed_45_3">Payload</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5776,7 +6013,7 @@ documentation for more information.</p>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="44:2"><input checked="checked" id="__tabbed_44_1" name="__tabbed_44" type="radio" /><input id="__tabbed_44_2" name="__tabbed_44" type="radio" /><div class="tabbed-labels"><label for="__tabbed_44_1">Python</label><label for="__tabbed_44_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="46:2"><input checked="checked" id="__tabbed_46_1" name="__tabbed_46" type="radio" /><input id="__tabbed_46_2" name="__tabbed_46" type="radio" /><div class="tabbed-labels"><label for="__tabbed_46_1">Python</label><label for="__tabbed_46_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5828,7 +6065,7 @@ documentation for more information.</p>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="45:2"><input checked="checked" id="__tabbed_45_1" name="__tabbed_45" type="radio" /><input id="__tabbed_45_2" name="__tabbed_45" type="radio" /><div class="tabbed-labels"><label for="__tabbed_45_1">Python</label><label for="__tabbed_45_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="47:2"><input checked="checked" id="__tabbed_47_1" name="__tabbed_47" type="radio" /><input id="__tabbed_47_2" name="__tabbed_47" type="radio" /><div class="tabbed-labels"><label for="__tabbed_47_1">Python</label><label for="__tabbed_47_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5890,7 +6127,7 @@ documentation for more information.</p>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="46:2"><input checked="checked" id="__tabbed_46_1" name="__tabbed_46" type="radio" /><input id="__tabbed_46_2" name="__tabbed_46" type="radio" /><div class="tabbed-labels"><label for="__tabbed_46_1">Python</label><label for="__tabbed_46_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="48:2"><input checked="checked" id="__tabbed_48_1" name="__tabbed_48" type="radio" /><input id="__tabbed_48_2" name="__tabbed_48" type="radio" /><div class="tabbed-labels"><label for="__tabbed_48_1">Python</label><label for="__tabbed_48_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -5959,7 +6196,7 @@ permissions. This request will fail if a user has already been deactivated.</p>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="47:3"><input checked="checked" id="__tabbed_47_1" name="__tabbed_47" type="radio" /><input id="__tabbed_47_2" name="__tabbed_47" type="radio" /><input id="__tabbed_47_3" name="__tabbed_47" type="radio" /><div class="tabbed-labels"><label for="__tabbed_47_1">Python</label><label for="__tabbed_47_2">CLI</label><label for="__tabbed_47_3">Payload</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="49:3"><input checked="checked" id="__tabbed_49_1" name="__tabbed_49" type="radio" /><input id="__tabbed_49_2" name="__tabbed_49" type="radio" /><input id="__tabbed_49_3" name="__tabbed_49" type="radio" /><div class="tabbed-labels"><label for="__tabbed_49_1">Python</label><label for="__tabbed_49_2">CLI</label><label for="__tabbed_49_3">Payload</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -6117,7 +6354,7 @@ permissions. This request will fail if a user has already been deactivated.</p>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="48:2"><input checked="checked" id="__tabbed_48_1" name="__tabbed_48" type="radio" /><input id="__tabbed_48_2" name="__tabbed_48" type="radio" /><div class="tabbed-labels"><label for="__tabbed_48_1">Python</label><label for="__tabbed_48_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="50:2"><input checked="checked" id="__tabbed_50_1" name="__tabbed_50" type="radio" /><input id="__tabbed_50_2" name="__tabbed_50" type="radio" /><div class="tabbed-labels"><label for="__tabbed_50_1">Python</label><label for="__tabbed_50_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -6169,7 +6406,7 @@ permissions. This request will fail if a user has already been deactivated.</p>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="49:2"><input checked="checked" id="__tabbed_49_1" name="__tabbed_49" type="radio" /><input id="__tabbed_49_2" name="__tabbed_49" type="radio" /><div class="tabbed-labels"><label for="__tabbed_49_1">Python</label><label for="__tabbed_49_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="51:2"><input checked="checked" id="__tabbed_51_1" name="__tabbed_51" type="radio" /><input id="__tabbed_51_2" name="__tabbed_51" type="radio" /><div class="tabbed-labels"><label for="__tabbed_51_1">Python</label><label for="__tabbed_51_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
@@ -6254,7 +6491,7 @@ Use - to indicate reverse order.</p></td>
   </div>
 
 </div><p><strong>Examples:</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="50:2"><input checked="checked" id="__tabbed_50_1" name="__tabbed_50" type="radio" /><input id="__tabbed_50_2" name="__tabbed_50" type="radio" /><div class="tabbed-labels"><label for="__tabbed_50_1">Python</label><label for="__tabbed_50_2">CLI</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="52:2"><input checked="checked" id="__tabbed_52_1" name="__tabbed_52" type="radio" /><input id="__tabbed_52_2" name="__tabbed_52" type="radio" /><div class="tabbed-labels"><label for="__tabbed_52_1">Python</label><label for="__tabbed_52_2">CLI</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>

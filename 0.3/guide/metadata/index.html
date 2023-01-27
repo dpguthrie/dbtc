@@ -494,6 +494,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#query" class="md-nav__link">
+    query
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -731,6 +738,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#query" class="md-nav__link">
+    query
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -751,6 +765,44 @@
 
 <h1 id="metadata">Metadata<a class="headerlink" href="#metadata" title="Permanent link">&para;</a></h1>
 <p>The <code>metadata</code> property on the <code>dbtCloudClient</code> class contains methods that allow a user to retrieve metadata which pertains to the accuracy, recency, configuration, and structure of the views and tables in the warehouse.</p>
+<p>The Metadata API is a GraphQL API.  Normally, this would require a user to write a GraphQL query as part of the required payload.  However, this package provides a convenient interface that allows a user to write the GraphQL query in a more pythonic way.  There are two options:</p>
+<ol>
+<li>Simply provide the minimal set of arguments to the functions below and get every field in the desired schema, including those that are nested.  An example is below for the <code>models</code> schema:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dbtc</span> <span class="kn">import</span> <span class="n">dbtCloudClient</span>
+
+<span class="c1"># Assuming DBT_CLOUD_SERVICE_TOKEN is set as an environment variable</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">dbtCloudClient</span><span class="p">()</span>
+<span class="n">job_id</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_models</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>If you don't want or need all of the fields from a particular schema, use the optional <code>fields</code> argument to limit the amount of data that's returned.  This argument accepts a list of strings where the strings are names of fields within the schema.  Additionally, you can ask for nested fields using dot notation.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dbtc</span> <span class="kn">import</span> <span class="n">dbtCloudClient</span>
+
+<span class="c1"># Assuming DBT_CLOUD_SERVICE_TOKEN is set as an environment variable</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">dbtCloudClient</span><span class="p">()</span>
+<span class="n">job_id</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;uniqueId&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;runId&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;projectId&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;environmentId&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;alias&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;description&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;parentsSources.name&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;parentsSources.criteria.warnAfter.period&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;parentsSources.criteria.warnAfter.count&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_models</span><span class="p">(</span><span class="n">job_id</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
+</code></pre></div>
+<p>The video below provides some more detail.</p>
+<div style="position: relative; padding-bottom: 57.93991416309014%; height: 0;"><iframe src="https://www.loom.com/embed/5be093114c1d4e02a1bcc27c5976a4b2" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+
 <h2 id="get_exposure">get_exposure<a class="headerlink" href="#get_exposure" title="Permanent link">&para;</a></h2>
 
 
@@ -802,6 +854,19 @@ generated for</p></td>
           </td>
           <td><p>The run ID of the run in dbt Cloud that this
 exposure was generated for</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -871,6 +936,19 @@ generated for</p></td>
           </td>
           <td><p>The run ID of the run in dbt Cloud that this
 exposure was generated for</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -954,6 +1032,19 @@ was generated for</p></td>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
       <div class="admonition note">
@@ -1019,6 +1110,19 @@ generated for</p></td>
           </td>
           <td><p>The run ID of the run in dbt Cloud that this macro
 was generated for</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -1101,6 +1205,19 @@ was generated for</p></td>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
       <div class="admonition note">
@@ -1165,6 +1282,19 @@ generated for</p></td>
           </td>
           <td><p>The run ID of the run in dbt Cloud that this metric
 was generated for</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -1244,6 +1374,19 @@ generated for</p></td>
           </td>
           <td><p>The run ID of the run in dbt Cloud that this model
 was generated for</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -1339,6 +1482,19 @@ was built to return (max of 10). Defaults to 10.</p></td>
 information for this model. Defaults to False.</p></td>
           <td>
                 <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
+          <td>
+                <code>None</code>
           </td>
         </tr>
     </tbody>
@@ -1442,6 +1598,19 @@ was generated for</p></td>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
       <div class="admonition note">
@@ -1521,6 +1690,19 @@ was generated for</p></td>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
       <div class="admonition note">
@@ -1586,6 +1768,19 @@ generated for</p></td>
           </td>
           <td><p>The run ID of the run in dbt Cloud that this seed
 was generated for</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -1669,6 +1864,19 @@ snapshot was generated for</p></td>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
       <div class="admonition note">
@@ -1734,6 +1942,19 @@ generated for</p></td>
           </td>
           <td><p>The run ID of the run in dbt Cloud that this
 snapshot was generated for</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -1813,6 +2034,19 @@ generated for</p></td>
           </td>
           <td><p>The run ID of the run in dbt Cloud that this source
 was generated for</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -1916,6 +2150,19 @@ was generated for</p></td>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
       <div class="admonition note">
@@ -1994,6 +2241,19 @@ was generated for</p></td>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
       <div class="admonition note">
@@ -2063,6 +2323,19 @@ was generated for</p></td>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
       <div class="admonition note">
@@ -2084,6 +2357,29 @@ the specified job.</p>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>dbtc get-tests --job-id<span class="o">=</span><span class="m">12345</span>
 </code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="query">query<a class="headerlink" href="#query" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+  <div class="doc doc-contents first">
+
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="18:1"><input checked="checked" id="__tabbed_18_1" name="__tabbed_18" type="radio" /><div class="tabbed-labels"><label for="__tabbed_18_1">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;{models(jobId: 1) </span><span class="si">{uniqueId}</span><span class="s1">}&#39;</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</code></pre></div></p>
 </div>
 </div>
 </div>

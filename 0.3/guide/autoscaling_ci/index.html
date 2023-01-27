@@ -720,6 +720,7 @@
 
 <span class="nt">jobs</span><span class="p">:</span><span class="w"></span>
 <span class="w">  </span><span class="nt">autoscaling</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.event.pull_request.draft == false</span><span class="w"></span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span><span class="w"></span>
 <span class="w">    </span><span class="nt">env</span><span class="p">:</span><span class="w"></span>
 <span class="w">      </span><span class="nt">DBT_CLOUD_SERVICE_TOKEN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.DBT_CLOUD_SERVICE_TOKEN }}</span><span class="w"></span>
