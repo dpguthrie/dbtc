@@ -14,6 +14,12 @@ app = typer.Typer()
 
 valid_inclusions = ['trigger', 'environment', 'run_steps', 'job', 'repository']
 
+__version__ = '0.3.4'
+
+def version_callback(value:bool):
+    if value:
+        typer.echo(f'dbtc version: {__version__}')
+        raise typer.Exit()
 
 def complete_inclusion(ctx, param, incomplete):
     for inclusion in valid_inclusions:
@@ -103,6 +109,9 @@ UNIQUE_ID = typer.Option(
 )
 USER_ID = typer.Option(..., '--user-id', '-u', help='Numeric ID of the user.')
 
+VERSION = typer.Option(
+    None, '--version', help='Show installed version of dbtc.', callback=version_callback,is_eager=True
+)
 
 def _dbt_api_request(ctx: typer.Context, property: str, method: str, *args, **kwargs):
     instance = dbtc(**ctx.obj)
@@ -131,6 +140,7 @@ def common(
     api_key: Optional[str] = API_KEY,
     service_token: Optional[str] = TOKEN,
     host: Optional[str] = HOST,
+    version: Optional[bool] = VERSION,
 ):
     ctx.obj = ctx.params
     pass
