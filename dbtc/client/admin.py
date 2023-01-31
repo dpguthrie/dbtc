@@ -1310,7 +1310,7 @@ class _AdminClient(_Client):
         payload: Dict,
         *,
         should_poll: bool = True,
-        poll_interval: bool = False,
+        poll_interval: int = 10,
         trigger_on_failure_only: bool = True,
     ):
         """Restart a job from the point of failure
