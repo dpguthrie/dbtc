@@ -4,11 +4,11 @@ from typing import Optional
 
 # third party
 import typer
-from importlib_metadata import version
 
 # first party
 from dbtc import dbtCloudClient as dbtc
 from dbtc.console import console
+from _version import __version__
 
 app = typer.Typer()
 
@@ -18,7 +18,7 @@ valid_inclusions = ['trigger', 'environment', 'run_steps', 'job', 'repository']
 
 def version_callback(called:bool):
     if called:
-        typer.echo(f'dbtc version: {version(__package__)}')
+        typer.echo(f'dbtc version: {__version__}')
         raise typer.Exit()
 
 def complete_inclusion(ctx, param, incomplete):
