@@ -604,6 +604,22 @@ class _AdminClient(_Client):
         deferring_run_id: int = None,
         status: Union[List[str], str] = None,
     ) -> Dict:
+        """Get the most recent run
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            include_related (list): List of related
+                fields to pull with the run. Valid values are `trigger`, `job`,
+                `repository`, `debug_logs`, `run_steps`, and `environment`.
+            job_definition_id (int, optional): Applies a filter to only return
+                runs from the specified Job.
+            environment_id (int, optional): Numeric ID of the environment
+            project_id (int or list, optional): The project ID or IDs
+            deferring_run_id (int, optional): Numeric ID of a deferred run
+            status (str or list, optional): The status to apply when listing runs.
+                Options include queued, starting, running, success, error, and
+                cancelled
+        """
         runs = self.list_runs(
             account_id,
             include_related=include_related,
@@ -633,6 +649,37 @@ class _AdminClient(_Client):
         deferring_run_id: int = None,
         step: int = None,
     ):
+        """Fetch artifacts from the most recent run
+
+        Once a run has completed, you can use this endpoint to download the
+        `manifest.json`, `run_results.json` or `catalog.json` files from dbt Cloud.
+        These artifacts contain information about the models in your dbt project,
+        timing information around their execution, and a status message indicating the
+        result of the model build.
+
+        !!! note
+            By default, this endpoint returns artifacts from the last step in the
+            run. To list artifacts from other steps in the run, use the step query
+            parameter described below.
+
+        !!! warning
+            If requesting a non JSON artifact, the result will be a `str`
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            path (str): Paths are rooted at the target/ directory. Use manifest.json,
+                catalog.json, or run_results.json to download dbt-generated artifacts
+                for the run.
+            job_definition_id (int, optional): Applies a filter to only return
+                runs from the specified Job.
+            environment_id (int, optional): Numeric ID of the environment
+            project_id (int or list, optional): The project ID or IDs
+            deferring_run_id (int, optional): Numeric ID of a deferred run
+            step (str, optional): The index of the Step in the Run to query for
+                artifacts. The first step in the run has the index 1. If the step
+                parameter is omitted, then this endpoint will return the artifacts
+                compiled for the last step in the run.
+        """
         runs = self.get_most_recent_run(
             account_id,
             job_definition_id=job_definition_id,
@@ -846,7 +893,7 @@ class _AdminClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            project_id (int, optional): Numeric ID of the project to retrieve
+            project_id (int or list, optional): The project ID or IDs
             dbt_version (str or list, optional): The version of dbt the environment
                 is using
             name (str, optional): Name of the environment to retrieve
@@ -1011,7 +1058,7 @@ class _AdminClient(_Client):
         include_related: List[str] = None,
         job_definition_id: int = None,
         environment_id: int = None,
-        project_id: int = None,
+        project_id: Union[int, List[int]] = None,
         deferring_run_id: int = None,
         status: Union[List[str], str] = None,
         order_by: str = None,
@@ -1026,17 +1073,19 @@ class _AdminClient(_Client):
                 fields to pull with the run. Valid values are `trigger`, `job`,
                 `repository`, `debug_logs`, `run_steps`, and `environment`.
             job_definition_id (int, optional): Applies a filter to only return
-                runs
-                from the specified Job.
+                runs from the specified Job.
+            environment_id (int, optional): Numeric ID of the environment
+            project_id (int or list, optional): The project ID or IDs
+            deferring_run_id (int, optional): Numeric ID of a deferred run
+            status (str or list, optional): The status to apply when listing runs.
+                Options include queued, starting, running, success, error, and
+                cancelled
             order_by (str, optional): Field to order the result by.
                 Use - to indicate reverse order.
             offset (int, optional): The offset to apply when listing runs.
                 Use with limit to paginate results.
             limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
-            status (str or list, optional): The status to apply when listing runs.
-                Options include queued, starting, running, success, error, and
-                cancelled
         """
         if status is not None:
             try:
