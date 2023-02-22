@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.5] - 2023-02-22
+
+### Added
+- `version` argument to the CLI.  Invoke with `dbtc --version`.
+- Ability to track what methods are being used.  Important to note that you can opt out of this by passing `do_not_track=True` to the `dbtCloudClient` class.  Additionally, nothing identifiable, like IDs, will be tracked - simply a way to understand what methods of the package are being used.
+
+### Fixed
+- Bad type argument for `poll_interval` in the CLI method for `trigger-job-from-failure`
+
 ## [0.3.4] - 2023-01-27
 
 ### Added
@@ -65,10 +74,10 @@
 ### Added
 - The ability to restart a job from failure.  The `trigger_job` method now accepts an argument `restart_from_failure` (default `False`) that will determine whether or not the last run attempt for a job was unsuccessful - in the event it was, it will parse the steps within that job and find the nodes that it needs to rerun as well as any steps that were skipped entirely.
 - Additional commands to the `trigger_job` method:
-    - `should_poll` - Indicate whether or not the method should poll for completion (default `True`)
-    - `poll_interval` - How long in between polling requests (default 10 seconds)
-    - `restart_from_failure` - Described above
-    - `trigger_on_failure_only` - Only relevant when setting `restart_from_failure` to `True`.  This has the effect, when set to `True`, of only triggering the job when the prior invocation was not successful.  Otherwise, the function will exit prior to triggering the job (default `False`)
+  - `should_poll` - Indicate whether or not the method should poll for completion (default `True`)
+  - `poll_interval` - How long in between polling requests (default 10 seconds)
+  - `restart_from_failure` - Described above
+  - `trigger_on_failure_only` - Only relevant when setting `restart_from_failure` to `True`.  This has the effect, when set to `True`, of only triggering the job when the prior invocation was not successful.  Otherwise, the function will exit prior to triggering the job (default `False`)
 - Logging to stderr when using the `trigger_job` method (internally using the `rich` package that comes when installing `Typer`)
 - Multiple tests for the `restart_from_failure` functionality
 
