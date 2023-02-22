@@ -113,6 +113,7 @@ USER_ID = typer.Option(..., '--user-id', '-u', help='Numeric ID of the user.')
 VERSION = typer.Option(
     None,
     '--version',
+    '-v',
     help='Show installed version of dbtc.',
     callback=version_callback,
     is_eager=True,
@@ -148,6 +149,7 @@ def common(
     host: Optional[str] = HOST,
     version: Optional[bool] = VERSION,
 ):
+    ctx.params.pop('version')
     ctx.obj = ctx.params
     pass
 
