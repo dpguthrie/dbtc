@@ -54,6 +54,17 @@ def _version_decorator(func, version):
     def wrapper(self, *args, **kwargs):
         self._path = f'/api/{version}/'
         result = func(self, *args, **kwargs)
+        if not self.do_not_track:
+            addl_properties = {k: v for k, v in kwargs.items() if not k.endswith('_id')}
+            self._track(
+                self._anonymous_id,
+                'Admin API',
+                {
+                    'method': func.__name__,
+                    'version': version,
+                    **addl_properties,
+                },
+            )
         return result
 
     return wrapper
