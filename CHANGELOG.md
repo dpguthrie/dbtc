@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.5] - 2023-02-22
+
+### Added
+- `version` argument to the CLI.  Invoke with `dbtc --version`.
+- Ability to track what methods are being used.  Important to note that you can opt out of this by passing `do_not_track=True` to the `dbtCloudClient` class.  Additionally, nothing identifiable, like IDs, will be tracked - simply a way to understand what methods of the package are being used.
+
 ## [0.3.4] - 2023-01-27
 
 ### Added
