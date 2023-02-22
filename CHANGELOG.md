@@ -6,6 +6,9 @@
 - `version` argument to the CLI.  Invoke with `dbtc --version`.
 - Ability to track what methods are being used.  Important to note that you can opt out of this by passing `do_not_track=True` to the `dbtCloudClient` class.  Additionally, nothing identifiable, like IDs, will be tracked - simply a way to understand what methods of the package are being used.
 
+### Fixed
+- Bad type argument for `poll_interval` in the CLI method for `trigger-job-from-failure`
+
 ## [0.3.4] - 2023-01-27
 
 ### Added
