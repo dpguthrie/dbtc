@@ -6,9 +6,9 @@ from typing import Optional
 import typer
 
 # first party
+from dbtc import __version__
 from dbtc import dbtCloudClient as dbtc
 from dbtc.console import console
-from _version import __version__
 
 app = typer.Typer()
 
@@ -16,10 +16,11 @@ app = typer.Typer()
 valid_inclusions = ['trigger', 'environment', 'run_steps', 'job', 'repository']
 
 
-def version_callback(called:bool):
+def version_callback(called: bool):
     if called:
         typer.echo(f'dbtc version: {__version__}')
         raise typer.Exit()
+
 
 def complete_inclusion(ctx, param, incomplete):
     for inclusion in valid_inclusions:
@@ -110,8 +111,13 @@ UNIQUE_ID = typer.Option(
 USER_ID = typer.Option(..., '--user-id', '-u', help='Numeric ID of the user.')
 
 VERSION = typer.Option(
-    None, '--version', help='Show installed version of dbtc.', callback=version_callback,is_eager=True
+    None,
+    '--version',
+    help='Show installed version of dbtc.',
+    callback=version_callback,
+    is_eager=True,
 )
+
 
 def _dbt_api_request(ctx: typer.Context, property: str, method: str, *args, **kwargs):
     instance = dbtc(**ctx.obj)
@@ -1356,4 +1362,3 @@ def update_repository(
 
 def main():
     app()
-    
