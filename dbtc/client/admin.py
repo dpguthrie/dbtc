@@ -56,7 +56,7 @@ def set_called_from(func):
         result = func(self, *args, **kwargs)
         self._called_from = None
         return result
-    
+
     return wrapper
 
 

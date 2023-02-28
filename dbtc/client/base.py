@@ -62,7 +62,7 @@ class _Client(abc.ABC):
             return f'{self._base_url}{path}'
 
         return self._base_url
-    
+
     def _send_track(self, event_name: str, method_name: str):
         rudder_analytics.track(
             self._anonymous_id,
@@ -71,5 +71,5 @@ class _Client(abc.ABC):
                 'method': method_name,
                 'dbtc_version': __version__,
                 'called_from': self._called_from,
-            }
+            },
         )
