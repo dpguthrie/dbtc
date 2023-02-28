@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.6] - 2023-02-28
+
+### Fixed
+- An additional read-only field from a job definition needed to be removed prior to creating the cloned job.  500 errors were occuring because of this.
+
 ## [0.3.5] - 2023-02-22
 
 ### Added
