@@ -7,6 +7,7 @@ import uuid
 import rudder_analytics
 
 # first party
+from dbtc import __version__
 from dbtc.console import err_console
 
 rudder_analytics.write_key = "2KbeK4vnN03rxKRcL8YNIDvk1pz"
@@ -25,10 +26,10 @@ class _Client(abc.ABC):
         self.api_key = api_key or os.getenv('DBT_CLOUD_API_KEY', None)
         self.service_token = service_token or os.getenv('DBT_CLOUD_SERVICE_TOKEN', None)
         self._host = host or os.getenv('DBT_CLOUD_HOST', self._default_domain)
-        self.console = err_console
         self.do_not_track = do_not_track
+        self.console = err_console
         self._anonymous_id = str(uuid.uuid4())
-        self._track = rudder_analytics.track
+        self._called_from = None
 
     @property
     @abc.abstractmethod
@@ -61,3 +62,14 @@ class _Client(abc.ABC):
             return f'{self._base_url}{path}'
 
         return self._base_url
+    
+    def _send_track(self, event_name: str, method_name: str):
+        rudder_analytics.track(
+            self._anonymous_id,
+            event_name,
+            {
+                'method': method_name,
+                'dbtc_version': __version__,
+                'called_from': self._called_from,
+            }
+        )
