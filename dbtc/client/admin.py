@@ -372,6 +372,20 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def create_webhook(self, account_id: int, payload: Dict) -> Dict:
+        """Create a new outbound webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the webhook to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscriptions',
+            method='post',
+            json=payload,
+        )
+
+    @v3
     def create_user_group(self, account_id: int, payload: Dict) -> Dict:
         """Create a user group
 
@@ -495,6 +509,19 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/projects/{project_id}/repositories/{repository_id}',
+            method='delete',
+        )
+
+    @v3
+    def delete_webhook(self, account_id: int, webhook_id: int) -> Dict:
+        """Delete a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (int): Numeric ID of the webhook you want to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
             method='delete',
         )
 
@@ -802,6 +829,18 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/service-tokens/{service_token_id}'
+        )
+
+    @v3
+    def get_webhook(self, account_id: int, webhook_id: int) -> Dict:
+        """Get a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (int): Numeric ID of the webhook you want to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}/',
         )
 
     @v2
@@ -1181,6 +1220,28 @@ class _AdminClient(_Client):
         """
         return self._simple_request(f'accounts/{account_id}/service-tokens/')
 
+    @v3
+    def list_webhooks(
+        self,
+        account_id: int,
+        *,
+        limit: int = None,
+        offset: int = None,
+    ) -> Dict:
+        """List of webhooks in account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscriptions',
+            params={'limit': limit, 'offset': offset},
+        )
+
     @v2
     def list_users(
         self,
@@ -1216,6 +1277,18 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/connections/test/', method='post', json=payload
+        )
+
+    @v3
+    def test_webhook(self, account_id: int, webhook_id: int) -> Dict:
+        """Test a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (int): Numeric ID of the webhook you want to test
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}/test',
         )
 
     @v2
@@ -1679,5 +1752,20 @@ class _AdminClient(_Client):
         return self._simple_request(
             f'accounts/{account_id}/projects/{project_id}/repositories/{repository_id}/',  # noqa: E501
             method='post',
+            json=payload,
+        )
+
+    @v3
+    def update_webhook(self, account_id: int, webhook_id: int, payload: Dict) -> Dict:
+        """Update a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (int): Numeric ID of the webhook you want to update
+            payload (dict): Dictionary representing the webhook to update
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}/',
+            method='put',
             json=payload,
         )
