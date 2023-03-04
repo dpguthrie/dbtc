@@ -528,7 +528,7 @@ class _AdminClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account
-            webhook_id (int): String ID of the webhook you want to delete
+            webhook_id (str): String ID of the webhook you want to delete
         """
         return self._simple_request(
             f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
@@ -847,7 +847,7 @@ class _AdminClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account
-            webhook_id (int): String ID of the webhook you want to retrieve
+            webhook_id (str): String ID of the webhook you want to retrieve
         """
         return self._simple_request(
             f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
@@ -1295,7 +1295,7 @@ class _AdminClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account
-            webhook_id (int): String ID of the webhook you want to test
+            webhook_id (str): String ID of the webhook you want to test
         """
         return self._simple_request(
             f'accounts/{account_id}/webhooks/subscription/{webhook_id}/test',
@@ -1771,7 +1771,7 @@ class _AdminClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account
-            webhook_id (int): String ID of the webhook you want to update
+            webhook_id (str): String ID of the webhook you want to update
             payload (dict): Dictionary representing the webhook to update
         """
         return self._simple_request(
