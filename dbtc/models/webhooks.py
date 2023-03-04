@@ -21,4 +21,3 @@ class Webhook(BaseModel):
     description: Optional[str]
     id: Optional[str]
     job_ids: Optional[List[int]]
-    test: Optional[str]
