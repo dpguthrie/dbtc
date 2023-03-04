@@ -1228,6 +1228,7 @@ class _AdminClient(_Client):
         should_poll: bool = False,
         poll_interval: int = 10,
         delete_cloned_job: bool = True,
+        max_run_slots: int = None,
     ):
         """Trigger an autoscaling CI job
 
@@ -1262,6 +1263,11 @@ class _AdminClient(_Client):
                 polling
             delete_cloned_job (bool, optional): Indicate if cloned job should be
                 deleted after being triggered
+            max_run_slots (int, optional): Number of run slots that should be
+                available to this process.  This will limit the ability to run
+                concurrent PRs up the the allocated run slots for your account.  When
+                set to `None`, the `run_slots` allocated to your account will be used
+                to determine if a job should be cloned.
         """
         self.console.log('Finding any in progress runs...')
         cloned_job = None
@@ -1320,9 +1326,11 @@ class _AdminClient(_Client):
             # cancelled above
             if not job_run_is_pr_run:
 
-                acct = self.get_account(account_id).get('data', {})
-                run_slots = acct.get('run_slots', 0)
-                if run_slots > len(in_progress_runs):
+                run_slots = (
+                    self.get_account(account_id).get('data', {}).get('run_slots', 0)
+                )
+                max_run_slots = min(max_run_slots or run_slots, run_slots)
+                if max_run_slots > len(in_progress_runs):
                     self.console.log(
                         f'Job {job_id} is currently being used in run {job_run["id"]}. '
                         'This job definition will be cloned and then triggered for '
@@ -1348,8 +1356,8 @@ class _AdminClient(_Client):
                 else:
                     self.console.log(
                         'Not cloning the job as your account has met or exceeded the '
-                        'number of run slots and will not be able to execute even a '
-                        'cloned CI job.'
+                        'number of run slots or a limit was placed by the user.  The '
+                        'normal job will be queued.'
                     )
         else:
             self.console.log('No in progress job run found.  Triggering as normal')
