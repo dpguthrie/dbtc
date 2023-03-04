@@ -1,5 +1,5 @@
 # stdlib
-from typing import List, Literal, Optional
+from typing import Literal, Optional
 
 # third party
 from pydantic import BaseModel, conlist
@@ -20,4 +20,4 @@ class Webhook(BaseModel):
     deactivate_reason: Optional[str]
     description: Optional[str]
     id: Optional[str]
-    job_ids: Optional[List[int]]
+    job_ids: Optional[conlist(int, unique_items=True)]  # type: ignore
