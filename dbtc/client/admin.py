@@ -523,12 +523,12 @@ class _AdminClient(_Client):
         )
 
     @v3
-    def delete_webhook(self, account_id: int, webhook_id: int) -> Dict:
+    def delete_webhook(self, account_id: int, webhook_id: str) -> Dict:
         """Delete a webhook
 
         Args:
             account_id (int): Numeric ID of the account
-            webhook_id (int): Numeric ID of the webhook you want to delete
+            webhook_id (int): String ID of the webhook you want to delete
         """
         return self._simple_request(
             f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
@@ -842,12 +842,12 @@ class _AdminClient(_Client):
         )
 
     @v3
-    def get_webhook(self, account_id: int, webhook_id: int) -> Dict:
+    def get_webhook(self, account_id: int, webhook_id: str) -> Dict:
         """Get a webhook
 
         Args:
             account_id (int): Numeric ID of the account
-            webhook_id (int): Numeric ID of the webhook you want to retrieve
+            webhook_id (int): String ID of the webhook you want to retrieve
         """
         return self._simple_request(
             f'accounts/{account_id}/webhooks/subscription/{webhook_id}/',
@@ -1290,12 +1290,12 @@ class _AdminClient(_Client):
         )
 
     @v3
-    def test_webhook(self, account_id: int, webhook_id: int) -> Dict:
+    def test_webhook(self, account_id: int, webhook_id: str) -> Dict:
         """Test a webhook
 
         Args:
             account_id (int): Numeric ID of the account
-            webhook_id (int): Numeric ID of the webhook you want to test
+            webhook_id (int): String ID of the webhook you want to test
         """
         return self._simple_request(
             f'accounts/{account_id}/webhooks/subscription/{webhook_id}/test',
@@ -1766,12 +1766,12 @@ class _AdminClient(_Client):
         )
 
     @v3
-    def update_webhook(self, account_id: int, webhook_id: int, payload: Dict) -> Dict:
+    def update_webhook(self, account_id: int, webhook_id: str, payload: Dict) -> Dict:
         """Update a webhook
 
         Args:
             account_id (int): Numeric ID of the account
-            webhook_id (int): Numeric ID of the webhook you want to update
+            webhook_id (int): String ID of the webhook you want to update
             payload (dict): Dictionary representing the webhook to update
         """
         return self._simple_request(

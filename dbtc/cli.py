@@ -118,7 +118,7 @@ VERSION = typer.Option(
     callback=version_callback,
     is_eager=True,
 )
-WEBHOOK_ID = typer.Option(..., '--webhook-id', '-w', help='Numeric ID of the webhook')
+WEBHOOK_ID = typer.Option(..., '--webhook-id', '-w', help='String ID of the webhook')
 
 
 def _dbt_api_request(ctx: typer.Context, property: str, method: str, *args, **kwargs):
@@ -422,7 +422,7 @@ def delete_user_group(
 def delete_webhook(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    webhook_id: int = WEBHOOK_ID,
+    webhook_id: str = WEBHOOK_ID,
 ):
     """Delete a webhook."""
     _dbt_cloud_request(ctx, 'delete_webhook', account_id, webhook_id)
@@ -884,7 +884,7 @@ def get_user(
 def get_webhook(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    webhook_id: int = WEBHOOK_ID,
+    webhook_id: str = WEBHOOK_ID,
 ):
     """Get a webhook by its ID"""
     _dbt_cloud_request(ctx, 'get_webhook', account_id=account_id, webhook_id=webhook_id)
@@ -1205,7 +1205,7 @@ def test_connection(
 def test_webhook(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    webhook_id: int = WEBHOOK_ID,
+    webhook_id: str = WEBHOOK_ID,
 ):
     """Test a webhook."""
     _dbt_cloud_request(
@@ -1427,7 +1427,7 @@ def update_repository(
 def update_webhook(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    webhook_id: int = WEBHOOK_ID,
+    webhook_id: str = WEBHOOK_ID,
     payload: str = PAYLOAD,
 ):
     """Update a project."""
