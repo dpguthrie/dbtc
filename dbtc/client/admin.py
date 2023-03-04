@@ -850,7 +850,7 @@ class _AdminClient(_Client):
             webhook_id (int): String ID of the webhook you want to retrieve
         """
         return self._simple_request(
-            f'accounts/{account_id}/webhooks/subscription/{webhook_id}/',
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
         )
 
     @v2
@@ -1775,7 +1775,7 @@ class _AdminClient(_Client):
             payload (dict): Dictionary representing the webhook to update
         """
         return self._simple_request(
-            f'accounts/{account_id}/webhooks/subscription/{webhook_id}/',
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
             method='put',
             json=payload,
         )
