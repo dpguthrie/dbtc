@@ -20,5 +20,5 @@ class Webhook(BaseModel):
     deactivate_reason: Optional[str]
     description: Optional[str]
     id: Optional[str]
-    job_ids: List[int]
+    job_ids: Optional[List[int]]
     test: Optional[str]
