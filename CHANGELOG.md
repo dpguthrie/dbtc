@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.7] - 2023-03-04
+
+### Added
+- A `max_run_slots` keyword argument to the `trigger_autoscaling_ci_job` method.  This will allow a user to limit the amount of run slots that can be occupied by CI jobs.  The default value will be None, which will ensure that the normal behavior of this method remains intact (e.g. it will clone the CI job until the number of run slots configured for the account is reached).
+
 ## [0.3.6] - 2023-02-28
 
 ### Fixed
