@@ -8,6 +8,10 @@ from typer.testing import CliRunner
 # first party
 from dbtc.cli import app
 
+ACCOUNT_ID = 43786
+PROJECT_ID = 146088
+JOB_ID = 229335
+
 runner = CliRunner()
 
 
@@ -30,12 +34,12 @@ def test_list_accounts():
 
 @pytest.mark.dependency(depends=['test_list_accounts'])
 def test_get_account():
-    _test_cloud_cli(['get-account', '--account-id', pytest.account_id])
+    _test_cloud_cli(['get-account', '--account-id', ACCOUNT_ID])
 
 
 @pytest.mark.dependency(depends=['test_get_account'])
 def test_list_projects():
-    _test_cloud_cli(['list-projects', '--account-id', pytest.account_id], 'project_id')
+    _test_cloud_cli(['list-projects', '--account-id', ACCOUNT_ID], 'project_id')
 
 
 @pytest.mark.dependency(depends=['test_list_projects'])
@@ -44,9 +48,9 @@ def test_get_project():
         [
             'get-project',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--project-id',
-            pytest.project_id,
+            PROJECT_ID,
         ]
     )
 
@@ -57,11 +61,10 @@ def test_list_jobs():
         [
             'list-jobs',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--project-id',
-            pytest.project_id,
+            PROJECT_ID,
         ],
-        'job_id',
     )
 
 
@@ -71,9 +74,9 @@ def test_get_job():
         [
             'get-job',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--job-id',
-            pytest.job_id,
+            JOB_ID,
         ],
     )
 
@@ -81,7 +84,7 @@ def test_get_job():
 @pytest.mark.dependency(depends=['test_list_jobs'])
 def test_list_runs():
     _test_cloud_cli(
-        ['list-runs', '--account-id', pytest.account_id, '--job-id', pytest.job_id],
+        ['list-runs', '--account-id', ACCOUNT_ID, '--job-id', JOB_ID],
         'run_id',
     )
 
@@ -92,9 +95,9 @@ def test_list_runs_list_status():
         [
             'list-runs',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--job-id',
-            pytest.job_id,
+            JOB_ID,
             '--status',
             '["success", "error"]',
         ]
@@ -107,9 +110,9 @@ def test_list_runs_str_status():
         [
             'list-runs',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--job-id',
-            pytest.job_id,
+            JOB_ID,
             '--status',
             'queued',
         ]
@@ -122,7 +125,7 @@ def test_get_run():
         [
             'get-run',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--run-id',
             pytest.run_id,
         ],
@@ -135,7 +138,7 @@ def test_get_most_recent_run():
         [
             'get-most-recent-run',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
         ],
     )
 
@@ -146,7 +149,7 @@ def test_list_run_artifacts():
         [
             'list-run-artifacts',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--run-id',
             pytest.run_id,
         ],
@@ -159,7 +162,7 @@ def test_get_run_artifact():
         [
             'get-run-artifact',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--run-id',
             pytest.run_id,
             '--path',
@@ -174,7 +177,7 @@ def test_get_most_recent_run_artifact():
         [
             'get-most-recent-run-artifact',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--path',
             'manifest.json',
         ],
