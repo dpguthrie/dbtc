@@ -1430,7 +1430,7 @@ def update_webhook(
     webhook_id: str = WEBHOOK_ID,
     payload: str = PAYLOAD,
 ):
-    """Update a project."""
+    """Update a webhook."""
     _dbt_cloud_request(
         ctx,
         'update_webhook',
