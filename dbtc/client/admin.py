@@ -12,6 +12,7 @@ from typing import Dict, Iterable, List, Optional, Union
 import requests
 
 # first party
+from dbtc import models
 from dbtc.client.base import _Client
 from dbtc.utils import json_listify, listify
 
@@ -102,6 +103,14 @@ class _AdminClient(_Client):
         self, path: str, *, method: str = 'get', **kwargs
     ) -> requests.Response:
         """Make request to API."""
+
+        # Model is not an argument that the request method accepts, needs to be removed
+        model = kwargs.pop('model', None)
+        if model is not None:
+
+            # This will validate the payload
+            kwargs['json'] = model(**kwargs['json']).dict(exclude_unset=True)
+
         full_url = self.full_url(path)
         response = self.session.request(method=method, url=full_url, **kwargs)
         return response
@@ -383,6 +392,7 @@ class _AdminClient(_Client):
             f'accounts/{account_id}/webhooks/subscriptions',
             method='post',
             json=payload,
+            model=models.Webhook,
         )
 
     @v3
