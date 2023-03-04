@@ -4423,6 +4423,20 @@ deleted after being triggered</p></td>
                 <code>True</code>
           </td>
         </tr>
+        <tr>
+          <td><code>max_run_slots</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>Number of run slots that should be
+available to this process.  This will limit the ability to run
+concurrent PRs up the the allocated run slots for your account.  When
+set to <code>None</code>, the <code>run_slots</code> allocated to your account will be used
+to determine if a job should be cloned.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
