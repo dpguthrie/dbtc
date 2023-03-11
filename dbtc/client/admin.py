@@ -52,7 +52,11 @@ SUB_COMMAND_CLI_ARGS = {
 def set_called_from(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
-        self._called_from = func.__name__
+
+        # Don't want to reset this when it already exists
+        # (see get_most_recent_run_artifact as an example)
+        if self._called_from is None:
+            self._called_from = func.__name__
         result = func(self, *args, **kwargs)
         self._called_from = None
         return result
@@ -706,6 +710,10 @@ class _AdminClient(_Client):
             deferring_run_id=deferring_run_id,
             status='success',
         )
+
+        # Reset called from after being set to None in get_most_recent_run
+        self._called_from = 'get_most_recent_run_artifact'
+
         try:
             run_id = runs.get('data', {})['id']
         except KeyError:

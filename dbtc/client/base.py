@@ -2,6 +2,7 @@
 import abc
 import os
 import uuid
+from typing import Optional
 
 # third party
 import rudder_analytics
@@ -23,13 +24,17 @@ class _Client(abc.ABC):
         host: str = None,
         do_not_track: bool = False,
     ):
-        self.api_key = api_key or os.getenv('DBT_CLOUD_API_KEY', None)
-        self.service_token = service_token or os.getenv('DBT_CLOUD_SERVICE_TOKEN', None)
-        self._host = host or os.getenv('DBT_CLOUD_HOST', self._default_domain)
-        self.do_not_track = do_not_track
+        self.api_key: Optional[str] = api_key or os.getenv('DBT_CLOUD_API_KEY', None)
+        self.service_token: Optional[str] = service_token or os.getenv(
+            'DBT_CLOUD_SERVICE_TOKEN', None
+        )
+        self._host: Optional[str] = host or os.getenv(
+            'DBT_CLOUD_HOST', self._default_domain
+        )
+        self.do_not_track: bool = do_not_track
+        self._anonymous_id: str = str(uuid.uuid4())
+        self._called_from: Optional[str] = None
         self.console = err_console
-        self._anonymous_id = str(uuid.uuid4())
-        self._called_from = None
 
     @property
     @abc.abstractmethod
