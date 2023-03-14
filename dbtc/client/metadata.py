@@ -49,10 +49,11 @@ class _MetadataClient(_Client):
         self, obj: str, arguments: Dict = None, fields: List[str] = None
     ) -> Dict:
         op = Operation(Query)
+        arguments = {
+            k: v for k, v in arguments.items() if v is not None  # type: ignore
+        }
         if fields is not None:
-            query = getattr(op, obj)(  # noqa: F841
-                **{k: v for k, v in arguments.items() if v is not None}  # type: ignore
-            )
+            query = getattr(op, obj)(**arguments)
             field_dict = self._get_field_dict(fields)
             for k, v in field_dict.items():
                 if k == 'top_level':
@@ -60,12 +61,15 @@ class _MetadataClient(_Client):
                 else:
                     operator.attrgetter(k)(query).__fields__(*v)
         else:
-            getattr(op, obj)(  # noqa: F841
-                **{k: v for k, v in arguments.items() if v is not None}  # type: ignore
-            ).__fields__()
+            getattr(op, obj)(**arguments).__fields__()
         data = self._endpoint(op)
         if not self.do_not_track:
-            self._send_track('Metadata API', f'get_{obj}')
+            arguments['fields'] = fields
+            self._send_track(
+                'Metadata API',
+                getattr(self, f'get_{obj}'),
+                **arguments,
+            )
         return data
 
     def query(self, query: str, variables: Dict = None):
