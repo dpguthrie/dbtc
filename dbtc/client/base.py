@@ -1,8 +1,9 @@
 # stdlib
 import abc
+import inspect
 import os
 import uuid
-from typing import Optional
+from typing import Callable, Optional
 
 # third party
 import rudder_analytics
@@ -68,13 +69,14 @@ class _Client(abc.ABC):
 
         return self._base_url
 
-    def _send_track(self, event_name: str, method_name: str):
-        rudder_analytics.track(
-            self._anonymous_id,
-            event_name,
-            {
-                'method': method_name,
-                'dbtc_version': __version__,
-                'called_from': self._called_from,
-            },
-        )
+    def _send_track(self, event_name: str, func: Callable, *args, **kwargs):
+        func_args = [a for a in inspect.getfullargspec(func).args if a != 'self']
+        properties = {
+            'method': func.__name__,
+            'dbtc_version': __version__,
+            'called_from': self._called_from,
+            **dict(zip(func_args, args)),
+            **kwargs,
+        }
+        properties = {k: v for k, v in properties.items() if not k.endswith('_id')}
+        rudder_analytics.track(self._anonymous_id, event_name, properties)
