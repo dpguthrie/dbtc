@@ -54,10 +54,14 @@ def set_called_from(func):
     def wrapper(self, *args, **kwargs):
 
         # Don't want to reset this when it already exists
-        # (see get_most_recent_run_artifact as an example)
         if self._called_from is None:
             self._called_from = func.__name__
-        result = func(self, *args, **kwargs)
+        try:
+            result = func(self, *args, **kwargs)
+        except Exception as e:
+            self._called_from = None
+            raise (e)
+
         self._called_from = None
         return result
 
@@ -70,7 +74,7 @@ def _version_decorator(func, version):
         self._path = f'/api/{version}/'
         result = func(self, *args, **kwargs)
         if not self.do_not_track:
-            self._send_track('Admin API', func.__name__)
+            self._send_track('Admin API', func, *args, **kwargs)
 
         return result
 
@@ -1374,6 +1378,9 @@ class _AdminClient(_Client):
             should_poll=should_poll,
             poll_interval=poll_interval,
         )
+
+        # This property was set to `None` in the trigger_job method, reset here
+        self._called_from = 'trigger_autoscaling_ci_job'
         if cloned_job is not None and delete_cloned_job:
             self.delete_job(account_id, job_id)
         return run
@@ -1527,13 +1534,17 @@ class _AdminClient(_Client):
             if trigger_on_failure_only:
                 self.console.log('Not triggering job because prior run was successful.')
                 return
-        return self.trigger_job(
+        run = self.trigger_job(
             account_id,
             job_id,
             payload,
             should_poll=should_poll,
             poll_interval=poll_interval,
         )
+
+        # This property was set to `None` in the trigger_job method, reset here
+        self._called_from = 'trigger_job_from_failure'
+        return run
 
     @set_called_from
     @v2
