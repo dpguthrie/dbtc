@@ -1263,6 +1263,27 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def list_webhooks(
+        self,
+        account_id: int,
+        *,
+        limit: int = None,
+        offset: int = None,
+    ) -> Dict:
+        """List of webhooks in account
+        Args:
+            account_id (int): Numeric ID of the account
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscriptions',
+            params={'limit': limit, 'offset': offset},
+        )
+
+    @v3
     def test_connection(self, account_id: int, payload: Dict) -> Dict:
         """Test a connection
 
