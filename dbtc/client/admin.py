@@ -1181,11 +1181,12 @@ class _AdminClient(_Client):
         """
         return self._simple_request(f'accounts/{account_id}/service-tokens/')
 
-    @v2
+    @v3
     def list_users(
         self,
         account_id: int,
         *,
+        state: int = None,
         limit: int = None,
         offset: int = None,
         order_by: str = 'email',
@@ -1194,6 +1195,7 @@ class _AdminClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
+            state (int, optional): 1 = active, 2 = deleted
             limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
             offset (int, optional): The offset to apply when listing runs.
@@ -1203,7 +1205,12 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/users/',
-            params={'limit': limit, 'offset': offset, 'order_by': order_by},
+            params={
+                'limit': limit,
+                'offset': offset,
+                'order_by': order_by,
+                'state': state,
+            },
         )
 
     @v3
