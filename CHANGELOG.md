@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0] - 2023-03-18
+
+### Added
+- List, test, create, get, update, and delete methods for webhooks
+- Support for pydantic models used for validation logic when creating Webhooks - eventually will add support for other create methods
+- Decorator that sets a private property on the `_Client` class, `_called_from`, that helps understand when methods are called from another method.
+
+### Updated
+- `list_users` is now using a v3 endpoint
+
+### Removed
+- All v4 methods were removed as dbt Cloud will begin to deprecate their use soon
+
 ## [0.3.7] - 2023-03-04
 
 ### Added
