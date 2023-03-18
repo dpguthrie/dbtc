@@ -10,7 +10,7 @@ The `dbtCloudClient` class is the main interface through which you will interact
 - `service_token`
 - `host`
 
-An `api_key` can be used to access endpoints from any version of the dbt Cloud API (v2, v3, or v4).  The `service_token` can be used for *either* the dbt Cloud API or the Metadata API.  If you have the proper [permissions](https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/service-tokens#permissions-for-service-account-tokens), you would only need to pass a service token.
+An `api_key` can be used to access endpoints from any version of the dbt Cloud API (v2 or v3).  The `service_token` can be used for *either* the dbt Cloud API or the Metadata API.  If you have the proper [permissions](https://docs.getdbt.com/docs/dbt-cloud/dbt-cloud-api/service-tokens#permissions-for-service-account-tokens), you would only need to pass a service token.
 
 ```python
 from dbtc import dbtCloudClient

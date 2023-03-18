@@ -1,4 +1,1 @@
-# third party
-from importlib_metadata import version
-
-__version__ = version('dbtc')
+__version__ = '0.3.7'

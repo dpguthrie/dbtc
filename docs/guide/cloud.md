@@ -903,24 +903,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-run-timing-details --run-id=1
     ```
 
-### get_run_v4
-::: dbtc.client.admin._AdminClient.get_run_v4
-
-**Examples:**
-=== "Python"
-
-    Assuming that `client` is an instance of `dbtCloudClient`
-    ```py
-    client.cloud.get_run_v4(account_id, run_id)
-    ```
-
-=== "CLI"
-
-    Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
-    ```bash
-    dbtc delete-environment --run-id=1
-    ```
-
 ### list_runs
 ::: dbtc.client.admin._AdminClient.list_runs
 
@@ -937,24 +919,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
     ```bash
     dbtc list-runs
-    ```
-
-### list_runs_v4
-::: dbtc.client.admin._AdminClient.list_runs_v4
-
-**Examples:**
-=== "Python"
-
-    Assuming that `client` is an instance of `dbtCloudClient`
-    ```py
-    client.cloud.list_runs_v4(account_id)
-    ```
-
-=== "CLI"
-
-    Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
-    ```bash
-    dbtc list-runs-v4
     ```
 
 ## Project
