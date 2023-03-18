@@ -12,6 +12,7 @@ from typing import Dict, Iterable, List, Optional, Union
 import requests
 
 # first party
+from dbtc import models
 from dbtc.client.base import _Client
 from dbtc.utils import json_listify, listify
 
@@ -54,6 +55,17 @@ def _version_decorator(func, version):
     def wrapper(self, *args, **kwargs):
         self._path = f'/api/{version}/'
         result = func(self, *args, **kwargs)
+        if not self.do_not_track:
+            addl_properties = {k: v for k, v in kwargs.items() if not k.endswith('_id')}
+            self._track(
+                self._anonymous_id,
+                'Admin API',
+                {
+                    'method': func.__name__,
+                    'version': version,
+                    **addl_properties,
+                },
+            )
         return result
 
     return wrapper
@@ -90,6 +102,14 @@ class _AdminClient(_Client):
         self, path: str, *, method: str = 'get', **kwargs
     ) -> requests.Response:
         """Make request to API."""
+
+        # Model is not an argument that the request method accepts, needs to be removed
+        model = kwargs.pop('model', None)
+        if model is not None:
+
+            # This will validate the payload
+            kwargs['json'] = model(**kwargs['json']).dict(exclude_unset=True)
+
         full_url = self.full_url(path)
         response = self.session.request(method=method, url=full_url, **kwargs)
         return response
@@ -327,6 +347,21 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def create_webhook(self, account_id: int, payload: Dict) -> Dict:
+        """Create a new outbound webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the webhook to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscriptions',
+            method='post',
+            json=payload,
+            model=models.Webhook,
+        )
+
+    @v3
     def create_user_group(self, account_id: int, payload: Dict) -> Dict:
         """Create a user group
 
@@ -454,6 +489,19 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def delete_webhook(self, account_id: int, webhook_id: str) -> Dict:
+        """Delete a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
+            method='delete',
+        )
+
+    @v3
     def delete_user_group(self, account_id: int, group_id: int) -> Dict:
         """Delete group for a specified account
 
@@ -570,6 +618,22 @@ class _AdminClient(_Client):
         deferring_run_id: int = None,
         status: Union[List[str], str] = None,
     ) -> Dict:
+        """Get the most recent run
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            include_related (list): List of related
+                fields to pull with the run. Valid values are `trigger`, `job`,
+                `repository`, `debug_logs`, `run_steps`, and `environment`.
+            job_definition_id (int, optional): Applies a filter to only return
+                runs from the specified Job.
+            environment_id (int, optional): Numeric ID of the environment
+            project_id (int or list, optional): The project ID or IDs
+            deferring_run_id (int, optional): Numeric ID of a deferred run
+            status (str or list, optional): The status to apply when listing runs.
+                Options include queued, starting, running, success, error, and
+                cancelled
+        """
         runs = self.list_runs(
             account_id,
             include_related=include_related,
@@ -599,6 +663,37 @@ class _AdminClient(_Client):
         deferring_run_id: int = None,
         step: int = None,
     ):
+        """Fetch artifacts from the most recent run
+
+        Once a run has completed, you can use this endpoint to download the
+        `manifest.json`, `run_results.json` or `catalog.json` files from dbt Cloud.
+        These artifacts contain information about the models in your dbt project,
+        timing information around their execution, and a status message indicating the
+        result of the model build.
+
+        !!! note
+            By default, this endpoint returns artifacts from the last step in the
+            run. To list artifacts from other steps in the run, use the step query
+            parameter described below.
+
+        !!! warning
+            If requesting a non JSON artifact, the result will be a `str`
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            path (str): Paths are rooted at the target/ directory. Use manifest.json,
+                catalog.json, or run_results.json to download dbt-generated artifacts
+                for the run.
+            job_definition_id (int, optional): Applies a filter to only return
+                runs from the specified Job.
+            environment_id (int, optional): Numeric ID of the environment
+            project_id (int or list, optional): The project ID or IDs
+            deferring_run_id (int, optional): Numeric ID of a deferred run
+            step (str, optional): The index of the Step in the Run to query for
+                artifacts. The first step in the run has the index 1. If the step
+                parameter is omitted, then this endpoint will return the artifacts
+                compiled for the last step in the run.
+        """
         runs = self.get_most_recent_run(
             account_id,
             job_definition_id=job_definition_id,
@@ -702,6 +797,18 @@ class _AdminClient(_Client):
             f'accounts/{account_id}/service-tokens/{service_token_id}'
         )
 
+    @v3
+    def get_webhook(self, account_id: int, webhook_id: str) -> Dict:
+        """Get a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
+        )
+
     @v2
     def get_user(self, account_id: int, user_id: int) -> Dict:
         """List invited users in an account.
@@ -802,7 +909,7 @@ class _AdminClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
-            project_id (int, optional): Numeric ID of the project to retrieve
+            project_id (int or list, optional): The project ID or IDs
             dbt_version (str or list, optional): The version of dbt the environment
                 is using
             name (str, optional): Name of the environment to retrieve
@@ -967,7 +1074,7 @@ class _AdminClient(_Client):
         include_related: List[str] = None,
         job_definition_id: int = None,
         environment_id: int = None,
-        project_id: int = None,
+        project_id: Union[int, List[int]] = None,
         deferring_run_id: int = None,
         status: Union[List[str], str] = None,
         order_by: str = None,
@@ -982,17 +1089,19 @@ class _AdminClient(_Client):
                 fields to pull with the run. Valid values are `trigger`, `job`,
                 `repository`, `debug_logs`, `run_steps`, and `environment`.
             job_definition_id (int, optional): Applies a filter to only return
-                runs
-                from the specified Job.
+                runs from the specified Job.
+            environment_id (int, optional): Numeric ID of the environment
+            project_id (int or list, optional): The project ID or IDs
+            deferring_run_id (int, optional): Numeric ID of a deferred run
+            status (str or list, optional): The status to apply when listing runs.
+                Options include queued, starting, running, success, error, and
+                cancelled
             order_by (str, optional): Field to order the result by.
                 Use - to indicate reverse order.
             offset (int, optional): The offset to apply when listing runs.
                 Use with limit to paginate results.
             limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
-            status (str or list, optional): The status to apply when listing runs.
-                Options include queued, starting, running, success, error, and
-                cancelled
         """
         if status is not None:
             try:
@@ -1039,11 +1148,12 @@ class _AdminClient(_Client):
         """
         return self._simple_request(f'accounts/{account_id}/service-tokens/')
 
-    @v2
+    @v3
     def list_users(
         self,
         account_id: int,
         *,
+        state: int = None,
         limit: int = None,
         offset: int = None,
         order_by: str = 'email',
@@ -1052,6 +1162,7 @@ class _AdminClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
+            state (int, optional): 1 = active, 2 = deleted
             limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
             offset (int, optional): The offset to apply when listing runs.
@@ -1061,7 +1172,33 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/users/',
-            params={'limit': limit, 'offset': offset, 'order_by': order_by},
+            params={
+                'limit': limit,
+                'offset': offset,
+                'order_by': order_by,
+                'state': state,
+            },
+        )
+
+    @v3
+    def list_webhooks(
+        self,
+        account_id: int,
+        *,
+        limit: int = None,
+        offset: int = None,
+    ) -> Dict:
+        """List of webhooks in account
+        Args:
+            account_id (int): Numeric ID of the account
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscriptions',
+            params={'limit': limit, 'offset': offset},
         )
 
     @v3
@@ -1076,6 +1213,18 @@ class _AdminClient(_Client):
             f'accounts/{account_id}/connections/test/', method='post', json=payload
         )
 
+    @v3
+    def test_webhook(self, account_id: int, webhook_id: str) -> Dict:
+        """Test a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to test
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}/test',
+        )
+
     @v2
     def trigger_autoscaling_ci_job(
         self,
@@ -1086,6 +1235,7 @@ class _AdminClient(_Client):
         should_poll: bool = False,
         poll_interval: int = 10,
         delete_cloned_job: bool = True,
+        max_run_slots: int = None,
     ):
         """Trigger an autoscaling CI job
 
@@ -1120,6 +1270,11 @@ class _AdminClient(_Client):
                 polling
             delete_cloned_job (bool, optional): Indicate if cloned job should be
                 deleted after being triggered
+            max_run_slots (int, optional): Number of run slots that should be
+                available to this process.  This will limit the ability to run
+                concurrent PRs up the the allocated run slots for your account.  When
+                set to `None`, the `run_slots` allocated to your account will be used
+                to determine if a job should be cloned.
         """
         self.console.log('Finding any in progress runs...')
         cloned_job = None
@@ -1178,9 +1333,11 @@ class _AdminClient(_Client):
             # cancelled above
             if not job_run_is_pr_run:
 
-                acct = self.get_account(account_id).get('data', {})
-                run_slots = acct.get('run_slots', 0)
-                if run_slots > len(in_progress_runs):
+                run_slots = (
+                    self.get_account(account_id).get('data', {}).get('run_slots', 0)
+                )
+                max_run_slots = min(max_run_slots or run_slots, run_slots)
+                if max_run_slots > len(in_progress_runs):
                     self.console.log(
                         f'Job {job_id} is currently being used in run {job_run["id"]}. '
                         'This job definition will be cloned and then triggered for '
@@ -1189,7 +1346,9 @@ class _AdminClient(_Client):
                     current_job = self.get_job(account_id, job_id).get('data', {})
 
                     # Alter the current job definition so it can be cloned
-                    current_job.pop('is_deferrable')
+                    read_only_fields = ['is_deferrable', 'raw_dbt_version']
+                    for read_only_field in read_only_fields:
+                        current_job.pop(read_only_field)
                     current_job['id'] = None
                     now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
                     current_job['name'] = current_job['name'] + f' [CLONED {now}]'
@@ -1204,8 +1363,8 @@ class _AdminClient(_Client):
                 else:
                     self.console.log(
                         'Not cloning the job as your account has met or exceeded the '
-                        'number of run slots and will not be able to execute even a '
-                        'cloned CI job.'
+                        'number of run slots or a limit was placed by the user.  The '
+                        'normal job will be queued.'
                     )
         else:
             self.console.log('No in progress job run found.  Triggering as normal')
@@ -1228,7 +1387,7 @@ class _AdminClient(_Client):
         payload: Dict,
         *,
         should_poll: bool = True,
-        poll_interval: bool = False,
+        poll_interval: int = 10,
         trigger_on_failure_only: bool = True,
     ):
         """Restart a job from the point of failure
@@ -1535,5 +1694,20 @@ class _AdminClient(_Client):
         return self._simple_request(
             f'accounts/{account_id}/projects/{project_id}/repositories/{repository_id}/',  # noqa: E501
             method='post',
+            json=payload,
+        )
+
+    @v3
+    def update_webhook(self, account_id: int, webhook_id: str, payload: Dict) -> Dict:
+        """Update a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to update
+            payload (dict): Dictionary representing the webhook to update
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
+            method='put',
             json=payload,
         )

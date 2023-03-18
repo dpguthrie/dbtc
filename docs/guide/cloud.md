@@ -77,6 +77,24 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ## Artifact
 
+### get_most_recent_run_artifact
+::: dbtc.client.admin._AdminClient.get_most_recent_run_artifact
+
+**Examples:**
+=== "Python"
+
+    Assuming that `client` is an instance of `dbtCloudClient`
+    ```py
+    client.cloud.get_most_recent_run_artifact(account_id, path)
+    ```
+
+=== "CLI"
+
+    Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
+    ```bash
+    dbtc get-most-recent-run-artifact --path manifest.json
+    ```
+
 ### get_run_artifact
 ::: dbtc.client.admin._AdminClient.get_run_artifact
 
@@ -829,6 +847,24 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     environment variables have been set.
     ```bash
     dbtc cancel-run --account-id=1 --run-id=1
+
+### get_most_recent_run
+::: dbtc.client.admin._AdminClient.get_most_recent_run
+
+**Examples:**
+=== "Python"
+
+    Assuming that `client` is an instance of `dbtCloudClient`
+    ```py
+    client.cloud.get_most_recent_run(account_id)
+    ```
+
+=== "CLI"
+
+    Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
+    ```bash
+    dbtc get-most-recent-run
+    ```
 
 ### get_run
 ::: dbtc.client.admin._AdminClient.get_run

@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.3.7] - 2023-03-04
+
+### Added
+- A `max_run_slots` keyword argument to the `trigger_autoscaling_ci_job` method.  This will allow a user to limit the amount of run slots that can be occupied by CI jobs.  The default value will be None, which will ensure that the normal behavior of this method remains intact (e.g. it will clone the CI job until the number of run slots configured for the account is reached).
+
+## [0.3.6] - 2023-02-28
+
+### Fixed
+- An additional read-only field from a job definition needed to be removed prior to creating the cloned job.  500 errors were occuring because of this.
+
+## [0.3.5] - 2023-02-22
+
+### Added
+- `version` argument to the CLI.  Invoke with `dbtc --version`.
+- Ability to track what methods are being used.  Important to note that you can opt out of this by passing `do_not_track=True` to the `dbtCloudClient` class.  Additionally, nothing identifiable, like IDs, will be tracked - simply a way to understand what methods of the package are being used.
+
+### Fixed
+- Bad type argument for `poll_interval` in the CLI method for `trigger-job-from-failure`
+
+## [0.3.4] - 2023-01-27
+
+### Added
+- Additional keyword arguments to filter the `list_projects` endpoint by - `project_id`, `state`, `offset`, and `limit`.  The `offset` will be useful if an account has greater than 100 (the max projects that can be returned) projects.
+- Additional keyword arguments to filter the `list_jobs` endpoint by - `environment_id`, `state`, `offset`, and `limit`.  Important to note that the `project_id` can either be a single project_id integer or a list of project_ids
+- Convenience methods to return the most recent run, `get_most_recent_run`, and the recent run artifact, `get_most_recent_run_artifact`.
+- Additional keyword arguments to filter the `list_environments` endpoint by - `dbt_version`, `name`, `type`, `state`, `offset`, and `limit`.  Important to note that the `project_id` can either be a single project_id integer or a list of project_ids.
+- `fields` argument to the methods on the `metadata` property.  This allows you to limit the data returned from the Metadata API while still not having to write any GraphQL!
+- `query` method on the `metadata` property.  This allows you to write a GraphQL query and supply variables
+
+### Fixed
+- A bug in `get_project_by_name`
+- A bug in the CLI related to any methods that accept the `include_related` argument.  This is now valid syntax `'["debug_logs", "run_steps"]'`.
+
 ## [0.3.3] - 2022-11-14
 
 ### Fixed

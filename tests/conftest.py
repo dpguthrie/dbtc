@@ -13,4 +13,5 @@ def dbtc_client():
     return dbtCloudClient(
         service_token=os.getenv('DBT_CLOUD_SERVICE_TOKEN'),
         api_key=os.getenv('DBT_CLOUD_API_KEY'),
+        # do_not_track=True,
     )

@@ -20,6 +20,8 @@
 
 **Documentation**: <a target="_blank" href="https://dbtc.dpguthrie.com">https://dbtc.dpguthrie.com</a>
 
+**Interactive Demo**: <a target="_blank" href="https://dpguthrie-dbtc-streamlit-home-czkbxr.streamlit.app/">https://dpguthrie-dbtc-streamlit-home-czkbxr.streamlit.app/</a>
+
 **Source Code**: <a target="_blank" href="https://github.com/dpguthrie/dbtc">https://github.com/dpguthrie/dbtc</a>
 
 **V2 Docs**: <a target="_blank" href="https://docs.getdbt.com/dbt-cloud/api-v2">https://docs.getdbt.com/dbt-cloud/api-v2</a>
@@ -43,8 +45,8 @@ resources within their dbt Cloud Account.
 Python 3.7+
 
 - [Requests](https://requests.readthedocs.io/en/master/) - The elegant and simple HTTP library for Python, built for human beings.
-- [sgqlc]() - Simple GraphQL Client
-- [Typer](https://github.com/ross/requests-futures) - Library for building CLI applications
+- [sgqlc](https://github.com/profusion/sgqlc) - Simple GraphQL Client
+- [Typer](https://github.com/tiangolo/typer) - Library for building CLI applications
 
 ## Installation
 

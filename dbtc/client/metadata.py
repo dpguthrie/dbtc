@@ -64,6 +64,14 @@ class _MetadataClient(_Client):
                 **{k: v for k, v in arguments.items() if v is not None}  # type: ignore
             ).__fields__()
         data = self._endpoint(op)
+        if not self.do_not_track:
+            self._track(
+                self._anonymous_id,
+                'Metadata API',
+                {
+                    'method': f'get_{obj}',
+                },
+            )
         return data
 
     def query(self, query: str, variables: Dict = None):

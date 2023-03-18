@@ -8,19 +8,27 @@ from typer.testing import CliRunner
 # first party
 from dbtc.cli import app
 
+ACCOUNT_ID = 43786
+PROJECT_ID = 146088
+JOB_ID = 229335
+
 runner = CliRunner()
 
 
 def _test_cloud_cli(commands, variable: str = None):
     result = runner.invoke(app, commands)
-    data = json.loads(result.stdout)
+    response = json.loads(result.stdout)
     assert result.exit_code == 0
     try:
-        assert data['status']['code'] == 200
+        assert 200 <= response['status']['code'] <= 299
     except KeyError:
         pass
     if variable is not None:
-        setattr(pytest, variable, data['data'][0]['id'])
+        data = response['data']
+        if isinstance(data, list):
+            setattr(pytest, variable, data[0]['id'])
+        else:
+            setattr(pytest, variable, data['id'])
 
 
 @pytest.mark.dependency()
@@ -30,12 +38,12 @@ def test_list_accounts():
 
 @pytest.mark.dependency(depends=['test_list_accounts'])
 def test_get_account():
-    _test_cloud_cli(['get-account', '--account-id', pytest.account_id])
+    _test_cloud_cli(['get-account', '--account-id', ACCOUNT_ID])
 
 
 @pytest.mark.dependency(depends=['test_get_account'])
 def test_list_projects():
-    _test_cloud_cli(['list-projects', '--account-id', pytest.account_id], 'project_id')
+    _test_cloud_cli(['list-projects', '--account-id', ACCOUNT_ID], 'project_id')
 
 
 @pytest.mark.dependency(depends=['test_list_projects'])
@@ -44,9 +52,9 @@ def test_get_project():
         [
             'get-project',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--project-id',
-            pytest.project_id,
+            PROJECT_ID,
         ]
     )
 
@@ -57,11 +65,10 @@ def test_list_jobs():
         [
             'list-jobs',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--project-id',
-            pytest.project_id,
+            PROJECT_ID,
         ],
-        'job_id',
     )
 
 
@@ -71,9 +78,9 @@ def test_get_job():
         [
             'get-job',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--job-id',
-            pytest.job_id,
+            JOB_ID,
         ],
     )
 
@@ -81,7 +88,7 @@ def test_get_job():
 @pytest.mark.dependency(depends=['test_list_jobs'])
 def test_list_runs():
     _test_cloud_cli(
-        ['list-runs', '--account-id', pytest.account_id, '--job-id', pytest.job_id],
+        ['list-runs', '--account-id', ACCOUNT_ID, '--job-id', JOB_ID],
         'run_id',
     )
 
@@ -92,9 +99,9 @@ def test_list_runs_list_status():
         [
             'list-runs',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--job-id',
-            pytest.job_id,
+            JOB_ID,
             '--status',
             '["success", "error"]',
         ]
@@ -107,9 +114,9 @@ def test_list_runs_str_status():
         [
             'list-runs',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--job-id',
-            pytest.job_id,
+            JOB_ID,
             '--status',
             'queued',
         ]
@@ -122,7 +129,7 @@ def test_get_run():
         [
             'get-run',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--run-id',
             pytest.run_id,
         ],
@@ -135,7 +142,7 @@ def test_get_most_recent_run():
         [
             'get-most-recent-run',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
         ],
     )
 
@@ -146,7 +153,7 @@ def test_list_run_artifacts():
         [
             'list-run-artifacts',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--run-id',
             pytest.run_id,
         ],
@@ -159,7 +166,7 @@ def test_get_run_artifact():
         [
             'get-run-artifact',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--run-id',
             pytest.run_id,
             '--path',
@@ -174,8 +181,85 @@ def test_get_most_recent_run_artifact():
         [
             'get-most-recent-run-artifact',
             '--account-id',
-            pytest.account_id,
+            ACCOUNT_ID,
             '--path',
             'manifest.json',
+        ],
+    )
+
+
+@pytest.mark.dependency()
+def test_create_webhook():
+    _test_cloud_cli(
+        [
+            'create-webhook',
+            '--account-id',
+            ACCOUNT_ID,
+            '--payload',
+            '{"name": "Test webhook", "active": true, '
+            '"client_url": "https://not-a-real-url.com", '
+            '"event_types": ["job.run.started"]}',
+        ],
+        'webhook_id',
+    )
+
+
+@pytest.mark.dependency(depends=['test_create_webhook'])
+def test_list_webhook():
+    _test_cloud_cli(['list-webhooks', '--account-id', ACCOUNT_ID])
+
+
+@pytest.mark.dependency(depends=['test_create_webhook'])
+def test_get_webhook():
+    _test_cloud_cli(
+        [
+            'get-webhook',
+            '--account-id',
+            ACCOUNT_ID,
+            '--webhook-id',
+            pytest.webhook_id,
+        ],
+    )
+
+
+@pytest.mark.dependency()
+def test_update_webhook():
+    _test_cloud_cli(
+        [
+            'update-webhook',
+            '--account-id',
+            ACCOUNT_ID,
+            '--webhook-id',
+            pytest.webhook_id,
+            '--payload',
+            '{"name": "Updating webhook", "active": true, '
+            '"client_url": "https://not-a-real-url.com", '
+            '"event_types": ["job.run.started"]}',
+        ],
+    )
+
+
+@pytest.mark.dependency(depends=['test_create_webhook'])
+def test_test_webhook():
+    _test_cloud_cli(
+        [
+            'test-webhook',
+            '--account-id',
+            ACCOUNT_ID,
+            '--webhook-id',
+            pytest.webhook_id,
+        ],
+    )
+
+
+@pytest.mark.dependency(depends=['test_create_webhook'])
+def test_delete_webhook():
+    _test_cloud_cli(
+        [
+            'delete-webhook',
+            '--account-id',
+            ACCOUNT_ID,
+            '--webhook-id',
+            pytest.webhook_id,
         ],
     )

@@ -6,6 +6,7 @@ from typing import Optional
 import typer
 
 # first party
+from dbtc import __version__
 from dbtc import dbtCloudClient as dbtc
 from dbtc.console import console
 
@@ -13,6 +14,12 @@ app = typer.Typer()
 
 
 valid_inclusions = ['trigger', 'environment', 'run_steps', 'job', 'repository']
+
+
+def version_callback(called: bool):
+    if called:
+        typer.echo(f'dbtc version: {__version__}')
+        raise typer.Exit()
 
 
 def complete_inclusion(ctx, param, incomplete):
@@ -103,6 +110,16 @@ UNIQUE_ID = typer.Option(
 )
 USER_ID = typer.Option(..., '--user-id', '-u', help='Numeric ID of the user.')
 
+VERSION = typer.Option(
+    None,
+    '--version',
+    '-v',
+    help='Show installed version of dbtc.',
+    callback=version_callback,
+    is_eager=True,
+)
+WEBHOOK_ID = typer.Option(..., '--webhook-id', '-w', help='String ID of the webhook')
+
 
 def _dbt_api_request(ctx: typer.Context, property: str, method: str, *args, **kwargs):
     instance = dbtc(**ctx.obj)
@@ -131,7 +148,9 @@ def common(
     api_key: Optional[str] = API_KEY,
     service_token: Optional[str] = TOKEN,
     host: Optional[str] = HOST,
+    version: Optional[bool] = VERSION,
 ):
+    ctx.params.pop('version')
     ctx.obj = ctx.params
     pass
 
@@ -307,6 +326,14 @@ def create_user_group(
 
 
 @app.command()
+def create_webhook(
+    ctx: typer.Context, account_id: int = ACCOUNT_ID, payload: str = PAYLOAD
+):
+    """Create a webhook."""
+    _dbt_cloud_request(ctx, 'create_webhook', account_id, json.loads(payload))
+
+
+@app.command()
 def deactivate_user_license(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
@@ -389,6 +416,16 @@ def delete_user_group(
 ):
     """Delete a user group."""
     _dbt_cloud_request(ctx, 'delete_user_group', account_id, group_id)
+
+
+@app.command()
+def delete_webhook(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    webhook_id: str = WEBHOOK_ID,
+):
+    """Delete a webhook."""
+    _dbt_cloud_request(ctx, 'delete_webhook', account_id, webhook_id)
 
 
 @app.command()
@@ -829,6 +866,16 @@ def get_user(
 
 
 @app.command()
+def get_webhook(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    webhook_id: str = WEBHOOK_ID,
+):
+    """Get a webhook by its ID"""
+    _dbt_cloud_request(ctx, 'get_webhook', account_id=account_id, webhook_id=webhook_id)
+
+
+@app.command()
 def list_accounts(ctx: typer.Context):
     """List of accounts that your API Token is authorized to access."""
     _dbt_cloud_request(ctx, 'list_accounts')
@@ -1106,6 +1153,23 @@ def list_users(
 
 
 @app.command()
+def list_webhooks(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    offset: int = OFFSET,
+    limit: int = LIMIT,
+):
+    """List webhooks for a specific account."""
+    _dbt_cloud_request(
+        ctx,
+        'list_webhooks',
+        account_id,
+        offset=offset,
+        limit=limit,
+    )
+
+
+@app.command()
 def test_connection(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
@@ -1119,6 +1183,21 @@ def test_connection(
         account_id,
         project_id,
         json.loads(payload),
+    )
+
+
+@app.command()
+def test_webhook(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    webhook_id: str = WEBHOOK_ID,
+):
+    """Test a webhook."""
+    _dbt_cloud_request(
+        ctx,
+        'test_webhook',
+        account_id,
+        webhook_id,
     )
 
 
@@ -1166,6 +1245,9 @@ def trigger_autoscaling_ci_job(
     delete_cloned_job: bool = typer.Option(
         True, help='Indicate whether cloned job should be deleted after triggering'
     ),
+    max_run_slots: int = typer.Option(
+        None, help='Number of run slots that should be available to this process'
+    ),
 ):
     """Trigger an autoscaling CI job to run."""
     _dbt_cloud_request(
@@ -1177,6 +1259,7 @@ def trigger_autoscaling_ci_job(
         should_poll=should_poll,
         poll_interval=poll_interval,
         delete_cloned_job=delete_cloned_job,
+        max_run_slots=max_run_slots,
     )
 
 
@@ -1325,6 +1408,23 @@ def update_repository(
         account_id,
         project_id,
         repository_id,
+        json.loads(payload),
+    )
+
+
+@app.command()
+def update_webhook(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    webhook_id: str = WEBHOOK_ID,
+    payload: str = PAYLOAD,
+):
+    """Update a webhook."""
+    _dbt_cloud_request(
+        ctx,
+        'update_webhook',
+        account_id,
+        webhook_id,
         json.loads(payload),
     )
 
