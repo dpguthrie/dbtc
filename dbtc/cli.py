@@ -851,21 +851,6 @@ def get_run_timing_details(
 
 
 @app.command()
-def get_run_v4(
-    ctx: typer.Context,
-    account_id: int = ACCOUNT_ID,
-    run_id: int = RUN_ID,
-):
-    """Get specific run, from version 4"""
-    _dbt_cloud_request(
-        ctx,
-        'get_run_v4',
-        account_id,
-        run_id,
-    )
-
-
-@app.command()
 def get_user(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,

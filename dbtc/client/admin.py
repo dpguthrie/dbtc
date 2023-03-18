@@ -73,7 +73,6 @@ def _version_decorator(func, version):
 
 v2 = partial(_version_decorator, version='v2')
 v3 = partial(_version_decorator, version='v3')
-v4 = partial(_version_decorator, version='v4')
 
 
 class _AdminClient(_Client):
@@ -119,39 +118,6 @@ class _AdminClient(_Client):
         """Return json from response."""
         response = self._make_request(path, method=method, **kwargs)
         return response.json()
-
-    def _paginated_request(
-        self, path: str, *, method: str = 'get', **kwargs
-    ) -> List[Dict]:
-        """Multiple paginated requests given presence of specific header.
-
-        !!! note
-            Only available in V4.
-        """
-        response = self._make_request(path, method=method, **kwargs)
-        data = []
-        while True:
-            response_data = response.json().get('data', [])
-            data.extend(response_data)
-            next_page_token = self._get_pagination_token(response)
-            if next_page_token is not None:
-                response = self._make_request(
-                    path,
-                    method=method,
-                    headers={'x-dbt-continuation-token': next_page_token},
-                    **kwargs,
-                )
-            else:
-                break
-        return data
-
-    def _get_pagination_token(self, response):
-        """Retrieve pagination token.
-
-        !!! note
-            Only available in V4.
-        """
-        return response.headers.get('x-dbt-continuation-token', None)
 
     def _get_by_name(self, items: List, item_name: str, value: str = 'name'):
         try:
@@ -819,16 +785,6 @@ class _AdminClient(_Client):
             f'accounts/{account_id}/projects/{project_id}/runs/{run_id}/timing/'
         )
 
-    @v4
-    def get_run_v4(self, account_id: int, run_id: int) -> Dict:
-        """Retrieves the details of an existing run with the given run_id.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            run_id (int): Numeric ID of the run to retrieve
-        """
-        return self._simple_request(f'accounts/{account_id}/runs/{run_id}')
-
     @v3
     def get_service_token(self, account_id: int, service_token_id: int) -> Dict:
         """Retrieves a service token.
@@ -1166,44 +1122,6 @@ class _AdminClient(_Client):
                 'offset': offset,
                 'limit': limit,
                 'status__in': status,
-            },
-        )
-
-    @v4
-    def list_runs_v4(
-        self,
-        account_id: int,
-        *,
-        limit: int = None,
-        environment: str = None,
-        project: str = None,
-        job: str = None,
-        status: str = None,
-    ) -> List[Dict]:
-        """Returns a list of runs in the account.
-
-        The runs are returned sorted by creation date, with the most recent run
-        appearing first.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            limit (int, optional): A limit on the number of objects to be
-                returned, between 1 and 100.
-            environment (str): A filter on the list based on the object's
-                environment_id field.
-            project (str): A filter on the list based on the object's project_id field.
-            job (str): A filter on the list based on the object's job_id field.
-            status: A filter on the list based on the object's status field.
-                Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"
-        """
-        return self._paginated_request(
-            f'accounts/{account_id}/runs',
-            params={
-                'limit': limit,
-                'environment': environment,
-                'project': project,
-                'job': job,
-                'status': status,
             },
         )
 
