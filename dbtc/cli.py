@@ -118,6 +118,7 @@ VERSION = typer.Option(
     callback=version_callback,
     is_eager=True,
 )
+WEBHOOK_ID = typer.Option(..., '--webhook-id', '-w', help='String ID of the webhook')
 
 
 def _dbt_api_request(ctx: typer.Context, property: str, method: str, *args, **kwargs):
@@ -325,6 +326,14 @@ def create_user_group(
 
 
 @app.command()
+def create_webhook(
+    ctx: typer.Context, account_id: int = ACCOUNT_ID, payload: str = PAYLOAD
+):
+    """Create a webhook."""
+    _dbt_cloud_request(ctx, 'create_webhook', account_id, json.loads(payload))
+
+
+@app.command()
 def deactivate_user_license(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
@@ -407,6 +416,16 @@ def delete_user_group(
 ):
     """Delete a user group."""
     _dbt_cloud_request(ctx, 'delete_user_group', account_id, group_id)
+
+
+@app.command()
+def delete_webhook(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    webhook_id: str = WEBHOOK_ID,
+):
+    """Delete a webhook."""
+    _dbt_cloud_request(ctx, 'delete_webhook', account_id, webhook_id)
 
 
 @app.command()
@@ -862,6 +881,16 @@ def get_user(
 
 
 @app.command()
+def get_webhook(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    webhook_id: str = WEBHOOK_ID,
+):
+    """Get a webhook by its ID"""
+    _dbt_cloud_request(ctx, 'get_webhook', account_id=account_id, webhook_id=webhook_id)
+
+
+@app.command()
 def list_accounts(ctx: typer.Context):
     """List of accounts that your API Token is authorized to access."""
     _dbt_cloud_request(ctx, 'list_accounts')
@@ -1139,6 +1168,23 @@ def list_users(
 
 
 @app.command()
+def list_webhooks(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    offset: int = OFFSET,
+    limit: int = LIMIT,
+):
+    """List webhooks for a specific account."""
+    _dbt_cloud_request(
+        ctx,
+        'list_webhooks',
+        account_id,
+        offset=offset,
+        limit=limit,
+    )
+
+
+@app.command()
 def test_connection(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
@@ -1152,6 +1198,21 @@ def test_connection(
         account_id,
         project_id,
         json.loads(payload),
+    )
+
+
+@app.command()
+def test_webhook(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    webhook_id: str = WEBHOOK_ID,
+):
+    """Test a webhook."""
+    _dbt_cloud_request(
+        ctx,
+        'test_webhook',
+        account_id,
+        webhook_id,
     )
 
 
@@ -1362,6 +1423,23 @@ def update_repository(
         account_id,
         project_id,
         repository_id,
+        json.loads(payload),
+    )
+
+
+@app.command()
+def update_webhook(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    webhook_id: str = WEBHOOK_ID,
+    payload: str = PAYLOAD,
+):
+    """Update a webhook."""
+    _dbt_cloud_request(
+        ctx,
+        'update_webhook',
+        account_id,
+        webhook_id,
         json.loads(payload),
     )
 

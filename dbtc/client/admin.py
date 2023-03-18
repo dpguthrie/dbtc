@@ -12,6 +12,7 @@ from typing import Dict, Iterable, List, Optional, Union
 import requests
 
 # first party
+from dbtc import models
 from dbtc.client.base import _Client
 from dbtc.utils import json_listify, listify
 
@@ -102,6 +103,14 @@ class _AdminClient(_Client):
         self, path: str, *, method: str = 'get', **kwargs
     ) -> requests.Response:
         """Make request to API."""
+
+        # Model is not an argument that the request method accepts, needs to be removed
+        model = kwargs.pop('model', None)
+        if model is not None:
+
+            # This will validate the payload
+            kwargs['json'] = model(**kwargs['json']).dict(exclude_unset=True)
+
         full_url = self.full_url(path)
         response = self.session.request(method=method, url=full_url, **kwargs)
         return response
@@ -372,6 +381,21 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def create_webhook(self, account_id: int, payload: Dict) -> Dict:
+        """Create a new outbound webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the webhook to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscriptions',
+            method='post',
+            json=payload,
+            model=models.Webhook,
+        )
+
+    @v3
     def create_user_group(self, account_id: int, payload: Dict) -> Dict:
         """Create a user group
 
@@ -495,6 +519,19 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/projects/{project_id}/repositories/{repository_id}',
+            method='delete',
+        )
+
+    @v3
+    def delete_webhook(self, account_id: int, webhook_id: str) -> Dict:
+        """Delete a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
             method='delete',
         )
 
@@ -802,6 +839,18 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/service-tokens/{service_token_id}'
+        )
+
+    @v3
+    def get_webhook(self, account_id: int, webhook_id: str) -> Dict:
+        """Get a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
         )
 
     @v2
@@ -1214,6 +1263,27 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def list_webhooks(
+        self,
+        account_id: int,
+        *,
+        limit: int = None,
+        offset: int = None,
+    ) -> Dict:
+        """List of webhooks in account
+        Args:
+            account_id (int): Numeric ID of the account
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscriptions',
+            params={'limit': limit, 'offset': offset},
+        )
+
+    @v3
     def test_connection(self, account_id: int, payload: Dict) -> Dict:
         """Test a connection
 
@@ -1223,6 +1293,18 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/connections/test/', method='post', json=payload
+        )
+
+    @v3
+    def test_webhook(self, account_id: int, webhook_id: str) -> Dict:
+        """Test a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to test
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}/test',
         )
 
     @v2
@@ -1694,5 +1776,20 @@ class _AdminClient(_Client):
         return self._simple_request(
             f'accounts/{account_id}/projects/{project_id}/repositories/{repository_id}/',  # noqa: E501
             method='post',
+            json=payload,
+        )
+
+    @v3
+    def update_webhook(self, account_id: int, webhook_id: str, payload: Dict) -> Dict:
+        """Update a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to update
+            payload (dict): Dictionary representing the webhook to update
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
+            method='put',
             json=payload,
         )
