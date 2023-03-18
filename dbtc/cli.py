@@ -1260,6 +1260,9 @@ def trigger_autoscaling_ci_job(
     delete_cloned_job: bool = typer.Option(
         True, help='Indicate whether cloned job should be deleted after triggering'
     ),
+    max_run_slots: int = typer.Option(
+        None, help='Number of run slots that should be available to this process'
+    ),
 ):
     """Trigger an autoscaling CI job to run."""
     _dbt_cloud_request(
@@ -1271,6 +1274,7 @@ def trigger_autoscaling_ci_job(
         should_poll=should_poll,
         poll_interval=poll_interval,
         delete_cloned_job=delete_cloned_job,
+        max_run_slots=max_run_slots,
     )
 
 
