@@ -12,6 +12,7 @@ from typing import Dict, Iterable, List, Optional, Union
 import requests
 
 # first party
+from dbtc import models
 from dbtc.client.base import _Client
 from dbtc.utils import json_listify, listify
 
@@ -49,22 +50,33 @@ SUB_COMMAND_CLI_ARGS = {
 }
 
 
+def set_called_from(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+
+        # Don't want to reset this when it already exists
+        if self._called_from is None:
+            self._called_from = func.__name__
+        try:
+            result = func(self, *args, **kwargs)
+        except Exception as e:
+            self._called_from = None
+            raise (e)
+
+        self._called_from = None
+        return result
+
+    return wrapper
+
+
 def _version_decorator(func, version):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         self._path = f'/api/{version}/'
         result = func(self, *args, **kwargs)
         if not self.do_not_track:
-            addl_properties = {k: v for k, v in kwargs.items() if not k.endswith('_id')}
-            self._track(
-                self._anonymous_id,
-                'Admin API',
-                {
-                    'method': func.__name__,
-                    'version': version,
-                    **addl_properties,
-                },
-            )
+            self._send_track('Admin API', func, *args, **kwargs)
+
         return result
 
     return wrapper
@@ -72,7 +84,6 @@ def _version_decorator(func, version):
 
 v2 = partial(_version_decorator, version='v2')
 v3 = partial(_version_decorator, version='v3')
-v4 = partial(_version_decorator, version='v4')
 
 
 class _AdminClient(_Client):
@@ -102,6 +113,14 @@ class _AdminClient(_Client):
         self, path: str, *, method: str = 'get', **kwargs
     ) -> requests.Response:
         """Make request to API."""
+
+        # Model is not an argument that the request method accepts, needs to be removed
+        model = kwargs.pop('model', None)
+        if model is not None:
+
+            # This will validate the payload
+            kwargs['json'] = model(**kwargs['json']).dict(exclude_unset=True)
+
         full_url = self.full_url(path)
         response = self.session.request(method=method, url=full_url, **kwargs)
         return response
@@ -110,39 +129,6 @@ class _AdminClient(_Client):
         """Return json from response."""
         response = self._make_request(path, method=method, **kwargs)
         return response.json()
-
-    def _paginated_request(
-        self, path: str, *, method: str = 'get', **kwargs
-    ) -> List[Dict]:
-        """Multiple paginated requests given presence of specific header.
-
-        !!! note
-            Only available in V4.
-        """
-        response = self._make_request(path, method=method, **kwargs)
-        data = []
-        while True:
-            response_data = response.json().get('data', [])
-            data.extend(response_data)
-            next_page_token = self._get_pagination_token(response)
-            if next_page_token is not None:
-                response = self._make_request(
-                    path,
-                    method=method,
-                    headers={'x-dbt-continuation-token': next_page_token},
-                    **kwargs,
-                )
-            else:
-                break
-        return data
-
-    def _get_pagination_token(self, response):
-        """Retrieve pagination token.
-
-        !!! note
-            Only available in V4.
-        """
-        return response.headers.get('x-dbt-continuation-token', None)
 
     def _get_by_name(self, items: List, item_name: str, value: str = 'name'):
         try:
@@ -372,6 +358,21 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def create_webhook(self, account_id: int, payload: Dict) -> Dict:
+        """Create a new outbound webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the webhook to create
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscriptions',
+            method='post',
+            json=payload,
+            model=models.Webhook,
+        )
+
+    @v3
     def create_user_group(self, account_id: int, payload: Dict) -> Dict:
         """Create a user group
 
@@ -499,6 +500,19 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def delete_webhook(self, account_id: int, webhook_id: str) -> Dict:
+        """Delete a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to delete
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
+            method='delete',
+        )
+
+    @v3
     def delete_user_group(self, account_id: int, group_id: int) -> Dict:
         """Delete group for a specified account
 
@@ -520,6 +534,7 @@ class _AdminClient(_Client):
         """
         return self._simple_request(f'accounts/{account_id}')
 
+    @set_called_from
     @v2
     def get_account_by_name(self, account_name: str) -> Dict:
         """Get an account by its name.
@@ -568,6 +583,7 @@ class _AdminClient(_Client):
         """
         return self._simple_request(f'accounts/{account_id}/projects/{project_id}')
 
+    @set_called_from
     @v2
     def get_project_by_name(
         self, project_name: str, account_id: int = None, account_name: str = None
@@ -603,6 +619,7 @@ class _AdminClient(_Client):
 
         raise Exception(f'Project "{project_name}" was not found.')
 
+    @set_called_from
     @v2
     def get_most_recent_run(
         self,
@@ -648,6 +665,7 @@ class _AdminClient(_Client):
             runs['data'] = {}
         return runs
 
+    @set_called_from
     @v2
     def get_most_recent_run_artifact(
         self,
@@ -699,6 +717,10 @@ class _AdminClient(_Client):
             deferring_run_id=deferring_run_id,
             status='success',
         )
+
+        # Reset called from after being set to None in get_most_recent_run
+        self._called_from = 'get_most_recent_run_artifact'
+
         try:
             run_id = runs.get('data', {})['id']
         except KeyError:
@@ -782,16 +804,6 @@ class _AdminClient(_Client):
             f'accounts/{account_id}/projects/{project_id}/runs/{run_id}/timing/'
         )
 
-    @v4
-    def get_run_v4(self, account_id: int, run_id: int) -> Dict:
-        """Retrieves the details of an existing run with the given run_id.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            run_id (int): Numeric ID of the run to retrieve
-        """
-        return self._simple_request(f'accounts/{account_id}/runs/{run_id}')
-
     @v3
     def get_service_token(self, account_id: int, service_token_id: int) -> Dict:
         """Retrieves a service token.
@@ -802,6 +814,18 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/service-tokens/{service_token_id}'
+        )
+
+    @v3
+    def get_webhook(self, account_id: int, webhook_id: str) -> Dict:
+        """Get a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to retrieve
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
         )
 
     @v2
@@ -1120,44 +1144,6 @@ class _AdminClient(_Client):
             },
         )
 
-    @v4
-    def list_runs_v4(
-        self,
-        account_id: int,
-        *,
-        limit: int = None,
-        environment: str = None,
-        project: str = None,
-        job: str = None,
-        status: str = None,
-    ) -> List[Dict]:
-        """Returns a list of runs in the account.
-
-        The runs are returned sorted by creation date, with the most recent run
-        appearing first.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            limit (int, optional): A limit on the number of objects to be
-                returned, between 1 and 100.
-            environment (str): A filter on the list based on the object's
-                environment_id field.
-            project (str): A filter on the list based on the object's project_id field.
-            job (str): A filter on the list based on the object's job_id field.
-            status: A filter on the list based on the object's status field.
-                Enum: "Queued" "Starting" "Running" "Succeeded" "Failed" "Canceled"
-        """
-        return self._paginated_request(
-            f'accounts/{account_id}/runs',
-            params={
-                'limit': limit,
-                'environment': environment,
-                'project': project,
-                'job': job,
-                'status': status,
-            },
-        )
-
     @v3
     def list_service_token_permissions(
         self, account_id: int, service_token_id: int
@@ -1181,11 +1167,12 @@ class _AdminClient(_Client):
         """
         return self._simple_request(f'accounts/{account_id}/service-tokens/')
 
-    @v2
+    @v3
     def list_users(
         self,
         account_id: int,
         *,
+        state: int = None,
         limit: int = None,
         offset: int = None,
         order_by: str = 'email',
@@ -1194,6 +1181,7 @@ class _AdminClient(_Client):
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
+            state (int, optional): 1 = active, 2 = deleted
             limit (int, optional): The limit to apply when listing runs.
                 Use with offset to paginate results.
             offset (int, optional): The offset to apply when listing runs.
@@ -1203,7 +1191,33 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/users/',
-            params={'limit': limit, 'offset': offset, 'order_by': order_by},
+            params={
+                'limit': limit,
+                'offset': offset,
+                'order_by': order_by,
+                'state': state,
+            },
+        )
+
+    @v3
+    def list_webhooks(
+        self,
+        account_id: int,
+        *,
+        limit: int = None,
+        offset: int = None,
+    ) -> Dict:
+        """List of webhooks in account
+        Args:
+            account_id (int): Numeric ID of the account
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscriptions',
+            params={'limit': limit, 'offset': offset},
         )
 
     @v3
@@ -1218,6 +1232,19 @@ class _AdminClient(_Client):
             f'accounts/{account_id}/connections/test/', method='post', json=payload
         )
 
+    @v3
+    def test_webhook(self, account_id: int, webhook_id: str) -> Dict:
+        """Test a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to test
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}/test',
+        )
+
+    @set_called_from
     @v2
     def trigger_autoscaling_ci_job(
         self,
@@ -1228,6 +1255,7 @@ class _AdminClient(_Client):
         should_poll: bool = False,
         poll_interval: int = 10,
         delete_cloned_job: bool = True,
+        max_run_slots: int = None,
     ):
         """Trigger an autoscaling CI job
 
@@ -1262,6 +1290,11 @@ class _AdminClient(_Client):
                 polling
             delete_cloned_job (bool, optional): Indicate if cloned job should be
                 deleted after being triggered
+            max_run_slots (int, optional): Number of run slots that should be
+                available to this process.  This will limit the ability to run
+                concurrent PRs up the the allocated run slots for your account.  When
+                set to `None`, the `run_slots` allocated to your account will be used
+                to determine if a job should be cloned.
         """
         self.console.log('Finding any in progress runs...')
         cloned_job = None
@@ -1320,9 +1353,11 @@ class _AdminClient(_Client):
             # cancelled above
             if not job_run_is_pr_run:
 
-                acct = self.get_account(account_id).get('data', {})
-                run_slots = acct.get('run_slots', 0)
-                if run_slots > len(in_progress_runs):
+                run_slots = (
+                    self.get_account(account_id).get('data', {}).get('run_slots', 0)
+                )
+                max_run_slots = min(max_run_slots or run_slots, run_slots)
+                if max_run_slots > len(in_progress_runs):
                     self.console.log(
                         f'Job {job_id} is currently being used in run {job_run["id"]}. '
                         'This job definition will be cloned and then triggered for '
@@ -1331,7 +1366,9 @@ class _AdminClient(_Client):
                     current_job = self.get_job(account_id, job_id).get('data', {})
 
                     # Alter the current job definition so it can be cloned
-                    current_job.pop('is_deferrable')
+                    read_only_fields = ['is_deferrable', 'raw_dbt_version']
+                    for read_only_field in read_only_fields:
+                        current_job.pop(read_only_field)
                     current_job['id'] = None
                     now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
                     current_job['name'] = current_job['name'] + f' [CLONED {now}]'
@@ -1346,8 +1383,8 @@ class _AdminClient(_Client):
                 else:
                     self.console.log(
                         'Not cloning the job as your account has met or exceeded the '
-                        'number of run slots and will not be able to execute even a '
-                        'cloned CI job.'
+                        'number of run slots or a limit was placed by the user.  The '
+                        'normal job will be queued.'
                     )
         else:
             self.console.log('No in progress job run found.  Triggering as normal')
@@ -1358,10 +1395,14 @@ class _AdminClient(_Client):
             should_poll=should_poll,
             poll_interval=poll_interval,
         )
+
+        # This property was set to `None` in the trigger_job method, reset here
+        self._called_from = 'trigger_autoscaling_ci_job'
         if cloned_job is not None and delete_cloned_job:
             self.delete_job(account_id, job_id)
         return run
 
+    @set_called_from
     @v2
     def trigger_job_from_failure(
         self,
@@ -1510,7 +1551,7 @@ class _AdminClient(_Client):
             if trigger_on_failure_only:
                 self.console.log('Not triggering job because prior run was successful.')
                 return
-        return self.trigger_job(
+        run = self.trigger_job(
             account_id,
             job_id,
             payload,
@@ -1518,6 +1559,11 @@ class _AdminClient(_Client):
             poll_interval=poll_interval,
         )
 
+        # This property was set to `None` in the trigger_job method, reset here
+        self._called_from = 'trigger_job_from_failure'
+        return run
+
+    @set_called_from
     @v2
     def trigger_job(
         self,
@@ -1677,5 +1723,20 @@ class _AdminClient(_Client):
         return self._simple_request(
             f'accounts/{account_id}/projects/{project_id}/repositories/{repository_id}/',  # noqa: E501
             method='post',
+            json=payload,
+        )
+
+    @v3
+    def update_webhook(self, account_id: int, webhook_id: str, payload: Dict) -> Dict:
+        """Update a webhook
+
+        Args:
+            account_id (int): Numeric ID of the account
+            webhook_id (str): String ID of the webhook you want to update
+            payload (dict): Dictionary representing the webhook to update
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/webhooks/subscription/{webhook_id}',
+            method='put',
             json=payload,
         )

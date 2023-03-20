@@ -45,8 +45,8 @@ resources within their dbt Cloud Account.
 Python 3.7+
 
 - [Requests](https://requests.readthedocs.io/en/master/) - The elegant and simple HTTP library for Python, built for human beings.
-- [sgqlc]() - Simple GraphQL Client
-- [Typer](https://github.com/ross/requests-futures) - Library for building CLI applications
+- [sgqlc](https://github.com/profusion/sgqlc) - Simple GraphQL Client
+- [Typer](https://github.com/tiangolo/typer) - Library for building CLI applications
 
 ## Installation
 

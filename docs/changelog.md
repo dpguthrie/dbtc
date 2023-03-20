@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.4.0] - 2023-03-18
+
+### Added
+- List, test, create, get, update, and delete methods for webhooks
+- Support for pydantic models used for validation logic when creating Webhooks - eventually will add support for other create methods
+- Decorator that sets a private property on the `_Client` class, `_called_from`, that helps understand when methods are called from another method.
+
+### Updated
+- `list_users` is now using a v3 endpoint
+
+### Removed
+- All v4 methods were removed as dbt Cloud will begin to deprecate their use soon
+
+## [0.3.7] - 2023-03-04
+
+### Added
+- A `max_run_slots` keyword argument to the `trigger_autoscaling_ci_job` method.  This will allow a user to limit the amount of run slots that can be occupied by CI jobs.  The default value will be None, which will ensure that the normal behavior of this method remains intact (e.g. it will clone the CI job until the number of run slots configured for the account is reached).
+
+## [0.3.6] - 2023-02-28
+
+### Fixed
+- An additional read-only field from a job definition needed to be removed prior to creating the cloned job.  500 errors were occuring because of this.
+
 ## [0.3.5] - 2023-02-22
 
 ### Added
