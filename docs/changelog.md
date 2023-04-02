@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.1] - 2023-04-02
+
+### Added
+- Most recent updates for the Metadata API schema
+
 ## [0.4.0] - 2023-03-18
 
 ### Added
