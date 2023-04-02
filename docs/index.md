@@ -20,6 +20,8 @@
 
 **Documentation**: <a target="_blank" href="https://dbtc.dpguthrie.com">https://dbtc.dpguthrie.com</a>
 
+**Interactive Demo**: <a target="_blank" href="https://dpguthrie-dbtc-streamlit-home-yy7c0b.streamlit.app/">https://dpguthrie-dbtc-streamlit-home-yy7c0b.streamlit.app/</a>
+
 **Source Code**: <a target="_blank" href="https://github.com/dpguthrie/dbtc">https://github.com/dpguthrie/dbtc</a>
 
 **V2 Docs**: <a target="_blank" href="https://docs.getdbt.com/dbt-cloud/api-v2">https://docs.getdbt.com/dbt-cloud/api-v2</a>
