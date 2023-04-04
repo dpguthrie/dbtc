@@ -20,8 +20,11 @@ class _MetadataClient(_Client):
         self.session.headers = self.headers
 
     _header_property = 'service_token'
-    _default_domain = 'metadata.cloud.getdbt.com'
     _path = '/graphql'
+
+    @property
+    def _base_url(self):
+        return f'https://metadata.{self._host}{self._path}'
 
     @property
     def _endpoint(self) -> HTTPEndpoint:

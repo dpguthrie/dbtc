@@ -99,7 +99,6 @@ class _AdminClient(_Client):
                 *flags, **{k: v for k, v in arg_specs.items() if k != 'flags'}
             )
 
-    _default_domain = 'cloud.getdbt.com'
     _path = None
 
     @property
