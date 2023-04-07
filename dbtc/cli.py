@@ -1303,6 +1303,35 @@ def trigger_job_from_failure(
 
 
 @app.command()
+def trigger_job_from_job(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    job_id: int = JOB_ID,
+    from_job_id: int = JOB_ID,
+    payload: str = PAYLOAD,
+    should_poll: bool = typer.Option(
+        True,
+        help='Poll until job completion (status is one of success, failure, or '
+        'cancelled)',
+    ),
+    poll_interval: int = typer.Option(
+        10, '--poll-interval', help='Number of seconds to wait in between polling.'
+    )
+):
+    """Trigger job from another the job"""
+    _dbt_cloud_request(
+        ctx,
+        'trigger_job_from_job',
+        account_id,
+        job_id,
+        from_job_id,
+        json.loads(payload),
+        should_poll=should_poll,
+        poll_interval=poll_interval,
+    )
+
+
+@app.command()
 def update_connection(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,

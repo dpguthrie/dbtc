@@ -1564,6 +1564,71 @@ class _AdminClient(_Client):
 
     @set_called_from
     @v2
+    def trigger_job_from_job(
+        self,
+        account_id: int,
+        job_id: int,
+        from_job_id: str,
+        payload: Dict,
+        *,
+        should_poll: bool = True,
+        poll_interval: int = 10,
+    ):
+        """Run a job from the point of success of another job
+
+        More info [here](/latest/guide/trigger_job_from_job)
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            job_id (int): Numeric ID of the job to trigger
+            from_job_id (int): Numeric ID of the from job to check status
+            payload (dict): Payload required for post request
+            should_poll (bool, optional): Poll until completion if `True`, completion
+                is one of success, failure, or cancelled
+            poll_interval (int, optional): Number of seconds to wait in between
+                polling
+        """
+
+        self.console.log(f'Triggering job {job_id} from the job {from_job_id}.')
+        last_from_run_data = self.list_runs(
+            account_id=account_id,
+            job_definition_id=from_job_id,
+            order_by='-id',
+            limit=1,
+        )['data'][0]
+
+        last_from_run_status = last_from_run_data['status_humanized'].lower()
+        if last_from_run_status != 'success':
+            self.console.log('Not triggering job because prior run was successful.')
+            return
+        
+        last_run_data = self.list_runs(
+            account_id=account_id,
+            job_definition_id=job_id,
+            order_by='-id',
+            limit=1,
+        )['data'][0]
+        today_date_string = datetime.utcnow().strftime('%Y-%m-%d')
+        today_run_already = last_run_data['created_at'][:10] == today_date_string
+        last_run_status = last_run_data['status_humanized'].lower()
+        if today_run_already and last_run_status == 'success':
+            self.console.log('Not triggering job because the run was successful already today.')
+            return
+            
+        run = self.trigger_job(
+            account_id,
+            job_id,
+            payload,
+            should_poll=should_poll,
+            poll_interval=poll_interval,
+        )
+
+        # This property was set to `None` in the trigger_job method, reset here
+        self._called_from = 'trigger_job_from_job'
+        return run
+
+    @set_called_from
+    @v2
     def trigger_job(
         self,
         account_id: int,
