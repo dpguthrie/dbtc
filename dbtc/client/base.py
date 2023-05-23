@@ -30,17 +30,14 @@ class _Client(abc.ABC):
             'DBT_CLOUD_SERVICE_TOKEN', None
         )
         self._host: Optional[str] = host or os.getenv(
-            'DBT_CLOUD_HOST', self._default_domain
+            'DBT_CLOUD_HOST', self.DEFAULT_DOMAIN
         )
         self.do_not_track: bool = do_not_track
         self._anonymous_id: str = str(uuid.uuid4())
         self._called_from: Optional[str] = None
         self.console = err_console
 
-    @property
-    @abc.abstractmethod
-    def _default_domain(self):
-        """Default used when host is not provided by a user"""
+    DEFAULT_DOMAIN = 'cloud.getdbt.com'
 
     @property
     @abc.abstractmethod
