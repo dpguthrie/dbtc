@@ -917,7 +917,7 @@ python-versions = "*"
 
 [[package]]
 name = "typing-extensions"
-version = "4.5.0"
+version = "4.3.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
 category = "main"
 optional = false
