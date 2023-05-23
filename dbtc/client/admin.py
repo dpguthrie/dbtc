@@ -512,16 +512,25 @@ class _AdminClient(_Client):
         )
 
     @v3
-    def delete_user_group(self, account_id: int, group_id: int) -> Dict:
+    def delete_user_group(self, account_id: int, group_id: int, payload: Dict) -> Dict:
         """Delete group for a specified account
 
         Args:
             account_id (int): Numeric ID of the account
             group_id (int): Numeric ID of the group to delete
+            payload (dict): Dictionary representing the group to delete with the format
+                {
+                    "account_id": int,
+                    "name": str,
+                    "id": int,
+                    "state":2, 
+                    "assign_by_default":false,
+                    "sso_mapping_groups": list
+                }
         """
         return self._simple_request(
             f'accounts/{account_id}/groups/{group_id}/',
-            method='post',
+            method='post', payload = payload
         )
 
     @v2
