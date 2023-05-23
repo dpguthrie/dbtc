@@ -625,7 +625,7 @@ optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
-typing-extensions = ">=4.2.0"
+typing-extensions = ">=4.2.0 <4.2.6"
 
 [package.extras]
 dotenv = ["python-dotenv (>=0.10.4)"]
