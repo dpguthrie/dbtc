@@ -172,17 +172,20 @@ class _AdminClient(_Client):
 
     @v3
     def assign_user_to_group(
-        self, account_id: int, project_id: int, payload: Dict
+        self, account_id: int, payload: Dict
     ) -> Dict:
         """Assign a user to a group
 
         Args:
             account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
             payload (dict): Dictionary representing the user to assign
+            { 
+                "user_id": int,
+                "desired_group_ids": list(int)
+            }
         """
         return self._simple_request(
-            f'accounts/{account_id}/projects/{project_id}/assign-groups/',
+            f'accounts/{account_id}/assign-groups/',
             method='post',
             json=payload,
         )
