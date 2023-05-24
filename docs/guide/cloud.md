@@ -1013,7 +1013,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
     Assuming that `client` is an instance of `dbtCloudClient`
     ```py
-    client.cloud.get_project("name")
+    client.cloud.get_project_by_name(account_id, project_name)
     ```
 
 === "CLI"
