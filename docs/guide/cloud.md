@@ -545,7 +545,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
     Assuming that `client` is an instance of `dbtCloudClient`
     ```py
-    client.cloud.assign_user_to_group(account_id, project_id, payload)
+    client.cloud.assign_user_to_group(account_id, payload)
     ```
 
 === "CLI"
@@ -602,7 +602,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
     Assuming that `client` is an instance of `dbtCloudClient`
     ```py
-    client.cloud.delete_group(account_id, group_id)
+    client.cloud.delete_group(account_id, group_id, payload)
     ```
 
 === "CLI"
@@ -610,6 +610,19 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
     ```bash
     dbtc delete-environment --group-id=1
+    ```
+
+=== "Payload"
+
+    ```py
+    payload = {
+        'account_id': 1,
+        'name': '{{ group_name }}',
+        'id': 1,
+        'state':2, 
+        'assign_by_default': False,
+        'sso_mapping_groups': []
+    }
     ```
 
 ### list_groups
@@ -1000,7 +1013,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
     Assuming that `client` is an instance of `dbtCloudClient`
     ```py
-    client.cloud.get_project("name")
+    client.cloud.get_project_by_name(account_id, project_name)
     ```
 
 === "CLI"
