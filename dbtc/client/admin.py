@@ -171,15 +171,13 @@ class _AdminClient(_Client):
         )
 
     @v3
-    def assign_user_to_group(
-        self, account_id: int, payload: Dict
-    ) -> Dict:
+    def assign_user_to_group(self, account_id: int, payload: Dict) -> Dict:
         """Assign a user to a group
 
         Args:
             account_id (int): Numeric ID of the account
             payload (dict): Dictionary representing the user to assign
-            { 
+            {
                 "user_id": int,
                 "desired_group_ids": list(int)
             }
@@ -526,14 +524,13 @@ class _AdminClient(_Client):
                     "account_id": int,
                     "name": str,
                     "id": int,
-                    "state":2, 
+                    "state":2,
                     "assign_by_default":false,
                     "sso_mapping_groups": list
                 }
         """
         return self._simple_request(
-            f'accounts/{account_id}/groups/{group_id}/',
-            method='post', payload = payload
+            f'accounts/{account_id}/groups/{group_id}/', method='post', payload=payload
         )
 
     @v2
@@ -1469,7 +1466,7 @@ class _AdminClient(_Client):
         except IndexError:
             self.console.log(f'no prior runs of job_id {job_id}')
             last_run_status = None
-        
+
         else:
             last_run_status = last_run_data['status_humanized'].lower()
             last_run_id = last_run_data['id']
@@ -1569,7 +1566,7 @@ class _AdminClient(_Client):
             if trigger_on_failure_only:
                 self.console.log(
                     'Not triggering job because prior run was successful or there is '
-                    'no prior run, and trigger_on_failure_only set to True' 
+                    'no prior run, and trigger_on_failure_only set to True'
                 )
                 return
 
