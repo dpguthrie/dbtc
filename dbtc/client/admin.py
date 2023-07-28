@@ -1456,16 +1456,23 @@ class _AdminClient(_Client):
             return string
 
         self.console.log(f'Restarting job {job_id} from last failed state.')
-        last_run_data = self.list_runs(
-            account_id=account_id,
-            include_related=['run_steps'],
-            job_definition_id=job_id,
-            order_by='-id',
-            limit=1,
-        )['data'][0]
+        try:
+            last_run_data = self.list_runs(
+                account_id=account_id,
+                include_related=['run_steps'],
+                job_definition_id=job_id,
+                order_by='-id',
+                limit=1,
+            )['data'][0]
 
-        last_run_status = last_run_data['status_humanized'].lower()
-        last_run_id = last_run_data['id']
+        # this happens when there are no prior runs of a job
+        except IndexError:
+            self.console.log(f'no prior runs of job_id {job_id}')
+            last_run_status = None
+        
+        else:
+            last_run_status = last_run_data['status_humanized'].lower()
+            last_run_id = last_run_data['id']
 
         if last_run_status == 'error':
             rerun_steps = []
@@ -1560,8 +1567,12 @@ class _AdminClient(_Client):
                 'failed run steps found.'
             )
             if trigger_on_failure_only:
-                self.console.log('Not triggering job because prior run was successful.')
+                self.console.log(
+                    'Not triggering job because prior run was successful or there is '
+                    'no prior run, and trigger_on_failure_only set to True' 
+                )
                 return
+
         run = self.trigger_job(
             account_id,
             job_id,
