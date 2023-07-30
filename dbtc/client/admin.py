@@ -886,15 +886,29 @@ class _AdminClient(_Client):
         )
 
     @v3
-    def list_connections(self, account_id: int, project_id: int) -> Dict:
+    def list_connections(
+        self,
+        account_id: int,
+        project_id: int,
+        *,
+        state: int = None,
+        offset: int = None,
+        limit: int = None,
+    ) -> Dict:
         """List connections for a specific account and project
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
             project_id (int): Numeric ID of the project to retrieve
+            state (int, optional): 1 = active, 2 = deleted
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
         """
         return self._simple_request(
-            f'accounts/{account_id}/projects/{project_id}/connections'
+            f'accounts/{account_id}/projects/{project_id}/connections',
+            params={'state': state, 'limit': limit, 'offset': offset},
         )
 
     @v3
@@ -959,6 +973,60 @@ class _AdminClient(_Client):
                 'offset': offset,
                 'limit': limit,
                 'order_by': order_by,
+            },
+        )
+
+    @v3
+    def list_environment_variables(
+        self,
+        account_id: int,
+        project_id: int,
+        *,
+        resource_type: str = 'environment',
+        environment_id: int = None,
+        job_id: int = None,
+        limit: int = None,
+        offset: int = None,
+        name: str = None,
+        state: int = None,
+        type: str = None,
+        user_id: int = None,
+    ):
+        """List environment variables for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of he project to retrieve
+            resource_type (str, optional): The name of the resource to retrieve. Valid
+                resources include environment, job, and user
+            environment_id (int, optional): Numeric ID of the environment to retrieve
+            job_id (int, optional): Numeric ID of the job to retrieve
+            name (str, optional): Name of the environment to retrieve
+            type (str, optional): Type of the environment variable
+            state (int, optional): 1 = active, 2 = deleted
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+        """
+        valid_resource_types = ['environment', 'job', 'user']
+        if resource_type not in valid_resource_types:
+            raise ValueError(
+                f'{resource_type} is not a valid argument for resource_type.  Valid '
+                f'resource types include {", ".join(valid_resource_types)}.'
+            )
+
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/environment-variables/{resource_type}',  # noqa: E501
+            params={
+                'environment_id': environment_id,
+                'job_definition_id': job_id,
+                'name': name,
+                'type': type,
+                'state': state,
+                'offset': offset,
+                'limit': limit,
+                'user_id': user_id,
             },
         )
 
@@ -1695,6 +1763,23 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/projects/{project_id}/environments/{environment_id}/',  # noqa: E501
+            method='post',
+            json=payload,
+        )
+
+    @v3
+    def update_environment_variables(
+        self, account_id: int, project_id: int, payload: Dict
+    ):
+        """Update an environment variable
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the environment to update
+        """
+        return self._simple_request(
+            f'accounts/{account_id}/projects/{project_id}/environment-variables/bulk',  # noqa: E501
             method='post',
             json=payload,
         )

@@ -929,6 +929,58 @@ def list_credentials(
 
 
 @app.command()
+def list_environment_variables(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    project_id: int = PROJECT_ID,
+    resource_type: str = typer.Option(
+        'environment',
+        '--resource-type',
+        help='The name of the resource to retrieve',
+    ),
+    environment_id: int = typer.Option(
+        None,
+        '--environment-id',
+        help='Numeric ID of the environment to retrieve',
+    ),
+    job_id: int = typer.Option(
+        None,
+        '--job-id',
+        help='Numeric ID of the job to retrieve',
+    ),
+    user_id: int = typer.Option(None, '--user-id', '-u', help='Numeric ID of the user'),
+    name: str = typer.Option(
+        None,
+        '--name',
+        help='The name of the environment',
+    ),
+    type: str = typer.Option(
+        None,
+        '--type',
+        help='The type of environment (deployment or development)',
+    ),
+    state: str = STATE,
+    offset: int = OFFSET,
+    limit: int = LIMIT,
+):
+    _dbt_cloud_request(
+        ctx,
+        'list_environment_variables',
+        account_id,
+        project_id,
+        resource_type=resource_type,
+        environment_id=environment_id,
+        job_id=job_id,
+        user_id=user_id,
+        name=name,
+        type=type,
+        state=state,
+        offset=offset,
+        limit=limit,
+    )
+
+
+@app.command()
 def list_environments(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
@@ -1357,6 +1409,23 @@ def update_environment(
         account_id,
         project_id,
         environment_id,
+        json.loads(payload),
+    )
+
+
+@app.command()
+def update_environment_variables(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    project_id: int = PROJECT_ID,
+    payload: str = PAYLOAD,
+):
+    """Update environment variables."""
+    _dbt_cloud_request(
+        ctx,
+        'update_environment_variables',
+        account_id,
+        project_id,
         json.loads(payload),
     )
 
