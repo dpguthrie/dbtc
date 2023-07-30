@@ -1769,7 +1769,7 @@ class _AdminClient(_Client):
 
     @v3
     def update_environment_variables(
-        self, account_id: int, project_id: int, payload: Dict, method: str = 'put'
+        self, account_id: int, project_id: int, payload: Dict
     ):
         """Update an environment variable
 
@@ -1778,15 +1778,9 @@ class _AdminClient(_Client):
             project_id (int): Numeric ID of the project
             payload (dict): Dictionary representing the environment to update
         """
-        is_valid_method = method.lower() in ['put', 'post']
-        if not is_valid_method:
-            raise ValueError(
-                'Invalid method specified.  Valid methods include put or post.'
-            )
-
         return self._simple_request(
             f'accounts/{account_id}/projects/{project_id}/environment-variables/bulk',  # noqa: E501
-            method=method,
+            method='put',
             json=payload,
         )
 
