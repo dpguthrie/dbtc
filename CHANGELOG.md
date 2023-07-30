@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.2] - 2023-07-30
+
+### Fixed
+- Method used in the `update_environment_variables` method call from `POST` to `PUT`
+
 ## [0.5.1] - 2023-07-30
 
 ### Added

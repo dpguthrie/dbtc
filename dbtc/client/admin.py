@@ -1780,7 +1780,7 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f'accounts/{account_id}/projects/{project_id}/environment-variables/bulk',  # noqa: E501
-            method='post',
+            method='put',
             json=payload,
         )
 
