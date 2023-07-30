@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.1] - 2023-07-30
+
+### Added
+- Methods to update and list environment variables
+
 ## [0.5.0] - 2023-07-28
 
 ### Fixed
