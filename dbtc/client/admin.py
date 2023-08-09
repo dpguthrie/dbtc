@@ -1442,7 +1442,7 @@ class _AdminClient(_Client):
                     current_job = self.get_job(account_id, job_id).get('data', {})
 
                     # Alter the current job definition so it can be cloned
-                    read_only_fields = ['is_deferrable', 'raw_dbt_version']
+                    read_only_fields = ['is_deferrable', 'raw_dbt_version', 'job_type']
                     for read_only_field in read_only_fields:
                         current_job.pop(read_only_field)
                     current_job['id'] = None
