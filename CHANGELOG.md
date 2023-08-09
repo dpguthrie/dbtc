@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.5.3] - 2023-08-09
+- Remove read-only field `job_type` from job payload before cloning job
+
 ## [0.5.2] - 2023-07-30
 
 ### Fixed
