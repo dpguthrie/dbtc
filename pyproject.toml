@@ -12,7 +12,7 @@ readme = "README.md"
 python = "^3.8"
 sgqlc = "^15.0"
 requests = "^2.27.1"
-typer = {extras = ["all"], version = "^0.6.1"}
+typer = {extras = ["all"], version = "^0.9.0"}
 rudder-sdk-python = "^1.0.6"
 pydantic = "^1.10.5"
 
