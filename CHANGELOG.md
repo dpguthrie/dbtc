@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.0] - 2023-09-02
+
+### Updated
+- Typer version to `0.9.0`
+
 ## [0.5.3] - 2023-08-09
 - Remove read-only field `job_type` from job payload before cloning job
 
