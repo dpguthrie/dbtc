@@ -1,0 +1,4330 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An unaffiliated python wrapper for dbt Cloud APIs">
+      
+      
+        <meta name="author" content="Doug Guthrie">
+      
+      
+      <link rel="icon" href="../../img/dbt-standalone.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Metadata - dbtc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/termynal.css">
+    
+      <link rel="stylesheet" href="../../css/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+
+  <script id="__analytics">function __md_analytics(){function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-FBR4YZVM7P"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&n("event","search",{search_term:this.value})}),document$.subscribe(function(){var a=document.forms.feedback;if(void 0!==a)for(var e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");n("event","feedback",{page:t,data:e}),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}),location$.subscribe(function(e){n("config","G-FBR4YZVM7P",{page_path:e.pathname})})});var e=document.createElement("script");e.async=!0,e.src="https://www.googletagmanager.com/gtag/js?id=G-FBR4YZVM7P",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
+
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#metadata" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest version.
+  <a href="../../..">
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="dbtc" class="md-header__button md-logo" aria-label="dbtc" data-md-component="logo">
+      
+  <img src="../../img/dbt-standalone.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            dbtc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Metadata
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dpguthrie/dbtc" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dbtc
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="dbtc" class="md-nav__button md-logo" aria-label="dbtc" data-md-component="logo">
+      
+  <img src="../../img/dbt-standalone.png" alt="logo">
+
+    </a>
+    dbtc
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dpguthrie/dbtc" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dbtc
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          User Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="User Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          User Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intro/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/" class="md-nav__link">
+        Cloud
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Metadata
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Metadata
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#get_exposure" class="md-nav__link">
+    get_exposure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_exposure" class="md-nav__link">
+    get_exposure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_exposures" class="md-nav__link">
+    get_exposures
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_exposures" class="md-nav__link">
+    get_exposures
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_macro" class="md-nav__link">
+    get_macro
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_macro" class="md-nav__link">
+    get_macro
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_macros" class="md-nav__link">
+    get_macros
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_macros" class="md-nav__link">
+    get_macros
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_metric" class="md-nav__link">
+    get_metric
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_metric" class="md-nav__link">
+    get_metric
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_metrics" class="md-nav__link">
+    get_metrics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_metrics" class="md-nav__link">
+    get_metrics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_model" class="md-nav__link">
+    get_model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_model" class="md-nav__link">
+    get_model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_model_by_environment" class="md-nav__link">
+    get_model_by_environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_model_by_environment" class="md-nav__link">
+    get_model_by_environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_models" class="md-nav__link">
+    get_models
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_models" class="md-nav__link">
+    get_models
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_seed" class="md-nav__link">
+    get_seed
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_seed" class="md-nav__link">
+    get_seed
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_seeds" class="md-nav__link">
+    get_seeds
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_seeds" class="md-nav__link">
+    get_seeds
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_snapshot" class="md-nav__link">
+    get_snapshot
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_snapshot" class="md-nav__link">
+    get_snapshot
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_snapshots" class="md-nav__link">
+    get_snapshots
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_snapshots" class="md-nav__link">
+    get_snapshots
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_source" class="md-nav__link">
+    get_source
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_source" class="md-nav__link">
+    get_source
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_sources" class="md-nav__link">
+    get_sources
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_sources" class="md-nav__link">
+    get_sources
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_test" class="md-nav__link">
+    get_test
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_test" class="md-nav__link">
+    get_test
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_tests" class="md-nav__link">
+    get_tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_tests" class="md-nav__link">
+    get_tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query" class="md-nav__link">
+    query
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.query" class="md-nav__link">
+    query
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Advanced
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Advanced" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autoscaling_ci/" class="md-nav__link">
+        Autoscaling CI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../restart_from_failure/" class="md-nav__link">
+        Restart From Failure
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#get_exposure" class="md-nav__link">
+    get_exposure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_exposure" class="md-nav__link">
+    get_exposure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_exposures" class="md-nav__link">
+    get_exposures
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_exposures" class="md-nav__link">
+    get_exposures
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_macro" class="md-nav__link">
+    get_macro
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_macro" class="md-nav__link">
+    get_macro
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_macros" class="md-nav__link">
+    get_macros
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_macros" class="md-nav__link">
+    get_macros
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_metric" class="md-nav__link">
+    get_metric
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_metric" class="md-nav__link">
+    get_metric
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_metrics" class="md-nav__link">
+    get_metrics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_metrics" class="md-nav__link">
+    get_metrics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_model" class="md-nav__link">
+    get_model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_model" class="md-nav__link">
+    get_model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_model_by_environment" class="md-nav__link">
+    get_model_by_environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_model_by_environment" class="md-nav__link">
+    get_model_by_environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_models" class="md-nav__link">
+    get_models
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_models" class="md-nav__link">
+    get_models
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_seed" class="md-nav__link">
+    get_seed
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_seed" class="md-nav__link">
+    get_seed
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_seeds" class="md-nav__link">
+    get_seeds
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_seeds" class="md-nav__link">
+    get_seeds
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_snapshot" class="md-nav__link">
+    get_snapshot
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_snapshot" class="md-nav__link">
+    get_snapshot
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_snapshots" class="md-nav__link">
+    get_snapshots
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_snapshots" class="md-nav__link">
+    get_snapshots
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_source" class="md-nav__link">
+    get_source
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_source" class="md-nav__link">
+    get_source
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_sources" class="md-nav__link">
+    get_sources
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_sources" class="md-nav__link">
+    get_sources
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_test" class="md-nav__link">
+    get_test
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_test" class="md-nav__link">
+    get_test
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_tests" class="md-nav__link">
+    get_tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.get_tests" class="md-nav__link">
+    get_tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query" class="md-nav__link">
+    query
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbtc.client.metadata._MetadataClient.query" class="md-nav__link">
+    query
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/dpguthrie/dbtc/edit/master/docs/guide/metadata.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="metadata">Metadata<a class="headerlink" href="#metadata" title="Permanent link">&para;</a></h1>
+<p>The <code>metadata</code> property on the <code>dbtCloudClient</code> class contains methods that allow a user to retrieve metadata which pertains to the accuracy, recency, configuration, and structure of the views and tables in the warehouse.</p>
+<p>The Metadata API is a GraphQL API.  Normally, this would require a user to write a GraphQL query as part of the required payload.  However, this package provides a convenient interface that allows a user to write the GraphQL query in a more pythonic way.  There are two options:</p>
+<ol>
+<li>Simply provide the minimal set of arguments to the functions below and get every field in the desired schema, including those that are nested.  An example is below for the <code>models</code> schema:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dbtc</span> <span class="kn">import</span> <span class="n">dbtCloudClient</span>
+
+<span class="c1"># Assuming DBT_CLOUD_SERVICE_TOKEN is set as an environment variable</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">dbtCloudClient</span><span class="p">()</span>
+<span class="n">job_id</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_models</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>If you don't want or need all of the fields from a particular schema, use the optional <code>fields</code> argument to limit the amount of data that's returned.  This argument accepts a list of strings where the strings are names of fields within the schema.  Additionally, you can ask for nested fields using dot notation.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dbtc</span> <span class="kn">import</span> <span class="n">dbtCloudClient</span>
+
+<span class="c1"># Assuming DBT_CLOUD_SERVICE_TOKEN is set as an environment variable</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">dbtCloudClient</span><span class="p">()</span>
+<span class="n">job_id</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;uniqueId&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;runId&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;projectId&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;environmentId&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;alias&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;description&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;parentsSources.name&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;parentsSources.criteria.warnAfter.period&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;parentsSources.criteria.warnAfter.count&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_models</span><span class="p">(</span><span class="n">job_id</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
+</code></pre></div>
+<p>The video below provides some more detail.</p>
+<div style="position: relative; padding-bottom: 57.93991416309014%; height: 0;"><iframe src="https://www.loom.com/embed/5be093114c1d4e02a1bcc27c5976a4b2" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+
+<h2 id="get_exposure">get_exposure<a class="headerlink" href="#get_exposure" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_exposure"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The exposure object allows you to query information about a particular
+    exposure. You can learn more about exposures <a href="https://docs.getdbt.com/docs/building-a-dbt-project/exposures">here</a>.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this expsoure was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The name of this particular exposure</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this
+exposure was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_exposure</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The exposure object allows you to query information about a particular</span>
+<span class="sd">        exposure. You can learn more about exposures [here](</span>
+<span class="sd">        https://docs.getdbt.com/docs/building-a-dbt-project/exposures).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this expsoure was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        name (str): The name of this particular exposure</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this</span>
+<span class="sd">            exposure was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;exposure&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_exposure</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-exposure<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_exposures">get_exposures<a class="headerlink" href="#get_exposures" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_exposures"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The exposures object allows you to query information about all exposures in a
+    given job. You can learn more about exposures <a href="https://docs.getdbt.com/docs/building-a-dbt-project/exposures">here</a>.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this exposure was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this
+exposure was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_exposures</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The exposures object allows you to query information about all exposures in a</span>
+<span class="sd">        given job. You can learn more about exposures [here](</span>
+<span class="sd">        https://docs.getdbt.com/docs/building-a-dbt-project/exposures).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this exposure was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this</span>
+<span class="sd">            exposure was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;exposures&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Python</label><label for="__tabbed_2_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_exposures</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-exposures<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_macro">get_macro<a class="headerlink" href="#get_macro" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_macro"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The macro object allows you to query information about a particular macro in a
+given job.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this macro was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of this particular macro</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this macro
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_macro</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The macro object allows you to query information about a particular macro in a</span>
+<span class="sd">    given job.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this macro was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        unique_id (str): The unique ID of this particular macro</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this macro</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;macro&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;unique_id&quot;</span><span class="p">:</span> <span class="n">unique_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Python</label><label for="__tabbed_3_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_macro</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-macro<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_macros">get_macros<a class="headerlink" href="#get_macros" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_macros"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The macros object allows you to query information about all macros in a
+    given job.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this macro was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this macro
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_macros</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The macros object allows you to query information about all macros in a</span>
+<span class="sd">        given job.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this macro was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this macro</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;macros&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span> <span class="n">fields</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Python</label><label for="__tabbed_4_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_macros</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-macros<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_metric">get_metric<a class="headerlink" href="#get_metric" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_metric"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The metric object allows you to query information about <a href="https://docs.getdbt.com/docs/building-a-dbt-project/metrics">metrics</a>.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this metric was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of this particular metric</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this metric
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_metric</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The metric object allows you to query information about [metrics](</span>
+<span class="sd">        https://docs.getdbt.com/docs/building-a-dbt-project/metrics).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this metric was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        unique_id (str): The unique ID of this particular metric</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this metric</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;metric&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;unique_id&quot;</span><span class="p">:</span> <span class="n">unique_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Python</label><label for="__tabbed_5_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_metric</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-metric<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_metrics">get_metrics<a class="headerlink" href="#get_metrics" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_metrics"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The metrics object allows you to query information about <a href="https://docs.getdbt.com/docs/building-a-dbt-project/metrics">metrics</a>.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this metric was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this metric
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_metrics</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The metrics object allows you to query information about [metrics](</span>
+<span class="sd">        https://docs.getdbt.com/docs/building-a-dbt-project/metrics).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this metric was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this metric</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;metrics&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span> <span class="n">fields</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Python</label><label for="__tabbed_6_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-metrics<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_model">get_model<a class="headerlink" href="#get_model" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_model"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The model object allows you to query information about a particular model in a
+given job.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this model was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of this particular model</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this model
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The model object allows you to query information about a particular model in a</span>
+<span class="sd">    given job.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this model was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        unique_id (str): The unique ID of this particular model</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this model</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;unique_id&quot;</span><span class="p">:</span> <span class="n">unique_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Python</label><label for="__tabbed_7_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-model<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_model_by_environment">get_model_by_environment<a class="headerlink" href="#get_model_by_environment" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_model_by_environment"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The model by environment object allows you to query information about a
+particular model based on environment_id</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This feature is currently in beta and subject to change.</p>
+</div>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>environment_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The environment_id for this model</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of this model</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>last_run_count</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Number of last run results where this model
+was built to return (max of 10). Defaults to 10.</p>
+            </div>
+          </td>
+          <td>
+                <code>10</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>with_catalog</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If true, return only runs that have catalog
+information for this model. Defaults to False.</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_model_by_environment</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">environment_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">last_run_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">with_catalog</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The model by environment object allows you to query information about a</span>
+<span class="sd">    particular model based on environment_id</span>
+
+<span class="sd">    !!! warning</span>
+<span class="sd">        This feature is currently in beta and subject to change.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        environment_id (int): The environment_id for this model</span>
+<span class="sd">        unique_id (str): The unique ID of this model</span>
+<span class="sd">        last_run_count (int, optional): Number of last run results where this model</span>
+<span class="sd">            was built to return (max of 10). Defaults to 10.</span>
+<span class="sd">        with_catalog (bool, optional): If true, return only runs that have catalog</span>
+<span class="sd">            information for this model. Defaults to False.</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;model_by_environment&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;environment_id&quot;</span><span class="p">:</span> <span class="n">environment_id</span><span class="p">,</span>
+            <span class="s2">&quot;unique_id&quot;</span><span class="p">:</span> <span class="n">unique_id</span><span class="p">,</span>
+            <span class="s2">&quot;last_run_count&quot;</span><span class="p">:</span> <span class="n">last_run_count</span><span class="p">,</span>
+            <span class="s2">&quot;with_catalog&quot;</span><span class="p">:</span> <span class="n">with_catalog</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Python</label><label for="__tabbed_8_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_model_by_environment</span><span class="p">(</span>
+    <span class="n">environment_id</span><span class="p">,</span> <span class="n">unique_id</span>
+<span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-model-by-environment<span class="w"> </span>--environment-id<span class="o">=</span><span class="m">12345</span><span class="w"> </span>--unique-id<span class="o">=</span>models.tpch.order_items
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_models">get_models<a class="headerlink" href="#get_models" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_models"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The models object allows you to query information about all models in a given
+    job.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this model was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this model
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>database</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The database where this table/view lives</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>schema</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The schema where this table/view lives</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>identifier</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The identifier of this table/view</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_models</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">database</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The models object allows you to query information about all models in a given</span>
+<span class="sd">        job.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this model was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this model</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        database (str, optional): The database where this table/view lives</span>
+<span class="sd">        schema (str, optional): The schema where this table/view lives</span>
+<span class="sd">        identifier (str, optional): The identifier of this table/view</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;models&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span>
+            <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="n">database</span><span class="p">,</span>
+            <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="p">,</span>
+            <span class="s2">&quot;identifier&quot;</span><span class="p">:</span> <span class="n">identifier</span><span class="p">,</span>
+            <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Python</label><label for="__tabbed_9_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_models</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-models<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_seed">get_seed<a class="headerlink" href="#get_seed" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_seed"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The seed object allows you to query information about a particular seed in a
+    given job.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this seed was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of this particular seed</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this seed
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_seed</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The seed object allows you to query information about a particular seed in a</span>
+<span class="sd">        given job.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this seed was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        unique_id (str): The unique ID of this particular seed</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this seed</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;seed&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;unique_id&quot;</span><span class="p">:</span> <span class="n">unique_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span> <span class="n">fields</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Python</label><label for="__tabbed_10_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_seed</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-seed<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_seeds">get_seeds<a class="headerlink" href="#get_seeds" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_seeds"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The seeds object allows you to query information about a all seeds in a given
+    job.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this seed was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this seed
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_seeds</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The seeds object allows you to query information about a all seeds in a given</span>
+<span class="sd">        job.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this seed was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this seed</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span><span class="s2">&quot;seeds&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span> <span class="n">fields</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Python</label><label for="__tabbed_11_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_seeds</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-seeds<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_snapshot">get_snapshot<a class="headerlink" href="#get_snapshot" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_snapshot"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The snapshot object allows you to query information about a particular
+    snapshot.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this snapshot was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of this particular snapshot</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this
+snapshot was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_snapshot</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The snapshot object allows you to query information about a particular</span>
+<span class="sd">        snapshot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this snapshot was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        unique_id (str): The unique ID of this particular snapshot</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this</span>
+<span class="sd">            snapshot was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;snapshot&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;unique_id&quot;</span><span class="p">:</span> <span class="n">unique_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Python</label><label for="__tabbed_12_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_snapshot</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-snapshot<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_snapshots">get_snapshots<a class="headerlink" href="#get_snapshots" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_snapshots"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The snapshots object allows you to query information about all snapshots in a
+    given job.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this snapshot was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this
+snapshot was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_snapshots</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The snapshots object allows you to query information about all snapshots in a</span>
+<span class="sd">        given job.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this snapshot was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this</span>
+<span class="sd">            snapshot was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;snapshots&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span>
+            <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Python</label><label for="__tabbed_13_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_snapshots</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-snapshots<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_source">get_source<a class="headerlink" href="#get_source" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_source"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The source object allows you to query information about a particular source in
+    a given job.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this source was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of this particular source</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this source
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The source object allows you to query information about a particular source in</span>
+<span class="sd">        a given job.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this source was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        unique_id (str): The unique ID of this particular source</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this source</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;unique_id&quot;</span><span class="p">:</span> <span class="n">unique_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Python</label><label for="__tabbed_14_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-source<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_sources">get_sources<a class="headerlink" href="#get_sources" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_sources"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The snapshots object allows you to query information about all snapshots in a
+    given job.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this source was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this source
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>database</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The database where this table/view lives</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>schema</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The schema where this table/view lives</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>identifier</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The identifier of this table/view</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span>
+<span class="normal">567</span>
+<span class="normal">568</span>
+<span class="normal">569</span>
+<span class="normal">570</span>
+<span class="normal">571</span>
+<span class="normal">572</span>
+<span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_sources</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">database</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The snapshots object allows you to query information about all snapshots in a</span>
+<span class="sd">        given job.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this source was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this source</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        database (str, optional): The database where this table/view lives</span>
+<span class="sd">        schema (str, optional): The schema where this table/view lives</span>
+<span class="sd">        identifier (str, optional): The identifier of this table/view</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;sources&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span>
+            <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="n">database</span><span class="p">,</span>
+            <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="p">,</span>
+            <span class="s2">&quot;identifier&quot;</span><span class="p">:</span> <span class="n">identifier</span><span class="p">,</span>
+            <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Python</label><label for="__tabbed_15_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_sources</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-sources<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_test">get_test<a class="headerlink" href="#get_test" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_test"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The test object allows you to query information about a particular test.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this test was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of this particular test</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this test
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_test</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The test object allows you to query information about a particular test.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this test was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        unique_id (str): The unique ID of this particular test</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this test</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">&quot;unique_id&quot;</span><span class="p">:</span> <span class="n">unique_id</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">Python</label><label for="__tabbed_16_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_test</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-test<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="get_tests">get_tests<a class="headerlink" href="#get_tests" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.get_tests"></a>
+  <div class="doc doc-contents first">
+  
+      <p>The tests object allows you to query information about all tests in a given
+    job.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>job_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The unique ID of the job in dbt Cloud that this test was
+generated for</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_id</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The run ID of the run in dbt Cloud that this test
+was generated for</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fields</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The list of fields to include in the response.
+The field can either be in snake_case or camelCase (e.g. run_id and
+runId will be evaluated similarly).  Nested fields can be accessed
+with a <code>.</code> (e.g. <code>parentsSources.criteria.warnAfter.errorAfter</code>)</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not include a run_id, it will default to the most recent run of
+the specified job.</p>
+</div>
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_tests</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The tests object allows you to query information about all tests in a given</span>
+<span class="sd">        job.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        job_id (int): The unique ID of the job in dbt Cloud that this test was</span>
+<span class="sd">            generated for</span>
+<span class="sd">        run_id (int, optional): The run ID of the run in dbt Cloud that this test</span>
+<span class="sd">            was generated for</span>
+<span class="sd">        fields (list, optional): The list of fields to include in the response.</span>
+<span class="sd">            The field can either be in snake_case or camelCase (e.g. run_id and</span>
+<span class="sd">            runId will be evaluated similarly).  Nested fields can be accessed</span>
+<span class="sd">            with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        If you do not include a run_id, it will default to the most recent run of</span>
+<span class="sd">        the specified job.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+        <span class="s2">&quot;tests&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span>
+            <span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">fields</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="17:2"><input checked="checked" id="__tabbed_17_1" name="__tabbed_17" type="radio" /><input id="__tabbed_17_2" name="__tabbed_17" type="radio" /><div class="tabbed-labels"><label for="__tabbed_17_1">Python</label><label for="__tabbed_17_2">CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get_tests</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>dbtc<span class="w"> </span>get-tests<span class="w"> </span>--job-id<span class="o">=</span><span class="m">12345</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="query">query<a class="headerlink" href="#query" title="Permanent link">&para;</a></h2>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="dbtc.client.metadata._MetadataClient.query"></a>
+  <div class="doc doc-contents first">
+
+          <details class="quote">
+            <summary>Source code in <code>dbtc/client/metadata.py</code></summary>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">query</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">variables</span><span class="p">:</span>
+        <span class="n">payload</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;variables&#39;</span><span class="p">:</span> <span class="n">variables</span><span class="p">})</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">full_url</span><span class="p">(),</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p><strong>Examples:</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="18:1"><input checked="checked" id="__tabbed_18_1" name="__tabbed_18" type="radio" /><div class="tabbed-labels"><label for="__tabbed_18_1">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Assuming that <code>client</code> is an instance of <code>dbtCloudClient</code>
+<div class="highlight"><pre><span></span><code><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;{models(jobId: 1) </span><span class="si">{uniqueId}</span><span class="s1">}&#39;</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+</div>
+</div>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81Z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14Z"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+                Thanks for your feedback!
+              
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+                Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/dpguthrie/dbtc/issues/new/?title=[Feedback]+Metadata+-+/guide/metadata/" target=_blank>feedback form</a>.
+              
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../cloud/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Cloud" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Cloud
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../autoscaling_ci/" class="md-footer__link md-footer__link--next" aria-label="Next: Autoscaling CI" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Autoscaling CI
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+      
+    
+    <a href="https://github.com/dpguthrie" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/douglas-guthrie-07994a48/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://medium.com/@douglas.p.guthrie" target="_blank" rel="noopener" title="medium.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M180.5 74.262C80.813 74.262 0 155.633 0 256s80.819 181.738 180.5 181.738S361 356.373 361 256 280.191 74.262 180.5 74.262Zm288.25 10.646c-49.845 0-90.245 76.619-90.245 171.095s40.406 171.1 90.251 171.1 90.251-76.619 90.251-171.1H559c0-94.503-40.4-171.095-90.248-171.095Zm139.506 17.821c-17.526 0-31.735 68.628-31.735 153.274s14.2 153.274 31.735 153.274S640 340.631 640 256c0-84.649-14.215-153.271-31.742-153.271Z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://dpguthrie.com" target="_blank" rel="noopener" title="dpguthrie.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64h185.4c2.2 20.4 3.3 41.8 3.3 64zm28.8-64h123.1c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6 78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7 10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5 11.6 26 21 58.2 27 94.7zm-209 0H18.6c30-74.1 93.6-130.9 172-151.6-25.5 34.2-45.3 87.7-55.3 151.6zM8.1 192h123.1c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zm186.6 254.6c-11.6-26-20.9-58.2-27-94.6h176.6c-6.1 36.4-15.5 68.6-27 94.6-10.5 23.6-22.2 40.7-33.5 51.5-11.2 10.7-20.5 13.9-27.8 13.9s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6-78.4-20.7-142-77.5-172-151.6h116.7zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6 25.5-34.2 45.2-87.7 55.3-151.6h116.6z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+        <script src="../../js/termynal.js"></script>
+      
+        <script src="../../js/custom.js"></script>
+      
+    
+    
+  </body>
+</html>
