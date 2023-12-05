@@ -1280,6 +1280,9 @@ def trigger_job(
     poll_interval: int = typer.Option(
         10, "--poll-interval", help="Number of seconds to wait in between polling."
     ),
+    retries: int = typer.Option(
+        0, "--retries", help="Number of times to retry triggering the job on failure."
+    ),
 ):
     """Trigger job to run."""
     _dbt_cloud_request(
@@ -1290,6 +1293,7 @@ def trigger_job(
         json.loads(payload),
         should_poll=should_poll,
         poll_interval=poll_interval,
+        retries=retries,
     )
 
 
@@ -1333,7 +1337,6 @@ def trigger_job_from_failure(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
     job_id: int = JOB_ID,
-    payload: str = PAYLOAD,
     should_poll: bool = typer.Option(
         True,
         help="Poll until job completion (status is one of success, failure, or "
@@ -1342,15 +1345,6 @@ def trigger_job_from_failure(
     poll_interval: int = typer.Option(
         10, "--poll-interval", help="Number of seconds to wait in between polling."
     ),
-    trigger_on_failure_only: bool = typer.Option(
-        False,
-        help=(
-            "Only relevant when setting restart_from_failure to True.  This has the "
-            "effect of only triggering the job when the prior invocation was not "
-            "successful. Otherwise, the function will exit prior to triggering the "
-            "job."
-        ),
-    ),
 ):
     """Trigger job from point of failure."""
     _dbt_cloud_request(
@@ -1358,10 +1352,8 @@ def trigger_job_from_failure(
         "trigger_job_from_failure",
         account_id,
         job_id,
-        json.loads(payload),
         should_poll=should_poll,
         poll_interval=poll_interval,
-        trigger_on_failure_only=trigger_on_failure_only,
     )
 
 
