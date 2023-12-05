@@ -5085,8 +5085,7 @@ environment variables have been set.
 
           <details class="quote">
             <summary>Source code in <code>dbtc/client/admin.py</code></summary>
-            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1560</span>
-<span class="normal">1561</span>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1561</span>
 <span class="normal">1562</span>
 <span class="normal">1563</span>
 <span class="normal">1564</span>
@@ -5101,7 +5100,8 @@ environment variables have been set.
 <span class="normal">1573</span>
 <span class="normal">1574</span>
 <span class="normal">1575</span>
-<span class="normal">1576</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v3</span>
+<span class="normal">1576</span>
+<span class="normal">1577</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v3</span>
 <span class="k">def</span> <span class="nf">update_connection</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">connection_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Dict</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
@@ -5445,8 +5445,7 @@ environment variables have been set.
 
           <details class="quote">
             <summary>Source code in <code>dbtc/client/admin.py</code></summary>
-            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1578</span>
-<span class="normal">1579</span>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1579</span>
 <span class="normal">1580</span>
 <span class="normal">1581</span>
 <span class="normal">1582</span>
@@ -5461,7 +5460,8 @@ environment variables have been set.
 <span class="normal">1591</span>
 <span class="normal">1592</span>
 <span class="normal">1593</span>
-<span class="normal">1594</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v3</span>
+<span class="normal">1594</span>
+<span class="normal">1595</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v3</span>
 <span class="k">def</span> <span class="nf">update_credentials</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">credentials_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Dict</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
@@ -6045,8 +6045,7 @@ environment variables have been set.
 
           <details class="quote">
             <summary>Source code in <code>dbtc/client/admin.py</code></summary>
-            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1596</span>
-<span class="normal">1597</span>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1597</span>
 <span class="normal">1598</span>
 <span class="normal">1599</span>
 <span class="normal">1600</span>
@@ -6061,7 +6060,8 @@ environment variables have been set.
 <span class="normal">1609</span>
 <span class="normal">1610</span>
 <span class="normal">1611</span>
-<span class="normal">1612</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v3</span>
+<span class="normal">1612</span>
+<span class="normal">1613</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v3</span>
 <span class="k">def</span> <span class="nf">update_environment</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Dict</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
@@ -8191,6 +8191,20 @@ polling</p>
                 <code>10</code>
           </td>
         </tr>
+        <tr>
+          <td><code>retries</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Number of times to retry a failed job</p>
+            </div>
+          </td>
+          <td>
+                <code>0</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -8245,7 +8259,8 @@ polling</p>
 <span class="normal">1555</span>
 <span class="normal">1556</span>
 <span class="normal">1557</span>
-<span class="normal">1558</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@set_called_from</span>
+<span class="normal">1558</span>
+<span class="normal">1559</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@set_called_from</span>
 <span class="nd">@v2</span>
 <span class="k">def</span> <span class="nf">trigger_job</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
@@ -8267,6 +8282,7 @@ polling</p>
 <span class="sd">            is one of success, failure, or cancelled</span>
 <span class="sd">        poll_interval (int, optional): Number of seconds to wait in between</span>
 <span class="sd">            polling</span>
+<span class="sd">        retries (int, optional): Number of times to retry a failed job</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">is_run_complete</span><span class="p">(</span><span class="n">run</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
@@ -8492,8 +8508,7 @@ the run failed. Otherwise trigger a new run.</p>
 
           <details class="quote">
             <summary>Source code in <code>dbtc/client/admin.py</code></summary>
-            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1631</span>
-<span class="normal">1632</span>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1632</span>
 <span class="normal">1633</span>
 <span class="normal">1634</span>
 <span class="normal">1635</span>
@@ -8505,7 +8520,8 @@ the run failed. Otherwise trigger a new run.</p>
 <span class="normal">1641</span>
 <span class="normal">1642</span>
 <span class="normal">1643</span>
-<span class="normal">1644</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v2</span>
+<span class="normal">1644</span>
+<span class="normal">1645</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v2</span>
 <span class="k">def</span> <span class="nf">update_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update a job by its ID.</span>
 
@@ -8989,8 +9005,7 @@ environment variables have been set.
 
           <details class="quote">
             <summary>Source code in <code>dbtc/client/admin.py</code></summary>
-            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1659</span>
-<span class="normal">1660</span>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1660</span>
 <span class="normal">1661</span>
 <span class="normal">1662</span>
 <span class="normal">1663</span>
@@ -9005,7 +9020,8 @@ environment variables have been set.
 <span class="normal">1672</span>
 <span class="normal">1673</span>
 <span class="normal">1674</span>
-<span class="normal">1675</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v3</span>
+<span class="normal">1675</span>
+<span class="normal">1676</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v3</span>
 <span class="k">def</span> <span class="nf">update_repository</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">repository_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Dict</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
@@ -10639,8 +10655,7 @@ Use with offset to paginate results.</p>
 
           <details class="quote">
             <summary>Source code in <code>dbtc/client/admin.py</code></summary>
-            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1646</span>
-<span class="normal">1647</span>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1647</span>
 <span class="normal">1648</span>
 <span class="normal">1649</span>
 <span class="normal">1650</span>
@@ -10650,7 +10665,8 @@ Use with offset to paginate results.</p>
 <span class="normal">1654</span>
 <span class="normal">1655</span>
 <span class="normal">1656</span>
-<span class="normal">1657</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v3</span>
+<span class="normal">1657</span>
+<span class="normal">1658</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@v3</span>
 <span class="k">def</span> <span class="nf">update_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update project for a specified account</span>
 
