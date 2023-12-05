@@ -111,5 +111,4 @@ plugins:
         python:
           options:
             show_source: true
-            show_symbol_type_toc: true
-            heading_level: 3
+            show_root_toc_entry: false
