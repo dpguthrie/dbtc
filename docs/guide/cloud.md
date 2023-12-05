@@ -5,7 +5,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ## Account
 
-### get_account
 ::: dbtc.client.admin._AdminClient.get_account
 
 **Examples:**
@@ -23,7 +22,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-account
     ```
 
-### get_account_by_name
 ::: dbtc.client.admin._AdminClient.get_account_by_name
 
 **Examples:**
@@ -40,7 +38,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-account-by-name --account-name=name
     ```
 
-### get_account_licenses
 ::: dbtc.client.admin._AdminClient.get_account_licenses
 
 **Examples:**
@@ -58,7 +55,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-account-licenses
     ```
 
-### list_accounts
 ::: dbtc.client.admin._AdminClient.list_accounts
 
 **Examples:**
@@ -77,7 +73,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ## Artifact
 
-### get_most_recent_run_artifact
 ::: dbtc.client.admin._AdminClient.get_most_recent_run_artifact
 
 **Examples:**
@@ -95,7 +90,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-most-recent-run-artifact --path manifest.json
     ```
 
-### get_run_artifact
 ::: dbtc.client.admin._AdminClient.get_run_artifact
 
 **Examples:**
@@ -113,7 +107,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-run-artifact --run-id=1 --path=manifest.json
     ```
 
-### list_run_artifacts
 ::: dbtc.client.admin._AdminClient.list_run_artifacts
 
 **Examples:**
@@ -133,7 +126,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ## Audit Log
 
-### list_audit_logs
 ::: dbtc.client.admin._AdminClient.list_audit_logs
 
 **Examples:**
@@ -153,7 +145,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ## Connection
 
-### create_adapter
 ::: dbtc.client.admin._AdminClient.create_adapter
 
 **Examples:**
@@ -185,7 +176,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### create_connection
 ::: dbtc.client.admin._AdminClient.create_connection
 
 **Examples:**
@@ -272,7 +262,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### delete_connection
 ::: dbtc.client.admin._AdminClient.delete_connection
 
 **Examples:**
@@ -291,7 +280,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc delete-connection --connection-id=1
     ```
 
-### list_connections
 ::: dbtc.client.admin._AdminClient.list_connections
 
 **Examples:**
@@ -311,14 +299,12 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc list-connections
     ```
 
-### test_connection
 ::: dbtc.client.admin._AdminClient.test_connection
-### update_connection
+
 ::: dbtc.client.admin._AdminClient.update_connection
 
 ## Credentials
 
-### create_credentials
 ::: dbtc.client.admin._AdminClient.create_credentials
 
 **Examples:**
@@ -350,7 +336,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### list_credentials
 ::: dbtc.client.admin._AdminClient.list_credentials
 
 **Examples:**
@@ -369,14 +354,12 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc list-credentials
     ```
 
-### update_credentials
 ::: dbtc.client.admin._AdminClient.update_credentials
 
 ## Environment
 
-### create_environment
 ::: dbtc.client.admin._AdminClient.create_environment
-### delete_environment
+
 ::: dbtc.client.admin._AdminClient.delete_environment
 
 **Examples:**
@@ -395,7 +378,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc delete-environment --environment-id=1
     ```
 
-### list_environments
 ::: dbtc.client.admin._AdminClient.list_environments
 
 **Examples:**
@@ -414,12 +396,10 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc list-environments
     ```
 
-### update_environment
 ::: dbtc.client.admin._AdminClient.update_environment
 
 ## Environment Variables
 
-### create_environment_variables
 ::: dbtc.client.admin._AdminClient.create_environment_variables
 
 **Examples:**
@@ -453,7 +433,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### delete_environment_variables
 ::: dbtc.client.admin._AdminClient.delete_environment_variables
 
 **Examples:**
@@ -482,7 +461,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ## Feature Flags
 
-### list_feature_flags
 ::: dbtc.client.admin._AdminClient.list_feature_flags
 
 **Examples:**
@@ -502,7 +480,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ## Group
 
-### assign_group_permissions
 ::: dbtc.client.admin._AdminClient.assign_group_permissions
 
 **Examples:**
@@ -537,7 +514,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ]
     ```
 
-### assign_user_to_group
 ::: dbtc.client.admin._AdminClient.assign_user_to_group
 
 **Examples:**
@@ -565,7 +541,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### create_user_group
 ::: dbtc.client.admin._AdminClient.create_user_group
 
 **Examples:**
@@ -594,7 +569,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### delete_user_group
 ::: dbtc.client.admin._AdminClient.delete_user_group
 
 **Examples:**
@@ -625,7 +599,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### list_groups
 ::: dbtc.client.admin._AdminClient.list_groups
 
 **Examples:**
@@ -645,7 +618,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ## Job
 
-### create_job
 ::: dbtc.client.admin._AdminClient.create_job
 
 **Examples:**
@@ -700,7 +672,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### delete_job
 ::: dbtc.client.admin._AdminClient.delete_job
 
 **Examples:**
@@ -718,7 +689,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc delete-environment --job-id=1
     ```
 
-### get_job
 ::: dbtc.client.admin._AdminClient.get_job
 
 **Examples:**
@@ -736,7 +706,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-job --job-id=1
     ```
 
-### list_jobs
 ::: dbtc.client.admin._AdminClient.list_jobs
 
 **Examples:**
@@ -754,21 +723,16 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc list-jobs
     ```
 
-### trigger_autoscaling_ci_job
 ::: dbtc.client.admin._AdminClient.trigger_autoscaling_ci_job
 
-### trigger_job
 ::: dbtc.client.admin._AdminClient.trigger_job
 
-### trigger_job_from_failure
 ::: dbtc.client.admin._AdminClient.trigger_job_from_failure
 
-### update_job
 ::: dbtc.client.admin._AdminClient.update_job
 
 ## Repository
 
-### create_repository
 ::: dbtc.client.admin._AdminClient.create_repository
 
 **Examples:**
@@ -800,7 +764,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### delete_repository
 ::: dbtc.client.admin._AdminClient.delete_repository
 
 **Examples:**
@@ -819,7 +782,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc delete-repository --repository-id=1
     ```
 
-### list_repositories
 ::: dbtc.client.admin._AdminClient.list_repositories
 
 **Examples:**
@@ -838,12 +800,10 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc list-repositories
     ```
 
-### update_repository
 ::: dbtc.client.admin._AdminClient.update_repository
 
 ## Run
 
-### cancel_run
 ::: dbtc.client.admin._AdminClient.cancel_run
 
 **Examples:**
@@ -861,7 +821,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```bash
     dbtc cancel-run --account-id=1 --run-id=1
 
-### get_most_recent_run
 ::: dbtc.client.admin._AdminClient.get_most_recent_run
 
 **Examples:**
@@ -879,7 +838,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-most-recent-run
     ```
 
-### get_run
 ::: dbtc.client.admin._AdminClient.get_run
 
 **Examples:**
@@ -897,7 +855,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-run --run-id=1
     ```
 
-### get_run_timing_details
 ::: dbtc.client.admin._AdminClient.get_run_timing_details
 
 **Examples:**
@@ -916,7 +873,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-run-timing-details --run-id=1
     ```
 
-### list_runs
 ::: dbtc.client.admin._AdminClient.list_runs
 
 **Examples:**
@@ -936,7 +892,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ## Project
 
-### create_project
 ::: dbtc.client.admin._AdminClient.create_project
 
 **Examples:**
@@ -967,7 +922,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### delete_project
 ::: dbtc.client.admin._AdminClient.delete_project
 
 **Examples:**
@@ -986,7 +940,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc delete-project
     ```
 
-### get_project
 ::: dbtc.client.admin._AdminClient.get_project
 
 **Examples:**
@@ -1005,7 +958,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-project
     ```
 
-### get_project_by_name
 ::: dbtc.client.admin._AdminClient.get_project_by_name
 
 **Examples:**
@@ -1023,7 +975,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-project --project-name=name
     ```
 
-### list_projects
 ::: dbtc.client.admin._AdminClient.list_projects
 
 **Examples:**
@@ -1041,12 +992,10 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc list-projects
     ```
 
-### update_project
 ::: dbtc.client.admin._AdminClient.update_project
 
 ## Service Token
 
-### assign_service_token_permissions
 ::: dbtc.client.admin._AdminClient.assign_service_token_permissions
 
 **Examples:**
@@ -1122,7 +1071,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### get_service_token
 ::: dbtc.client.admin._AdminClient.get_service_token
 
 **Examples:**
@@ -1140,7 +1088,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get-service-token --service-token-id=1
     ```
 
-### list_service_tokens
 ::: dbtc.client.admin._AdminClient.list_service_tokens
 
 **Examples:**
@@ -1158,7 +1105,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc list-service-tokens
     ```
 
-### list_service_token_permissions
 ::: dbtc.client.admin._AdminClient.list_service_token_permissions
 
 **Examples:**
@@ -1178,7 +1124,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
 ## User
 
-### deactivate_user_license
 ::: dbtc.client.admin._AdminClient.deactivate_user_license
 
 **Examples:**
@@ -1294,7 +1239,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-### get_user
 ::: dbtc.client.admin._AdminClient.get_user
 
 **Examples:**
@@ -1312,7 +1256,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc get_user --user-id=1
     ```
 
-### list_invited_users
 ::: dbtc.client.admin._AdminClient.list_invited_users
 
 **Examples:**
@@ -1330,7 +1273,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     dbtc list-invited-users
     ```
 
-### list_users
 ::: dbtc.client.admin._AdminClient.list_users
 
 **Examples:**
@@ -1347,3 +1289,4 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```bash
     dbtc list-users
     ```
+    

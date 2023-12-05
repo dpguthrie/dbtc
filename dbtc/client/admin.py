@@ -1528,6 +1528,7 @@ class _AdminClient(_Client):
                 is one of success, failure, or cancelled
             poll_interval (int, optional): Number of seconds to wait in between
                 polling
+            retries (int, optional): Number of times to retry a failed job
         """
 
         def is_run_complete(run: Dict):

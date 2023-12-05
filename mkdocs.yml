@@ -109,6 +109,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          rendering:
-            show_root_toc_entry: false
-            show_source: false
+          options:
+            show_source: true
+            show_symbol_type_toc: true
+            heading_level: 3
