@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.8.0] - 2023-12-04
+
+### Added
+
+-   `retries` argument to the `trigger_job` method. This will allow you to retry a job `retries` amount of times until completion, which is defined as `success` or `cancelled`.
+
+### Updated
+
+-   `trigger_job_from_failure` method to point at the new `rerun` endpoint. Logic is no longer necessary internally.
+
 ## [0.7.0] - 2023-12-04
 
 ### Added
