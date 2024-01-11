@@ -6,13 +6,11 @@ from pydantic import BaseModel, conlist
 
 
 class Webhook(BaseModel):
-
     # Required
     active: bool
     client_url: str
     event_types: conlist(  # type: ignore
-        Literal['job.run.started', 'job.run.completed', 'job.run.errored'],
-        unique_items=True,
+        Literal["job.run.started", "job.run.completed", "job.run.errored"],
     )
     name: str
 
@@ -20,4 +18,4 @@ class Webhook(BaseModel):
     deactivate_reason: Optional[str]
     description: Optional[str]
     id: Optional[str]
-    job_ids: Optional[conlist(int, unique_items=True)]  # type: ignore
+    job_ids: Optional[conlist(int)]  # type: ignore
