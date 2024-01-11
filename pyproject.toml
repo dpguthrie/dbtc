@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dbtc"
-version = "0.8.0"
+version = "0.9.0"
 description = "An unaffiliated python wrapper for dbt Cloud APIs"
 authors = ["Doug Guthrie <douglas.p.guthrie@gmail.com>"]
 documentation = "https://dbtc.dpguthrie.com"
@@ -10,11 +10,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-sgqlc = "^15.0"
 requests = "^2.27.1"
 typer = {extras = ["all"], version = "^0.9.0"}
 rudder-sdk-python = "^1.0.6"
-pydantic = "^1.10.5"
+pydantic = ">=2.0,<3.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
@@ -28,7 +27,7 @@ types-requests = "^2.27.13"
 ipython = "^8.2.0"
 coverage = "^6.3.2"
 pytest-cov = "^3.0.0"
-mkdocs-material = "^8.2.13"
+mkdocs-material = "^9.5.2"
 
 [tool.poetry.scripts]
 dbtc = "dbtc.cli:main"
