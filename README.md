@@ -83,23 +83,49 @@ run['data']
 run['status']
 ```
 
-Similarly, use the `metadata` property to retrieve information about certain resources within your project - the example below shows how to retrieve metadata from models related to the most recent run for a given `job_id`.
+Similarly, use the `metadata` property to retrieve information from the [Discovery API](https://docs.getdbt.com/docs/dbt-cloud-apis/discovery-api).
+Here's how you could retrieve all of the metrics for your project.
 
 ```python
 from dbtc import dbtCloudClient
 
 client = dbtCloudClient()
+query = '''
+query ($environmentId: BigInt!, $first: Int!) {
+  environment(id: $environmentId) {
+    definition {
+      metrics(first: $first) {
+        edges {
+          node {
+            name
+            description
+            type
+            formula
+            filter
+            tags
+            parents {
+              name
+              resourceType
+            }
+          }
+        }
+      }
+    }
+  }
+}
+'''
+variables = {'environmentId': 1, 'first': 500}
+data = client.metadata.query(query, variables)
 
-job_id = 1
-
-models = client.metadata.get_models(job_id)
-
-# Models nested inside a couple keys
-models['data']['models']
-
-# This is a list
-models['data']['models'][0]
+# Data will be in the edges key, which will be a list of nodes
+nodes = data['data']['definition']['metrics']['edges']
+for node in nodes:
+    # node is a dictionary
+    node_name = node['name']
+    ...
 ```
+
+If you're unfamiliar either with the Schema to query or even how to write a GraphQL query, I highly recommend going to the [dbt Cloud Discovery API playground](https://metadata.cloud.getdbt.com/beta/graphql).  You'll be able to interactively explore the Schema while watching it write a GraphQL query for you!
 
 ### CLI
 
