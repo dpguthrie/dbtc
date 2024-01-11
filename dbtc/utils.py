@@ -1,9 +1,8 @@
 # stdlib
 import json
-import re
 from typing import Any
 
-__all__ = ['listify', 'json_listify', 'camel_to_snake']
+__all__ = ["listify", "json_listify"]
 
 
 def listify(value: Any):
@@ -18,7 +17,3 @@ def json_listify(value: Any):
         return json.dumps(listify(value))
 
     return value
-
-
-def camel_to_snake(str):
-    return re.sub(r'(?<!^)(?=[A-Z])', '_', str).lower()
