@@ -1020,6 +1020,27 @@ def list_webhooks(
 
 
 @app.command()
+def query(
+    ctx: typer.Context,
+    query: str = typer.Option(..., "--query", "-q", help="The GraphQL query to run."),
+    variables: str = typer.Option(
+        None, "--variables", help="The variables to include in the request."
+    ),
+    max_pages: int = typer.Option(
+        None, "--max-pages", help="Maximum number of pages to retrieve."
+    ),
+    paginated_request_to_list: bool = typer.Option(
+        True, "--to-list", help="Whether to convert paginated requests to a list."
+    ),
+):
+    if variables is not None:
+        variables = json.loads(variables)
+    _dbt_api_request(
+        ctx, "metadata", "query", query, variables, max_pages, paginated_request_to_list
+    )
+
+
+@app.command()
 def test_connection(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
