@@ -1,61 +1,64 @@
 JOB_ID = 73796
-IDENTIFIERS = {
-    'exposure': 'sales_by_region',
-    'macro': 'macro.tpch.money',
-    'model': 'model.tpch.dim_customers',
-    'seed': 'seed.tpch.country_codes',
-    'test': 'test.tpch.unique_fct_order_items_order_item_key',
-    'source': 'source.tpch.tpch.customer',
-    'snapshot': 'snapshot.tpch.tpch_customer_snapshot',
+ENVIRONMENT_ID = 218762
+QUERY = """
+query Environment($environmentId: BigInt!, $first: Int!, $after: String) {
+    environment(id: $environmentId) {
+        applied {
+            models(first: $first, after: $after) {
+                pageInfo {
+                    startCursor
+                    endCursor
+                    hasNextPage
+                }
+                edges {
+                    node {
+                        uniqueId
+                        executionInfo {
+                            lastSuccessJobDefinitionId
+                            lastSuccessRunId
+                            executionTime
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
-
-COMMON_FIELDS = [
-    'run_id',
-    'account_id',
-    'project_id',
-    'environment_id',
-    'job_id',
-    'unique_id',
-    'name',
-]
-SPECIFIC_FIELDS = {
-    'exposure': ['parentsSources.name'],
-    'metric': ['parents_models.columns.name'],
-    'model': ['parents_sources.criteria.error_after.period'],
-    'source': ['criteria.warnAfter.count'],
-    'snapshot': ['parentsModels.unique_id'],
-}
-
-
-def test_methods_with_fields(dbtc_client):
-    for resource, identifier in IDENTIFIERS.items():
-        fields = COMMON_FIELDS + SPECIFIC_FIELDS.get(resource, [])
-        method = f'get_{resource}'
-        data = getattr(dbtc_client.metadata, method)(JOB_ID, identifier, fields=fields)
-        assert 'data' in data
-        method += 's'
-        data = getattr(dbtc_client.metadata, method)(JOB_ID, fields=fields)
-        assert 'data' in data
-
-
-def test_methods_no_fields(dbtc_client):
-    for resource, identifier in IDENTIFIERS.items():
-        method = f'get_{resource}'
-        data = getattr(dbtc_client.metadata, method)(JOB_ID, identifier)
-        assert 'data' in data
-        method += 's'
-        data = getattr(dbtc_client.metadata, method)(JOB_ID)
-        assert 'data' in data
+"""
 
 
 def test_query_no_variables(dbtc_client):
-    query = f'{{models(jobId: {JOB_ID}) {{uniqueId}}}}'
+    query = f"{{models(jobId: {JOB_ID}) {{uniqueId}}}}"
     data = dbtc_client.metadata.query(query)
-    assert 'data' in data
+    assert "data" in data
+    assert "error" not in data
 
 
 def test_query_with_variables(dbtc_client):
-    query = 'query GetMetadata($jobId: Int!) {models(jobId: $jobId) {uniqueId}}'
-    variables = {'jobId': JOB_ID}
+    query = "query GetMetadata($jobId: Int!) {models(jobId: $jobId) {uniqueId}}"
+    variables = {"jobId": JOB_ID}
     data = dbtc_client.metadata.query(query, variables)
-    assert 'data' in data
+    assert "data" in data
+    assert "error" not in data
+
+
+def test_pagination(dbtc_client):
+    variables = {"environmentId": ENVIRONMENT_ID, "first": 25, "after": None}
+    data = dbtc_client.metadata.query(QUERY, variables)
+    assert isinstance(data[0], dict)
+    assert "node" in data[0]
+
+
+def test_pagination_without_combining_lists(dbtc_client):
+    variables = {"environmentId": ENVIRONMENT_ID, "first": 25, "after": None}
+    data = dbtc_client.metadata.query(QUERY, variables, paginated_request_to_list=False)
+    print(data)
+    assert isinstance(data[0], dict)
+    assert "data" in data[0]
+
+
+def test_pagination_with_max_pages(dbtc_client):
+    variables = {"environmentId": ENVIRONMENT_ID, "first": 25, "after": None}
+    data = dbtc_client.metadata.query(QUERY, variables, max_pages=1)
+    assert isinstance(data[0], dict)
+    assert len(data) == 25
