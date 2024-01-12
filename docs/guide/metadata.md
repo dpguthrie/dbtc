@@ -8,6 +8,21 @@ The `metadata` property on the `dbtCloudClient` class contains a single method, 
 
 If you're unfamiliar either with the Schema to query or even how to write a GraphQL query, I highly recommend going to the [dbt Cloud Discovery API playground](https://metadata.cloud.getdbt.com/beta/graphql).  You'll be able to interactively explore the Schema while watching it write a GraphQL query for you!
 
+## Usage
+
+The `metadata` property on the `dbtCloudClient` class has a single method to pass a `query` string and `variables` that will be submitted in the payload with the `query`.  It's important to note that as a default this package will use the beta endpoint at `https://metadata.cloud.getdbt.com/beta/graphql` (or your particular host).  As of this writing, there are many more beta fields that allow for a user to retrieve performance, lineage, recommendations, and much more!  If you don't want to use the beta endpoint, construct your `dbtCloudClient` as follows:
+
+```python
+from dbtc import dbtCloudClient
+
+# Assuming I have `DBT_CLOUD_SERVICE_TOKEN` as an env var
+client = dbtCloudClient(use_beta_endpoint=False)
+
+# Now all calls to the metadata service will use https://metadata.<host>.com/graphql
+client.metadata.query(...)
+
+```
+
 ## query
 ::: dbtc.client.metadata._MetadataClient.query
 

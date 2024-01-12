@@ -139,16 +139,16 @@ dbtc trigger-job-from-failure \
     --no-should-poll
 ```
 
-Similarly, for the metadata example above:
+Similarly, for the metadata example above (assuming that you've put both the `query` and `variables` argument into variables):
 
 ```bash
-dbtc get-models --job-id 1
+dbtc query --query $query --variables $variables
 ```
 
 If not setting your service token as an environment variable, do the following:
 
 ```bash
-dbtc --token this_is_my_token get_models --job-id 1
+dbtc --token this_is_my_token query --query $query --variables $variables
 ```
 
 ## License

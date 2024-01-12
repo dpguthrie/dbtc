@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.9.0] - 2024-01-11
+
+### Removed
+
+- All of the methods in the `_MetadataClient` except for `query`.  The Discovery API no longer allows a user to specify every single field recursively, which is what the `sgqlc` package would do.
+
+### Added
+
+- An optional keyword argument `use_beta_endpoint` to the `dbtCloudClient` class.  This will default to `True`, which means that the Discovery API will use the beta endpoint at https://metadata.<host>/beta/graphql instead of https://metadata.<host>/graphql.  This contains both the stable API resources (environment, models, tests, etc.) but also contains things for performance, recommendations, and lineage.
+- Ability to automatically paginate requests for the Discovery API.  If pagination is required/desired, ensure that your query is properly created with an `$after` variable and all of the fields within the `pageInfo` field.
+
+### Updated
+
+- Loosen restrictions on Pydantic - ">=2.0,<3.0"
+
 ## [0.8.0] - 2023-12-04
 
 ### Added

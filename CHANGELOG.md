@@ -15,12 +15,6 @@
 
 - Loosen restrictions on Pydantic - ">=2.0,<3.0"
 
-## [0.8.1] - 2023-12-20
-
-### Updated
-
-- Pydantic version from 1.10.5 to 2.5.*
-
 ## [0.8.0] - 2023-12-04
 
 ### Added
