@@ -59,10 +59,39 @@ accounts = client.cloud.list_accounts()
 from dbtc import dbtCloudClient
 
 client = dbtCloudClient()
+query = '''
+query ($environmentId: BigInt!, $first: Int!) {
+  environment(id: $environmentId) {
+    definition {
+      metrics(first: $first) {
+        edges {
+          node {
+            name
+            description
+            type
+            formula
+            filter
+            tags
+            parents {
+              name
+              resourceType
+            }
+          }
+        }
+      }
+    }
+  }
+}
+'''
+variables = {'environmentId': 1, 'first': 500}
+data = client.metadata.query(query, variables)
 
-job_id = <xxx>
-run_id = <xxx>
-models = client.metadata.get_models(job_id, run_id)
+# Data will be in the edges key, which will be a list of nodes
+nodes = data['data']['definition']['metrics']['edges']
+for node in nodes:
+    # node is a dictionary
+    node_name = node['name']
+    ...
 ```
 
 ## CLI

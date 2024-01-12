@@ -19,7 +19,7 @@ repos:
   - id: mypy
     stages: [commit,push]
     name: mypy
-    entry: poetry run mypy --ignore-missing-imports
+    entry: poetry run mypy --ignore-missing-imports --follow-imports=skip --strict-optional
     language: system
     types: [python]
 - repo: https://github.com/pre-commit/pre-commit-hooks

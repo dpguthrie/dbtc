@@ -1,653 +1,142 @@
 # stdlib
-import operator
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 # third party
 import requests
-from sgqlc.endpoint.http import HTTPEndpoint
-from sgqlc.operation import Operation
 
 # first party
 from dbtc.client.base import _Client
-from dbtc.client.schema import Query
-from dbtc.utils import camel_to_snake
 
 
 class _MetadataClient(_Client):
     def __init__(self, **kwargs):
+        self._use_beta = kwargs.pop("use_beta_endpoint", True)
         super().__init__(**kwargs)
         self.session = requests.Session()
         self.session.headers = self.headers
 
-    _header_property = 'service_token'
-    _path = '/graphql'
+    _header_property = "service_token"
+
+    @property
+    def _path(self):
+        if self._use_beta:
+            return "/beta/graphql"
+
+        return "/graphql"
 
     @property
     def _base_url(self):
-        return f'https://metadata.{self._host}{self._path}'
+        return f"https://metadata.{self._host}{self._path}"
 
-    @property
-    def _endpoint(self) -> HTTPEndpoint:
-        return HTTPEndpoint(self.full_url(), self.headers)
+    def _find_page_info(self, response_data: Dict):
+        for key, value in response_data.items():
+            if key == "pageInfo":
+                return value
 
-    def _get_nested_field(self, nested_field: List[str], field_dict: Dict):
-        value = nested_field[-1]
-        key = '.'.join(nested_field[:-1])
-        if key not in field_dict:
-            field_dict[key] = []
-        field_dict[key].append(value)
-        return field_dict
+            if isinstance(value, dict):
+                result = self._find_page_info(value)
+                if result is not None:
+                    return result
 
-    def _get_field_dict(self, fields: List[str]):
-        field_dict: Dict = {'top_level': []}
-        for field in fields:
-            nested_field = [camel_to_snake(f) for f in field.split('.')]
-            if len(nested_field) == 1:
-                field_dict['top_level'].append(nested_field[0])
-            else:
-                field_dict = self._get_nested_field(nested_field, field_dict)
-        return field_dict
+        return None
 
-    def _make_request(
-        self, obj: str, arguments: Dict = None, fields: List[str] = None
-    ) -> Dict:
-        op = Operation(Query)
-        arguments = {
-            k: v for k, v in arguments.items() if v is not None  # type: ignore
-        }
-        if fields is not None:
-            query = getattr(op, obj)(**arguments)
-            field_dict = self._get_field_dict(fields)
-            for k, v in field_dict.items():
-                if k == 'top_level':
-                    query.__fields__(*v)
-                else:
-                    operator.attrgetter(k)(query).__fields__(*v)
-        else:
-            getattr(op, obj)(**arguments).__fields__()
-        data = self._endpoint(op)
-        if not self.do_not_track:
-            arguments['fields'] = fields
-            self._send_track(
-                'Metadata API',
-                getattr(self, f'get_{obj}'),
-                **arguments,
-            )
-        return data
+    def _find_list_element(self, response_data: Dict):
+        for _, value in response_data.items():
+            if isinstance(value, list):
+                return value
 
-    def query(self, query: str, variables: Dict = None):
-        payload: Dict[str, Any] = {'query': query}
-        if variables:
-            payload.update({'variables': variables})
+            elif isinstance(value, dict):
+                result = self._find_list_element(value)
+                if result is not None:
+                    return result
+
+        return None
+
+    def _make_request(self, payload: Dict[str, Any], after_cursor: str = None):
+        if after_cursor:
+            if "variables" not in payload:
+                payload["variables"] = {}
+            payload["variables"]["after"] = after_cursor
+
         response = self.session.post(self.full_url(), json=payload)
         return response.json()
 
-    def get_exposure(
-        self, job_id: int, name: str, *, run_id: int = None, fields: List[str] = None
-    ) -> Dict:
-        """
-        The exposure object allows you to query information about a particular
-            exposure. You can learn more about exposures [here](
-            https://docs.getdbt.com/docs/building-a-dbt-project/exposures).
+    def _get_next_page_cursor(self, response: Dict) -> Union[str, None]:
+        page_info = self._find_page_info(response)
+        if page_info is None:
+            return None
 
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this expsoure was
-                generated for
-            name (str): The name of this particular exposure
-            run_id (int, optional): The run ID of the run in dbt Cloud that this
-                exposure was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
+        if page_info.get("hasNextPage", False):
+            return page_info["endCursor"]
 
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "exposure",
-            {"job_id": job_id, "name": name, "run_id": run_id},
-            fields,
-        )
+        return None
 
-    def get_exposures(
+    def query(
         self,
-        job_id: int,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The exposures object allows you to query information about all exposures in a
-            given job. You can learn more about exposures [here](
-            https://docs.getdbt.com/docs/building-a-dbt-project/exposures).
+        query: str,
+        variables: Dict = None,
+        max_pages: int = None,
+        paginated_request_to_list: bool = True,
+    ) -> Union[List[Dict], Dict]:
+        """Query the Discovery API
 
         Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this exposure was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this
-                exposure was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
+            query (str): The GraphQL query to execute.
+            variables (Dict, optional): Dictionary containing the variables to include
+                in the payload of the request.  Defaults to None.
+            max_pages (int, optional): The max number of pages to paginate through when
+                Defaults to None.
+            paginated_request_to_list (bool, optional): When paginating through a
+                request, the elements of the list within each request will be
+                combined into a single list of dictionaries. Defaults to True.
 
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
+        Returns:
+            Union[List[Dict], Dict]: _description_
         """
-        return self._make_request(
-            "exposures",
-            {"job_id": job_id, "run_id": run_id},
-            fields,
-        )
+        payload: Dict[str, Any] = {"query": query}
+        if variables:
+            payload.update({"variables": variables})
 
-    def get_macro(
-        self,
-        job_id: int,
-        unique_id: str,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The macro object allows you to query information about a particular macro in a
-        given job.
+        # If we're not paginating, just make the request and return the results
+        if "pageInfo" not in query:
+            self.console.log("No pageInfo found in query so making a single request.")
+            return self._make_request(payload)
 
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this macro was
-                generated for
-            unique_id (str): The unique ID of this particular macro
-            run_id (int, optional): The run ID of the run in dbt Cloud that this macro
-                was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
+        # If we're paginating but the query isn't setup properly for paginating,
+        # then make a single request
+        if query.count("$after") < 2:
+            self.console.log(
+                'Query not properly set up with an "$after" variable to paginate '
+                "results properly so making a single request."
+            )
+            return self._make_request(payload)
 
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "macro",
-            {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
-        )
+        cursor = None
+        all_results = []
+        page = 0
 
-    def get_macros(
-        self,
-        job_id: int,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The macros object allows you to query information about all macros in a
-            given job.
+        while True:
+            response = self._make_request(payload, cursor)
+            cursor = self._get_next_page_cursor(response)
+            paginated_results = (
+                self._find_list_element(response)
+                if paginated_request_to_list
+                else response
+            )
 
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this macro was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this macro
-                was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
+            all_results.extend(
+                paginated_results
+            ) if paginated_request_to_list else all_results.append(paginated_results)
+            page += 1
 
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "macros", {"job_id": job_id, "run_id": run_id}, fields
-        )
+            if not cursor:
+                self.console.log("No more results to fetch.")
+                break
 
-    def get_metric(
-        self,
-        job_id: int,
-        unique_id: str,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The metric object allows you to query information about [metrics](
-            https://docs.getdbt.com/docs/building-a-dbt-project/metrics).
+            if max_pages and page >= max_pages:
+                self.console.log(f"Reached max page limit of {max_pages}.")
+                break
 
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this metric was
-                generated for
-            unique_id (str): The unique ID of this particular metric
-            run_id (int, optional): The run ID of the run in dbt Cloud that this metric
-                was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
+            self.console.log(f"Fetching page {page} for query...")
 
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "metric",
-            {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
-        )
-
-    def get_metrics(
-        self,
-        job_id: int,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The metrics object allows you to query information about [metrics](
-            https://docs.getdbt.com/docs/building-a-dbt-project/metrics).
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this metric was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this metric
-                was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "metrics", {"job_id": job_id, "run_id": run_id}, fields
-        )
-
-    def get_model(
-        self,
-        job_id: int,
-        unique_id: str,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The model object allows you to query information about a particular model in a
-        given job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            unique_id (str): The unique ID of this particular model
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "model",
-            {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
-        )
-
-    def get_model_by_environment(
-        self,
-        environment_id: int,
-        unique_id: str,
-        last_run_count: int = 10,
-        with_catalog: bool = False,
-        fields: List[str] = None,
-    ):
-        """The model by environment object allows you to query information about a
-        particular model based on environment_id
-
-        !!! warning
-            This feature is currently in beta and subject to change.
-
-        Args:
-            environment_id (int): The environment_id for this model
-            unique_id (str): The unique ID of this model
-            last_run_count (int, optional): Number of last run results where this model
-                was built to return (max of 10). Defaults to 10.
-            with_catalog (bool, optional): If true, return only runs that have catalog
-                information for this model. Defaults to False.
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "model_by_environment",
-            {
-                "environment_id": environment_id,
-                "unique_id": unique_id,
-                "last_run_count": last_run_count,
-                "with_catalog": with_catalog,
-            },
-            fields,
-        )
-
-    def get_models(
-        self,
-        job_id: int,
-        *,
-        database: str = None,
-        schema: str = None,
-        identifier: str = None,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The models object allows you to query information about all models in a given
-            job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this model was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this model
-                was generated for
-            database (str, optional): The database where this table/view lives
-            schema (str, optional): The schema where this table/view lives
-            identifier (str, optional): The identifier of this table/view
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "models",
-            {
-                "job_id": job_id,
-                "database": database,
-                "schema": schema,
-                "identifier": identifier,
-                "run_id": run_id,
-            },
-            fields,
-        )
-
-    def get_seed(
-        self,
-        job_id: int,
-        unique_id: str,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The seed object allows you to query information about a particular seed in a
-            given job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this seed was
-                generated for
-            unique_id (str): The unique ID of this particular seed
-            run_id (int, optional): The run ID of the run in dbt Cloud that this seed
-                was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "seed", {"job_id": job_id, "unique_id": unique_id, "run_id": run_id}, fields
-        )
-
-    def get_seeds(
-        self,
-        job_id: int,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The seeds object allows you to query information about a all seeds in a given
-            job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this seed was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this seed
-                was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request("seeds", {"job_id": job_id, "run_id": run_id}, fields)
-
-    def get_snapshot(
-        self,
-        job_id: int,
-        unique_id: str,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The snapshot object allows you to query information about a particular
-            snapshot.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this snapshot was
-                generated for
-            unique_id (str): The unique ID of this particular snapshot
-            run_id (int, optional): The run ID of the run in dbt Cloud that this
-                snapshot was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "snapshot",
-            {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
-        )
-
-    def get_snapshots(
-        self,
-        job_id: int,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The snapshots object allows you to query information about all snapshots in a
-            given job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this snapshot was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this
-                snapshot was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-
-        """
-        return self._make_request(
-            "snapshots",
-            {
-                "job_id": job_id,
-                "run_id": run_id,
-            },
-            fields,
-        )
-
-    def get_source(
-        self,
-        job_id: int,
-        unique_id: str,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The source object allows you to query information about a particular source in
-            a given job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this source was
-                generated for
-            unique_id (str): The unique ID of this particular source
-            run_id (int, optional): The run ID of the run in dbt Cloud that this source
-                was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "source",
-            {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
-        )
-
-    def get_sources(
-        self,
-        job_id: int,
-        *,
-        database: str = None,
-        schema: str = None,
-        identifier: str = None,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The snapshots object allows you to query information about all snapshots in a
-            given job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this source was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this source
-                was generated for
-            database (str, optional): The database where this table/view lives
-            schema (str, optional): The schema where this table/view lives
-            identifier (str, optional): The identifier of this table/view
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "sources",
-            {
-                "job_id": job_id,
-                "database": database,
-                "schema": schema,
-                "identifier": identifier,
-                "run_id": run_id,
-            },
-            fields,
-        )
-
-    def get_test(
-        self,
-        job_id: int,
-        unique_id: str,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The test object allows you to query information about a particular test.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this test was
-                generated for
-            unique_id (str): The unique ID of this particular test
-            run_id (int, optional): The run ID of the run in dbt Cloud that this test
-                was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "test",
-            {"job_id": job_id, "unique_id": unique_id, "run_id": run_id},
-            fields,
-        )
-
-    def get_tests(
-        self,
-        job_id: int,
-        *,
-        run_id: int = None,
-        fields: List[str] = None,
-    ) -> Dict:
-        """
-        The tests object allows you to query information about all tests in a given
-            job.
-
-        Args:
-            job_id (int): The unique ID of the job in dbt Cloud that this test was
-                generated for
-            run_id (int, optional): The run ID of the run in dbt Cloud that this test
-                was generated for
-            fields (list, optional): The list of fields to include in the response.
-                The field can either be in snake_case or camelCase (e.g. run_id and
-                runId will be evaluated similarly).  Nested fields can be accessed
-                with a `.` (e.g. `parentsSources.criteria.warnAfter.errorAfter`)
-
-        !!! note
-            If you do not include a run_id, it will default to the most recent run of
-            the specified job.
-        """
-        return self._make_request(
-            "tests",
-            {
-                "job_id": job_id,
-                "run_id": run_id,
-            },
-            fields,
-        )
+        return all_results
