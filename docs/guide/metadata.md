@@ -38,7 +38,7 @@ client.metadata.query(...)
     ```
 
 === "CLI"
-    
+
     ```bash
     dbtc metadata column-lineage --environment-id 1 --unique-id "model.tpch.dim_customers"
     ```
@@ -55,7 +55,7 @@ client.metadata.query(...)
     ```
 
 === "CLI"
-    
+
     ```bash
     dbtc metadata longest-executed-models --environment-id 1 --start-date "2024-01-23" --end-date "2024-01-24"
     ```
@@ -72,7 +72,7 @@ client.metadata.query(...)
     ```
 
 === "CLI"
-    
+
     ```bash
     dbtc metadata mesh-projects --account-id 1
     ```
@@ -89,7 +89,7 @@ client.metadata.query(...)
     ```
 
 === "CLI"
-    
+
     ```bash
     dbtc metadata model-execution-history --environment-id 1 --start-date "2024-01-23" --end-date "2024-01-24" --unique-id "model.tpch.dim_customers"
     ```
@@ -106,7 +106,7 @@ client.metadata.query(...)
     ```
 
 === "CLI"
-    
+
     ```bash
     dbtc metadata model-job-information --environment-id 1 --start-date "2024-01-23" --end-date "2024-01-24" --unique-id "model.tpch.dim_customers"
     ```
@@ -123,7 +123,7 @@ client.metadata.query(...)
     ```
 
 === "CLI"
-    
+
     ```bash
     dbtc metadata most-executed-models --environment-id 1 --start-date "2024-01-23" --end-date "2024-01-24"
     ```
@@ -140,7 +140,7 @@ client.metadata.query(...)
     ```
 
 === "CLI"
-    
+
     ```bash
     dbtc metadata most-failed-models --environment-id 1 --start-date "2024-01-23" --end-date "2024-01-24"
     ```
@@ -157,7 +157,7 @@ client.metadata.query(...)
     ```
 
 === "CLI"
-    
+
     ```bash
     dbtc metadata most-test-failures --environment-id 1 --start-date "2024-01-23" --end-date "2024-01-24"
     ```
@@ -174,7 +174,7 @@ client.metadata.query(...)
     ```
 
 === "CLI"
-    
+
     ```bash
     dbtc metadata public-models --account-id 1
     ```
@@ -229,7 +229,7 @@ client.metadata.query(...)
     ```
 
 === "CLI"
-    
+
     ```bash
     dbtc metadata recommendations --environment-id 1
     ```

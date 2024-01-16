@@ -7,7 +7,7 @@ import requests
 # first party
 from dbtc.client.base import _Client
 
-QUERIES = {
+QUERIES = {  # noqa: E501
     "column_lineage": """
 query ColumnLineage($environmentId: BigInt!, $nodeUniqueId: String!, $filters: ColumnLineageFilter) {
   column(environmentId: $environmentId) {
@@ -342,7 +342,8 @@ class _MetadataClient(_Client):
             start_date (str): The start date in the format YYYY-MM-DD.
             end_date (str): The end date in the format YYYY-MM-DD.
             limit (int, optional): The max number of models to return. Defaults to 5.
-            job_limit (int, optional): The max number of jobs to return for each model. Defaults to 5.
+            job_limit (int, optional): The max number of jobs to return for each model.
+                Defaults to 5.
             job_id (int, optional): The job id to filter by. Defaults to None.
             order_by (str, optional): The order by clause. One of "AVG" or "MAX".
                 Defaults to "MAX".
@@ -424,7 +425,8 @@ class _MetadataClient(_Client):
             start_date (str): The start date in the format YYYY-MM-DD.
             end_date (str): The end date in the format YYYY-MM-DD.
             limit (int, optional): The max number of models to return. Defaults to 5.
-            job_limit (int, optional): The max number of jobs to return for each model. Defaults to 5.
+            job_limit (int, optional): The max number of jobs to return for each model.
+                Defaults to 5.
         """
         variables = {
             "environmentId": environment_id,
@@ -568,9 +570,11 @@ class _MetadataClient(_Client):
 
         Args:
             environment_id (int): The environment id.
-            first (int, optional): The max number of recommendations to return. Defaults to 10.
+            first (int, optional): The max number of recommendations to return.
+                Defaults to 10.
             after (str, optional): The cursor to paginate after. Defaults to None.
-            filter (str, optional): The filter to apply to the recommendations. Defaults to None.
+            filter (str, optional): The filter to apply to the recommendations.
+                Defaults to None.
         """
         variables = {
             "environmentId": environment_id,

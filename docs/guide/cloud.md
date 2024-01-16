@@ -682,7 +682,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
         'account_id': 1,
         'name': '{{ group_name }}',
         'id': 1,
-        'state':2, 
+        'state':2,
         'assign_by_default': False,
         'sso_mapping_groups': []
     }
