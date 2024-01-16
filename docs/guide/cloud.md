@@ -2,8 +2,7 @@
 
 The `cloud` property on the `dbtCloudClient` class contains methods that allow a user to perform CRUD operations against dbt Cloud resources.
 
-
-## Account
+## Accounts
 
 ### get_account
 ::: dbtc.client.admin._AdminClient.get_account
@@ -20,7 +19,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
     Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
     ```bash
-    dbtc get-account
+    dbtc accounts get --account-id 1
     ```
 
 ### get_account_by_name
@@ -37,7 +36,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 === "CLI"
 
     ```bash
-    dbtc get-account-by-name --account-name=name
+    dbtc accounts get-by-name --account-name "Doug Sandbox"
     ```
 
 ### get_account_licenses
@@ -55,7 +54,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
     Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
     ```bash
-    dbtc get-account-licenses
+    dbtc accounts get-licenses
     ```
 
 ### list_accounts
@@ -72,10 +71,140 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 === "CLI"
 
     ```bash
-    dbtc list-accounts
+    dbtc accounts list
     ```
 
-## Artifact
+### list_audit_logs
+::: dbtc.client.admin._AdminClient.list_audit_logs
+
+**Examples:**
+=== "Python"
+
+    Assuming that `client` is an instance of `dbtCloudClient`
+    ```py
+    client.cloud.list_audit_logs(account_id)
+    ```
+
+=== "CLI"
+
+    Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
+    ```bash
+    dbtc accounts list-audit-logs
+    ```
+
+### list_feature_flags
+::: dbtc.client.admin._AdminClient.list_feature_flags
+
+**Examples:**
+=== "Python"
+
+    Assuming that `client` is an instance of `dbtCloudClient`
+    ```py
+    client.cloud.list_feature_flags(account_id)
+    ```
+
+=== "CLI"
+
+    Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
+    ```bash
+    dbtc list-feature-flags
+    ```
+
+## Adapters
+
+### create_adapter
+::: dbtc.client.admin._AdminClient.create_adapter
+
+**Examples:**
+=== "Python"
+
+    Assuming that `client` is an instance of `dbtCloudClient`
+    ```py
+    payload = {
+        "id": None,
+        "account_id": 1,
+        "created_by_id": 1,
+        "project_id": 1,
+        "state": 1,
+        "adapter_version": "databricks_spark_v0"
+    }
+    client.cloud.create_adapter(1, 1, payload)
+    ```
+
+=== "CLI"
+
+    Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`
+    environment variables have been set.
+    ```bash
+    dbtc create-adapter --payload='{"id": null, "account_id": 1, "created_by_id": 1, "project_id": 1, "state": 1, "adapter_version": "databricks_spark_v0"}'
+    ```
+
+### delete_adapter
+::: dbtc.client.admin._AdminClient.delete_adapter
+
+**Examples:**
+=== "Python"
+
+    Assuming that `client` is an instance of `dbtCloudClient`
+    ```py
+    client.cloud.delete_adapter(1, 1, 1)
+    ```
+
+=== "CLI"
+
+    Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`
+    environment variables have been set.
+    ```bash
+    dbtc adapters delete --adapter-id 1
+    ```
+
+### get_adapter
+::: dbtc.client.admin._AdminClient.get_adapter
+
+**Examples:**
+=== "Python"
+
+    Assuming that `client` is an instance of `dbtCloudClient`
+    ```py
+    client.cloud.get_adapter(1, 1, 1)
+    ```
+
+=== "CLI"
+
+    Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`
+    environment variables have been set.
+    ```bash
+    dbtc adapters get --adapter-id 1
+    ```
+
+### update_adapter
+::: dbtc.client.admin._AdminClient.update_adapter
+
+**Examples:**
+=== "Python"
+
+    Assuming that `client` is an instance of `dbtCloudClient`
+    ```py
+    payload = {
+        "id": None,
+        "account_id": 1,
+        "created_by_id": 1,
+        "project_id": 1,
+        "state": 1,
+        "adapter_version": "databricks_spark_v0"
+    }
+    client.cloud.update_adapter(1, 1, payload)
+    ```
+
+=== "CLI"
+
+    Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`
+    environment variables have been set.
+    ```bash
+    dbtc adapters update --payload='{"id": null, "account_id": 1, "created_by_id": 1, "project_id": 1, "state": 1, "adapter_version": "databricks_spark_v0"}'
+    ```
+
+## Runs
 
 ### get_most_recent_run_artifact
 ::: dbtc.client.admin._AdminClient.get_most_recent_run_artifact
@@ -92,7 +221,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
     Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
     ```bash
-    dbtc get-most-recent-run-artifact --path manifest.json
+    dbtc runs get-most-recent-artifact --path manifest.json
     ```
 
 ### get_run_artifact
@@ -110,7 +239,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
     Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
     ```bash
-    dbtc get-run-artifact --run-id=1 --path=manifest.json
+    dbtc runs get-artifact --run-id 1 --path "manifest.json"
     ```
 
 ### list_run_artifacts
@@ -128,62 +257,10 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
     Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
     ```bash
-    dbtc list-environments --run-id=1
-    ```
-
-## Audit Log
-
-### list_audit_logs
-::: dbtc.client.admin._AdminClient.list_audit_logs
-
-**Examples:**
-=== "Python"
-
-    Assuming that `client` is an instance of `dbtCloudClient`
-    ```py
-    client.cloud.list_audit_logs(account_id)
-    ```
-
-=== "CLI"
-
-    Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
-    ```bash
-    dbtc list-audit-logs
+    dbtc runs list-artifacts --run-id 1
     ```
 
 ## Connection
-
-### create_adapter
-::: dbtc.client.admin._AdminClient.create_adapter
-
-**Examples:**
-=== "Python"
-
-    Assuming that `client` is an instance of `dbtCloudClient`
-    ```py
-    client.cloud.create_adapter(account_id, project_id, payload)
-    ```
-
-=== "CLI"
-
-    Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`
-    environment variables have been set.
-    ```bash
-    dbtc create-adapter --payload='{"id": null, "account_id": 1, "created_by_id": 1, "project_id": 1, "state": 1, "adapter_version": "databricks_spark_v0"}'  # noqa: E501
-    ```
-
-=== "Payload"
-
-    ```py
-    payload = {
-        'id': None,
-        'account_id': 1,
-        'created_by_id': 1,
-        'project_id': 1,
-        'state': 1,
-        'adapter_version': 'databricks_spark_v0',
-    }
-    ```
 
 ### create_connection
 ::: dbtc.client.admin._AdminClient.create_connection
@@ -192,13 +269,18 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 === "Python"
 
     Assuming that `client` is an instance of `dbtCloudClient`
+
     ```py
     client.cloud.create_connection(account_id, project_id, payload)
     ```
 
 === "CLI"
+
+    Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`
+    environment variables have been set.
+
     ```bash
-    dbtc create-connection --payload='{"id": null, "name": "<connection-name>", "type": "redshift", "details": {"hostname": "<hostname>", "port": 5439, "dbname": "<your-db-name>", "tunnel_enabled": false}, "state": 1, "account_id": 1, "project_id": 1}'  # noqa: E501
+    dbtc connections create --payload='{"id": null, "name": "<connection-name>", "type": "redshift", "details": {"hostname": "<hostname>", "port": 5439, "dbname": "<your-db-name>", "tunnel_enabled": false}, "state": 1, "account_id": 1, "project_id": 1}'  # noqa: E501
     ```
 
 === "Snowflake"
@@ -280,7 +362,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 
     Assuming that `client` is an instance of `dbtCloudClient`
     ```py
-    client.cloud.delete_connection(account_id, project_id, connection_id)
+    client.cloud.delete_connection(1, 1, 1)
     ```
 
 === "CLI"
@@ -288,7 +370,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`
     environment variables have been set.
     ```bash
-    dbtc delete-connection --connection-id=1
+    dbtc connections delete --connection-id 1
     ```
 
 ### list_connections
@@ -300,7 +382,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     Assuming that `client` is an instance of `dbtCloudClient`
 
     ```py
-    client.cloud.list_connections(account_id, project_id)
+    client.cloud.list_connections(1, 1)
     ```
 
 === "CLI"
@@ -308,7 +390,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`
     environment variables have been set.
     ```bash
-    dbtc list-connections
+    dbtc connections list
     ```
 
 ### test_connection
@@ -420,7 +502,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
 ## Environment Variables
 
 ### create_environment_variables
-::: dbtc.client.admin._AdminClient.create_environment_variables
+::: dbtc.client.admin._AdminClient.create_env_vars
 
 **Examples:**
 === "Python"
@@ -454,7 +536,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     ```
 
 ### delete_environment_variables
-::: dbtc.client.admin._AdminClient.delete_environment_variables
+::: dbtc.client.admin._AdminClient.delete_env_vars
 
 **Examples:**
 === "Python"
@@ -480,25 +562,6 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     }
     ```
 
-## Feature Flags
-
-### list_feature_flags
-::: dbtc.client.admin._AdminClient.list_feature_flags
-
-**Examples:**
-=== "Python"
-
-    Assuming that `client` is an instance of `dbtCloudClient`
-    ```py
-    client.cloud.list_feature_flags(account_id)
-    ```
-
-=== "CLI"
-
-    Assuming that `DBT_CLOUD_ACCOUNT_ID` environment variable has been set.
-    ```bash
-    dbtc list-feature-flags
-    ```
 
 ## Group
 

@@ -90,7 +90,7 @@ class _AdminClient(_Client):
         model = kwargs.pop("model", None)
         if model is not None:
             # This will validate the payload
-            kwargs["json"] = model(**kwargs["json"]).dict(exclude_unset=True)
+            kwargs["json"] = model(**kwargs["json"]).model_dump(exclude_unset=True)
 
         full_url = self.full_url(path)
         response = self.session.request(method=method, url=full_url, **kwargs)
@@ -108,70 +108,7 @@ class _AdminClient(_Client):
             obj = None
         return obj
 
-    @v3
-    def assign_group_permissions(
-        self, account_id: int, group_id: int, payload: Dict
-    ) -> Dict:
-        """Assign group permissions
-
-        Args:
-            account_id (int): Numeric ID of the account
-            group_id (int): Numeric ID of the group
-            payload (dict): Dictionary representing the group to create
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/group-permissions/{group_id}/",
-            method="post",
-            json=payload,
-        )
-
-    @v3
-    def assign_service_token_permissions(
-        self, account_id: int, service_token_id: int, payload: List[Dict]
-    ) -> Dict:
-        """Assign permissions to a service token.
-
-        Args:
-            account_id (int): Numeric ID of the account
-            service_token_id (int): Numeric ID of the service token
-            payload (list): List of dictionaries representing the permissions to assign
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/service-tokens/{service_token_id}/permissions/",
-            method="post",
-            json=payload,
-        )
-
-    @v3
-    def assign_user_to_group(self, account_id: int, payload: Dict) -> Dict:
-        """Assign a user to a group
-
-        Args:
-            account_id (int): Numeric ID of the account
-            payload (dict): Dictionary representing the user to assign
-            {
-                "user_id": int,
-                "desired_group_ids": list(int)
-            }
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/assign-groups/",
-            method="post",
-            json=payload,
-        )
-
-    @v2
-    def cancel_run(self, account_id: int, run_id: int) -> Dict:
-        """Cancel a run.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            run_id (int): Numeric ID of the run to retrieve
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/runs/{run_id}/cancel",
-            method="post",
-        )
+    # ADAPTERS
 
     @v3
     def create_adapter(self, account_id: int, project_id: int, payload: Dict) -> Dict:
@@ -192,6 +129,92 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def delete_adapter(self, account_id: int, project_id: int, adapter_id: int) -> Dict:
+        """Delete an adapter
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            adapter_id (int): Numeric ID of the adapter to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/adapters/{adapter_id}/",
+            method="delete",
+        )
+
+    @v3
+    def get_adapter(self, account_id: int, project_id: int, adapter_id: int) -> Dict:
+        """Get an adapter
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            adapter_id (int): Numeric ID of the adapter
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/adapters/{adapter_id}/",
+        )
+
+    @v3
+    def update_adapter(
+        self, account_id: int, project_id: int, adapter_id: int, payload: Dict
+    ) -> Dict:
+        """Update an adapter
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            adapter_id (int): Numeric ID of the adapter
+            payload (dict): Dictionary representing the adapter to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/adapters/{adapter_id}/",
+            method="post",
+            json=payload,
+        )
+
+    # AUDIT LOGS
+
+    @v3
+    def list_audit_logs(
+        self,
+        account_id: int,
+        *,
+        logged_at_start: str = None,
+        logged_at_end: str = None,
+        offset: int = None,
+        limit: int = None,
+    ) -> Dict:
+        """List audit logs for a specific account
+
+        !!! note
+            This API is only available to enterprise customers.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            logged_at_start (str, optional):  Date to begin retrieving audit
+                logs
+                Format is yyyy-mm-dd
+            logged_at_end (str, optional): Date to stop retrieving audit logs.
+                Format is yyyy-mm-dd
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/audit-logs",
+            params={
+                "logged_at_start": logged_at_start,
+                "logged_at_end": logged_at_end,
+                "offset": offset,
+                "limit": limit,
+            },
+        )
+
+    # CONNECTIONS
+
+    @v3
     def create_connection(
         self, account_id: int, project_id: int, payload: Dict
     ) -> Dict:
@@ -207,6 +230,83 @@ class _AdminClient(_Client):
             method="post",
             json=payload,
         )
+
+    @v3
+    def delete_connection(
+        self, account_id: int, project_id: int, connection_id: int
+    ) -> Dict:
+        """Delete a connection
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            connection_id (int): Numeric ID of the connection to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/connections/{connection_id}",
+            method="delete",
+        )
+
+    @v3
+    def get_connection(
+        self, account_id: int, project_id: int, connection_id: int
+    ) -> Dict:
+        """Get a connection
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            connection_id (int): Numeric ID of the connection to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/connections/{connection_id}",
+        )
+
+    @v3
+    def list_connections(
+        self,
+        account_id: int,
+        project_id: int,
+        *,
+        state: int = None,
+        offset: int = None,
+        limit: int = None,
+    ) -> Dict:
+        """List connections for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+            state (int, optional): 1 = active, 2 = deleted
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/connections",
+            params={"state": state, "limit": limit, "offset": offset},
+        )
+
+    @v3
+    def update_connection(
+        self, account_id: int, project_id: int, connection_id: int, payload: Dict
+    ) -> Dict:
+        """Update a connection
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            connection_id (int): Numeric ID of the connection to update
+            payload (dict): Dictionary representing the connection to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/connections/{connection_id}/",
+            method="post",
+            json=payload,
+        )
+
+    # CREDENTIALS
 
     @v3
     def create_credentials(
@@ -226,6 +326,243 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def delete_credentials(
+        self, account_id: int, project_id: int, credentials_id: int
+    ) -> Dict:
+        """Delete credentials
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            credentials_id (int): Numeric ID of the credentials to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",
+            method="delete",
+        )
+
+    @v3
+    def get_credentials(
+        self, account_id: int, project_id: int, credentials_id: int
+    ) -> Dict:
+        """Get credentials
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            credentials_id (int): Numeric ID of the credentials to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",
+        )
+
+    @v3
+    def list_credentials(self, account_id: int, project_id: int) -> Dict:
+        """List credentials for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/credentials"
+        )
+
+    @v3
+    def partial_update_credentials(
+        self, account_id: int, project_id: int, credentials_id: int, payload: Dict
+    ) -> Dict:
+        """Partial update credentials
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            credentials_id (int): Numeric ID of the credentials to update
+            payload (dict): Dictionary representing the credentials to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",
+            method="patch",
+            json=payload,
+        )
+
+    @v3
+    def update_credentials(
+        self, account_id: int, project_id: int, credentials_id: int, payload: Dict
+    ) -> Dict:
+        """Update credentials
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            credentials_id (int): Numeric ID of the credentials to update
+            payload (dict): Dictionary representing the credentials to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",  # noqa: E50
+            method="post",
+            json=payload,
+        )
+
+    # ENV VARS
+
+    @v3
+    def create_env_vars(self, account_id: int, project_id: int, payload: Dict) -> Dict:
+        """Create environment variables
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the environment variables to create
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/environment-variables/",
+            method="post",
+            json=payload,
+        )
+
+    @v3
+    def create_env_vars_bulk(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
+        """Create environment variables in bulk
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the environment variables to create
+                in bulk
+        """
+        url = f"accounts/{account_id}/projects/{project_id}/environment-variables/bulk/"
+        return self._simple_request(url, method="post", json=payload)
+
+    @v3
+    def delete_env_vars(
+        self, account_id: int, project_id: int, env_var_id: int
+    ) -> Dict:
+        """Delete environment variables
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            env_var_id (int): Numeric ID of the environment variable to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/environment-variables/{env_var_id}/",
+            method="delete",
+        )
+
+    @v3
+    def delete_env_vars_bulk(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
+        """Delete environment variables in bulk
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the environment variables to delete
+                in bulk
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/environment-variables/bulk/",
+            method="delete",
+            json=payload,
+        )
+
+    @v3
+    def list_environment_variables(
+        self,
+        account_id: int,
+        project_id: int,
+        *,
+        resource_type: str = "environment",
+        environment_id: int = None,
+        job_id: int = None,
+        limit: int = None,
+        offset: int = None,
+        name: str = None,
+        state: int = None,
+        type: str = None,
+        user_id: int = None,
+    ):
+        """List environment variables for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of he project to retrieve
+            resource_type (str, optional): The name of the resource to retrieve. Valid
+                resources include environment, job, and user
+            environment_id (int, optional): Numeric ID of the environment to retrieve
+            job_id (int, optional): Numeric ID of the job to retrieve
+            name (str, optional): Name of the environment to retrieve
+            type (str, optional): Type of the environment variable
+            state (int, optional): 1 = active, 2 = deleted
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+        """
+        valid_resource_types = ["environment", "job", "user"]
+        if resource_type not in valid_resource_types:
+            raise ValueError(
+                f"{resource_type} is not a valid argument for resource_type.  Valid "
+                f'resource types include {", ".join(valid_resource_types)}.'
+            )
+
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/environment-variables/{resource_type}",  # noqa: E501
+            params={
+                "environment_id": environment_id,
+                "job_definition_id": job_id,
+                "name": name,
+                "type": type,
+                "state": state,
+                "offset": offset,
+                "limit": limit,
+                "user_id": user_id,
+            },
+        )
+
+    @v3
+    def update_env_vars(
+        self, account_id: int, project_id: int, env_var_id: int, payload: Dict
+    ) -> Dict:
+        """Update environment variables
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            env_var_id (int): Numeric ID of the environment variable to update
+            payload (dict): Dictionary representing the environment variables to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/environment-variables/{env_var_id}/",
+            method="post",
+            json=payload,
+        )
+
+    @v3
+    def update_env_vars_bulk(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
+        """Update environment variables in bulk
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the environment variables to update
+                in bulk
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/environment-variables/bulk/",
+            method="post",
+            json=payload,
+        )
+
+    # ENVIRONMENTS
+
+    @v3
     def create_environment(
         self, account_id: int, project_id: int, payload: Dict
     ) -> Dict:
@@ -243,34 +580,346 @@ class _AdminClient(_Client):
         )
 
     @v3
-    def create_environment_variables(
-        self, account_id: int, project_id: int, payload: Dict
+    def delete_environment(self, account_id: int, environment_id: int) -> Dict:
+        """Delete job for a specified account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            environment_id (int): Numeric ID of the environment to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/environments/{environment_id}/",
+            method="delete",
+        )
+
+    @v3
+    def get_environment(
+        self, account_id: int, project_id: int, environment_id: int
     ) -> Dict:
-        """Create environment variabless
+        """Get an environment by its ID.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+            environment_id (int): Numeric ID of the environment to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/environments/{environment_id}"
+        )
+
+    @v3
+    def list_environments(
+        self,
+        account_id: int,
+        *,
+        project_id: Union[int, List[int]] = None,
+        dbt_version: Union[str, List[str]] = None,
+        name: str = None,
+        type: str = None,
+        state: int = None,
+        offset: int = None,
+        limit: int = None,
+        order_by: str = None,
+    ) -> Dict:
+        """List environments for a specific account
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int or list, optional): The project ID or IDs
+            dbt_version (str or list, optional): The version of dbt the environment
+                is using
+            name (str, optional): Name of the environment to retrieve
+            type (str, optional): Type of the environment (deployment or development)
+            state (int, optional): 1 = active, 2 = deleted
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+            order_by (str, optional): Field to order the result by.
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/environments/",
+            params={
+                "project_id__in": json_listify(project_id),
+                "dbt_version__in": json_listify(dbt_version),
+                "name": name,
+                "type": type,
+                "state": state,
+                "offset": offset,
+                "limit": limit,
+                "order_by": order_by,
+            },
+        )
+
+    @v3
+    def update_environment(
+        self, account_id: int, project_id: int, environment_id: int, payload: Dict
+    ) -> Dict:
+        """Update a connection
 
         Args:
             account_id (int): Numeric ID of the account
             project_id (int): Numeric ID of the project
-            payload (dict): Dictionary representing the environment variables to create
-        """
-        url = f"accounts/{account_id}/projects/{project_id}/environment-variables/"
-        if len(payload.keys()) > 1:
-            url += "bulk/"
-        return self._simple_request(url, method="post", json=payload)
-
-    @v2
-    def create_job(self, account_id: int, payload: Dict) -> Dict:
-        """Create a job
-
-        Args:
-            account_id (int): Numeric ID of the account
-            payload (dict): Dictionary representing the job to create
+            environment_id (int): Numeric ID of the environment to update
+            payload (dict): Dictionary representing the environment to update
         """
         return self._simple_request(
-            f"accounts/{account_id}/jobs/",
+            f"accounts/{account_id}/projects/{project_id}/environments/{environment_id}/",  # noqa: E501
             method="post",
             json=payload,
         )
+
+    # EXTENDED ATTRIBUTES
+
+    @v3
+    def create_extended_attributes(self, account_id: int, project_id: int) -> Dict:
+        """Create a new Extended Attributes record
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/extended-attributes/",
+            method="post",
+        )
+
+    @v3
+    def delete_extended_attributes(
+        self, account_id: int, project_id: int, extended_attributes_id: int
+    ) -> Dict:
+        """Delete an Extended Attributes record
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            extended_attributes_id (int): Numeric ID of the extended attributes record
+                to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/extended-attributes/{extended_attributes_id}/",  # noqa: E501
+            method="delete",
+        )
+
+    @v3
+    def get_extended_attributes(
+        self, account_id: int, project_id: int, extended_attributes_id: int
+    ) -> Dict:
+        """Get an Extended Attributes record
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            extended_attributes_id (int): Numeric ID of the extended attributes record
+                to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/extended-attributes/{extended_attributes_id}/",  # noqa: E501
+        )
+
+    @v3
+    def update_extended_attributes(
+        self,
+        account_id: int,
+        project_id: int,
+        extended_attributes_id: int,
+        payload: Dict,
+    ) -> Dict:
+        """Update an Extended Attributes record
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            extended_attributes_id (int): Numeric ID of the extended attributes record
+                to update
+            payload (dict): Dictionary representing the extended attributes record to
+                update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/extended-attributes/{extended_attributes_id}/",  # noqa: E501
+            method="post",
+            json=payload,
+        )
+
+    # GROUPS
+
+    @v3
+    def assign_group_permissions(
+        self, account_id: int, group_id: int, payload: Dict
+    ) -> Dict:
+        """Assign group permissions
+
+        Args:
+            account_id (int): Numeric ID of the account
+            group_id (int): Numeric ID of the group
+            payload (dict): Dictionary representing the group to create
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/group-permissions/{group_id}/",
+            method="post",
+            json=payload,
+        )
+
+    @v3
+    def assign_project_group_permissions(self, account_id: int, project_id: int):
+        """Assign project group permissions
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the project group permissions to
+                assign
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/group-permissions/",
+            method="post",
+        )
+
+    @v3
+    def assign_user_to_group(self, account_id: int, payload: Dict) -> Dict:
+        """Assign a user to a group
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the user to assign
+            {
+                "user_id": int,
+                "desired_group_ids": list(int)
+            }
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/assign-groups/",
+            method="post",
+            json=payload,
+        )
+
+    @v3
+    def create_group(self, account_id: int, payload: Dict) -> Dict:
+        """Create a group
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the group to create
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/groups/", method="post", json=payload
+        )
+
+    @v3
+    def get_group(self, account_id: int, group_id: int) -> Dict:
+        """Get a group
+
+        Args:
+            account_id (int): Numeric ID of the account
+            group_id (int): Numeric ID of the group
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/groups/{group_id}/",
+        )
+
+    @v3
+    def list_groups(self, account_id: int) -> Dict:
+        """List groups for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+        """
+        return self._simple_request(f"accounts/{account_id}/groups/")
+
+    @v3
+    def update_group(self, account_id: int, group_id: int, payload: Dict) -> Dict:
+        """Update a group
+
+        Args:
+            account_id (int): Numeric ID of the account
+            group_id (int): Numeric ID of the group
+            payload (dict): Dictionary representing the group to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/groups/{group_id}/",
+            method="post",
+            json=payload,
+        )
+
+    # LICENSE MAPS
+
+    @v3
+    def create_license_map(self, account_id: int, payload: Dict) -> Dict:
+        """Create a license map
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the license map to create
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/license-maps/",
+            method="post",
+            json=payload,
+        )
+
+    @v3
+    def delete_license_map(self, account_id: int, license_map_id: int) -> Dict:
+        """Delete a license map
+
+        Args:
+            account_id (int): Numeric ID of the account
+            license_map_id (int): Numeric ID of the license map to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/license-maps/{license_map_id}/",
+            method="delete",
+        )
+
+    @v3
+    def get_license_map(self, account_id: int, license_map_id: int) -> Dict:
+        """Get a license map
+
+        Args:
+            account_id (int): Numeric ID of the account
+            license_map_id (int): Numeric ID of the license map
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/license-maps/{license_map_id}/",
+        )
+
+    @v3
+    def list_license_maps(self, account_id: int) -> Dict:
+        """List license maps for a specific account
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+        """
+        return self._simple_request(f"accounts/{account_id}/license-maps/")
+
+    @v3
+    def update_license_map(
+        self, account_id: int, license_map_id: int, payload: Dict
+    ) -> Dict:
+        """Update a license map
+
+        Args:
+            account_id (int): Numeric ID of the account
+            license_map_id (int): Numeric ID of the license map
+            payload (dict): Dictionary representing the license map to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/license-maps/{license_map_id}/",
+            method="post",
+            json=payload,
+        )
+
+    # PRIVATE LINK
+
+    @v3
+    def list_private_link_endpoints(self, account_id: int) -> Dict:
+        """List private link endpoints for a specific account
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+        """
+        return self._simple_request(f"accounts/{account_id}/private-link-endpoints/")
+
+    # PROJECTS
 
     @v3
     def create_project(self, account_id: int, payload: Dict) -> Dict:
@@ -282,6 +931,124 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f"accounts/{account_id}/projects/", method="post", json=payload
+        )
+
+    @v3
+    def delete_project(self, account_id: int, project_id: int) -> Dict:
+        """Delete project for a specified account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/",
+            method="delete",
+        )
+
+    @v3
+    def get_project(self, account_id: int, project_id: int) -> Dict:
+        """Get a project by its ID.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+        """
+        return self._simple_request(f"accounts/{account_id}/projects/{project_id}")
+
+    @set_called_from
+    @v3
+    def get_project_by_name(
+        self, project_name: str, account_id: int = None, account_name: str = None
+    ) -> Dict:
+        """Get a project by its name.
+
+        Args:
+            project_name (str): Name of project to retrieve
+            account_id (int, optional): Numeric ID of the account to retrieve
+            account_name (str, optional): Name of account to retrieve
+        """
+        if account_id is None and account_name is None:
+            accounts = self.list_accounts()
+            for account in accounts["data"]:
+                projects = self.list_projects(account["id"])
+                project = self._get_by_name(projects["data"], project_name)
+                if project is not None:
+                    break
+
+        else:
+            if account_id is not None:
+                account = self.get_account(account_id)
+            else:
+                account = self.get_account_by_name(account_name)
+            if account.get("data", None) is not None:
+                projects = self.list_projects(account["data"]["id"])
+                project = self._get_by_name(projects["data"], project_name)
+            else:
+                project = None
+
+        if project is not None:
+            return self.get_project(project["account_id"], project["id"])
+
+        raise Exception(f'Project "{project_name}" was not found.')
+
+    @v3
+    def list_projects(
+        self,
+        account_id: int,
+        *,
+        project_id: Union[int, List[int]] = None,
+        state: int = None,
+        offset: int = None,
+        limit: int = None,
+    ) -> Dict:
+        """List projects for a specified account.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int or list, optional): The project ID or IDs
+            state (int, optional): 1 = active, 2 = deleted
+            offset (int, optional): The offset to apply when listing runs.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing runs.
+                Use with offset to paginate results.
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects",
+            params={
+                "pk__in": json_listify(project_id),
+                "state": state,
+                "offset": offset,
+                "limit": limit,
+            },
+        )
+
+    @v3
+    def update_project(self, account_id: int, project_id: int, payload: Dict) -> Dict:
+        """Update project for a specified account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project to update
+            payload (dict): Dictionary representing the project to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/", method="POST", json=payload
+        )
+
+    # REPOS
+
+    @v3
+    def create_managed_repository(self, account_id: int, project_id: int) -> Dict:
+        """Create a new dbt Cloud managed repository
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/managed-repositories/",
+            method="post",
         )
 
     @v3
@@ -309,6 +1076,234 @@ class _AdminClient(_Client):
         )
 
     @v3
+    def delete_repository(
+        self, account_id: int, project_id: int, repository_id: int
+    ) -> Dict:
+        """Delete repository for a specified account
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            repository_id (int): Numeric ID of the repository to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/repositories/{repository_id}",
+            method="delete",
+        )
+
+    @v3
+    def get_repository(
+        self, account_id: int, project_id: int, repository_id: int
+    ) -> Dict:
+        """Get a repository by its ID.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+            repository_id (int): Numeric ID of the repository to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/repositories/{repository_id}"
+        )
+
+    @v3
+    def list_repositories(self, account_id: int, project_id: int) -> Dict:
+        """List repositories for a specific account and project
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/repositories/"
+        )
+
+    @v3
+    def update_repository(
+        self, account_id: int, project_id: int, repository_id: int, payload: Dict
+    ) -> Dict:
+        """Update a connection
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            repository_id (int): Numeric ID of the repository to update
+            payload (dict): Dictionary representing the repository to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/repositories/{repository_id}/",  # noqa: E501
+            method="post",
+            json=payload,
+        )
+
+    # SEMANTIC LAYER CONFIG
+
+    @v3
+    def create_sl_config(self, account_id: int, project_id: int, payload: Dict) -> Dict:
+        """Create a semantic layer configuration
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the semantic layer configuration to create
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/semantic-layer-configurations",
+            method="post",
+            json=payload,
+        )
+
+    @v3
+    def delete_sl_config(
+        self, account_id: int, project_id: int, sl_config_id: int
+    ) -> Dict:
+        """Delete a semantic layer configuration
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            sl_config_id (int): Numeric ID of the semantic layer configuration to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/semantic-layer-configurations/{sl_config_id}",  # noqa: E501
+            method="delete",
+        )
+
+    @v3
+    def get_sl_config(
+        self, account_id: int, project_id: int, sl_config_id: int
+    ) -> Dict:
+        """Get a semantic layer configuration by its ID.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+            sl_config_id (int): Numeric ID of the semantic layer configuration to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/semantic-layer-configurations/{sl_config_id}"  # noqa: E501
+        )
+
+    @v3
+    def update_sl_config(
+        self, account_id: int, project_id: int, sl_config_id: int, payload: Dict
+    ) -> Dict:
+        """Update a semantic layer configuration
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            sl_config_id (int): Numeric ID of the semantic layer configuration to update
+            payload (dict): Dictionary representing the semantic layer configuration to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/semantic-layer-configurations/{sl_config_id}",  # noqa: E501
+            method="post",
+            json=payload,
+        )
+
+    # SEMANTIC LAYER CREDS
+
+    @v3
+    def create_sl_creds(self, account_id: int, project_id: int, payload: Dict) -> Dict:
+        """Create a semantic layer credential
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            payload (dict): Dictionary representing the semantic layer credential to create
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/semantic-layer-credentials",
+            method="post",
+            json=payload,
+        )
+
+    @v3
+    def delete_sl_creds(
+        self, account_id: int, project_id: int, sl_creds_id: int
+    ) -> Dict:
+        """Delete a semantic layer credential
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            sl_creds_id (int): Numeric ID of the semantic layer credential to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/semantic-layer-credentials/{sl_creds_id}",  # noqa: E501
+            method="delete",
+        )
+
+    @v3
+    def get_sl_creds(self, account_id: int, project_id: int, sl_creds_id: int) -> Dict:
+        """Get a semantic layer credential by its ID.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            project_id (int): Numeric ID of the project to retrieve
+            sl_creds_id (int): Numeric ID of the semantic layer credential to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/semantic-layer-credentials/{sl_creds_id}"  # noqa: E501
+        )
+
+    @v3
+    def partially_update_sl_creds(
+        self, account_id: int, project_id: int, sl_creds_id: int, payload: Dict
+    ) -> Dict:
+        """Partially update a semantic layer credential
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            sl_creds_id (int): Numeric ID of the semantic layer credential to update
+            payload (dict): Dictionary representing the semantic layer credential to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/semantic-layer-credentials/{sl_creds_id}",  # noqa: E501
+            method="patch",
+            json=payload,
+        )
+
+    @v3
+    def update_sl_creds(
+        self, account_id: int, project_id: int, sl_creds_id: int, payload: Dict
+    ) -> Dict:
+        """Update a semantic layer credential
+
+        Args:
+            account_id (int): Numeric ID of the account
+            project_id (int): Numeric ID of the project
+            sl_creds_id (int): Numeric ID of the semantic layer credential to update
+            payload (dict): Dictionary representing the semantic layer credential to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/projects/{project_id}/semantic-layer-credentials/{sl_creds_id}",  # noqa: E501
+            method="post",
+            json=payload,
+        )
+
+    # SERVICE TOKENS
+
+    @v3
+    def assign_service_token_permissions(
+        self, account_id: int, service_token_id: int, payload: List[Dict]
+    ) -> Dict:
+        """Assign permissions to a service token.
+
+        Args:
+            account_id (int): Numeric ID of the account
+            service_token_id (int): Numeric ID of the service token
+            payload (list): List of dictionaries representing the permissions to assign
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/service-tokens/{service_token_id}/permissions/",
+            method="post",
+            json=payload,
+        )
+
+    @v3
     def create_service_token(self, account_id: int, payload: Dict) -> Dict:
         """Create a service token
 
@@ -327,6 +1322,68 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f"accounts/{account_id}/service-tokens/", method="post", json=payload
+        )
+
+    @v3
+    def get_service_token(self, account_id: int, service_token_id: int) -> Dict:
+        """Retrieves a service token.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            service_token_id (int): Numeric ID of the service token to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/service-tokens/{service_token_id}"
+        )
+
+    @v3
+    def list_service_tokens(self, account_id: int) -> Dict:
+        """List service tokens for a specific account.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+        """
+        return self._simple_request(f"accounts/{account_id}/service-tokens/")
+
+    @v3
+    def list_service_token_permissions(
+        self, account_id: int, service_token_id: int
+    ) -> Dict:
+        """List service token permissions for a specific account.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            service_token_id (int): Numeric ID of the service token to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/service-tokens/{service_token_id}/permissions"
+        )
+
+    @v2
+    def cancel_run(self, account_id: int, run_id: int) -> Dict:
+        """Cancel a run.
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            run_id (int): Numeric ID of the run to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/runs/{run_id}/cancel",
+            method="post",
+        )
+
+    @v2
+    def create_job(self, account_id: int, payload: Dict) -> Dict:
+        """Create a job
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the job to create
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/jobs/",
+            method="post",
+            json=payload,
         )
 
     @v3
@@ -383,52 +1440,6 @@ class _AdminClient(_Client):
             json=payload,
         )
 
-    @v3
-    def delete_connection(
-        self, account_id: int, project_id: int, connection_id: int
-    ) -> Dict:
-        """Delete a connection
-
-        Args:
-            account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
-            connection_id (int): Numeric ID of the connection to delete
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/connections/{connection_id}",
-            method="delete",
-        )
-
-    @v3
-    def delete_environment(self, account_id: int, environment_id: int) -> Dict:
-        """Delete job for a specified account
-
-        Args:
-            account_id (int): Numeric ID of the account
-            environment_id (int): Numeric ID of the environment to delete
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/environments/{environment_id}/",
-            method="delete",
-        )
-
-    @v3
-    def delete_environment_variables(
-        self, account_id: int, project_id: int, payload: Dict
-    ) -> Dict:
-        """Delete environment variables for a specified account
-
-        Args:
-            account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
-            payload (Dict): Dictionary representing environment variables to delete
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/environment-variables/bulk/",
-            method="delete",
-            json=payload,
-        )
-
     @v2
     def delete_job(self, account_id: int, job_id: int) -> Dict:
         """Delete job for a specified account
@@ -439,35 +1450,6 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f"accounts/{account_id}/jobs/{job_id}/",
-            method="delete",
-        )
-
-    @v3
-    def delete_project(self, account_id: int, project_id: int) -> Dict:
-        """Delete project for a specified account
-
-        Args:
-            account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project to delete
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/",
-            method="delete",
-        )
-
-    @v3
-    def delete_repository(
-        self, account_id: int, project_id: int, repository_id: int
-    ) -> Dict:
-        """Delete repository for a specified account
-
-        Args:
-            account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
-            repository_id (int): Numeric ID of the repository to delete
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/repositories/{repository_id}",
             method="delete",
         )
 
@@ -552,52 +1534,6 @@ class _AdminClient(_Client):
             f"accounts/{account_id}/jobs/{job_id}/",
             params={"order_by": order_by},
         )
-
-    @v2
-    def get_project(self, account_id: int, project_id: int) -> Dict:
-        """Get a project by its ID.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            project_id (int): Numeric ID of the project to retrieve
-        """
-        return self._simple_request(f"accounts/{account_id}/projects/{project_id}")
-
-    @set_called_from
-    @v2
-    def get_project_by_name(
-        self, project_name: str, account_id: int = None, account_name: str = None
-    ) -> Dict:
-        """Get a project by its name.
-
-        Args:
-            project_name (str): Name of project to retrieve
-            account_id (int, optional): Numeric ID of the account to retrieve
-            account_name (str, optional): Name of account to retrieve
-        """
-        if account_id is None and account_name is None:
-            accounts = self.list_accounts()
-            for account in accounts["data"]:
-                projects = self.list_projects(account["id"])
-                project = self._get_by_name(projects["data"], project_name)
-                if project is not None:
-                    break
-
-        else:
-            if account_id is not None:
-                account = self.get_account(account_id)
-            else:
-                account = self.get_account_by_name(account_name)
-            if account.get("data", None) is not None:
-                projects = self.list_projects(account["data"]["id"])
-                project = self._get_by_name(projects["data"], project_name)
-            else:
-                project = None
-
-        if project is not None:
-            return self.get_project(project["account_id"], project["id"])
-
-        raise Exception(f'Project "{project_name}" was not found.')
 
     @set_called_from
     @v2
@@ -785,18 +1721,6 @@ class _AdminClient(_Client):
         )
 
     @v3
-    def get_service_token(self, account_id: int, service_token_id: int) -> Dict:
-        """Retrieves a service token.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            service_token_id (int): Numeric ID of the service token to retrieve
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/service-tokens/{service_token_id}"
-        )
-
-    @v3
     def get_webhook(self, account_id: int, webhook_id: str) -> Dict:
         """Get a webhook
 
@@ -818,82 +1742,10 @@ class _AdminClient(_Client):
         """
         return self._simple_request(f"accounts/{account_id}/users/{user_id}/")
 
-    @v2
+    @v3
     def list_accounts(self) -> Dict:
         """List of accounts that your API Token is authorized to access."""
         return self._simple_request("accounts/")
-
-    @v3
-    def list_audit_logs(
-        self,
-        account_id: int,
-        *,
-        logged_at_start: str = None,
-        logged_at_end: str = None,
-        offset: int = None,
-        limit: int = None,
-    ) -> Dict:
-        """List audit logs for a specific account
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            logged_at_start (str, optional):  Date to begin retrieving audit
-                logs
-                Format is yyyy-mm-dd
-            logged_at_end (str, optional): Date to stop retrieving audit logs.
-                Format is yyyy-mm-dd
-            offset (int, optional): The offset to apply when listing runs.
-                Use with limit to paginate results.
-            limit (int, optional): The limit to apply when listing runs.
-                Use with offset to paginate results.
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/audit-logs",
-            params={
-                "logged_at_start": logged_at_start,
-                "logged_at_end": logged_at_end,
-                "offset": offset,
-                "limit": limit,
-            },
-        )
-
-    @v3
-    def list_connections(
-        self,
-        account_id: int,
-        project_id: int,
-        *,
-        state: int = None,
-        offset: int = None,
-        limit: int = None,
-    ) -> Dict:
-        """List connections for a specific account and project
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            project_id (int): Numeric ID of the project to retrieve
-            state (int, optional): 1 = active, 2 = deleted
-            offset (int, optional): The offset to apply when listing runs.
-                Use with limit to paginate results.
-            limit (int, optional): The limit to apply when listing runs.
-                Use with offset to paginate results.
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/connections",
-            params={"state": state, "limit": limit, "offset": offset},
-        )
-
-    @v3
-    def list_credentials(self, account_id: int, project_id: int) -> Dict:
-        """List credentials for a specific account and project
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            project_id (int): Numeric ID of the project to retrieve
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/credentials"
-        )
 
     @v3
     def list_environments_by_account(self, account_id: int) -> Dict:
@@ -905,104 +1757,6 @@ class _AdminClient(_Client):
         return self._simple_request(f"accounts/{account_id}/environments/")
 
     @v3
-    def list_environments(
-        self,
-        account_id: int,
-        *,
-        project_id: Union[int, List[int]] = None,
-        dbt_version: Union[str, List[str]] = None,
-        name: str = None,
-        type: str = None,
-        state: int = None,
-        offset: int = None,
-        limit: int = None,
-        order_by: str = None,
-    ) -> Dict:
-        """List environments for a specific account
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            project_id (int or list, optional): The project ID or IDs
-            dbt_version (str or list, optional): The version of dbt the environment
-                is using
-            name (str, optional): Name of the environment to retrieve
-            type (str, optional): Type of the environment (deployment or development)
-            state (int, optional): 1 = active, 2 = deleted
-            offset (int, optional): The offset to apply when listing runs.
-                Use with limit to paginate results.
-            limit (int, optional): The limit to apply when listing runs.
-                Use with offset to paginate results.
-            order_by (str, optional): Field to order the result by.
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/environments/",
-            params={
-                "project_id__in": json_listify(project_id),
-                "dbt_version__in": json_listify(dbt_version),
-                "name": name,
-                "type": type,
-                "state": state,
-                "offset": offset,
-                "limit": limit,
-                "order_by": order_by,
-            },
-        )
-
-    @v3
-    def list_environment_variables(
-        self,
-        account_id: int,
-        project_id: int,
-        *,
-        resource_type: str = "environment",
-        environment_id: int = None,
-        job_id: int = None,
-        limit: int = None,
-        offset: int = None,
-        name: str = None,
-        state: int = None,
-        type: str = None,
-        user_id: int = None,
-    ):
-        """List environment variables for a specific account and project
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            project_id (int): Numeric ID of he project to retrieve
-            resource_type (str, optional): The name of the resource to retrieve. Valid
-                resources include environment, job, and user
-            environment_id (int, optional): Numeric ID of the environment to retrieve
-            job_id (int, optional): Numeric ID of the job to retrieve
-            name (str, optional): Name of the environment to retrieve
-            type (str, optional): Type of the environment variable
-            state (int, optional): 1 = active, 2 = deleted
-            offset (int, optional): The offset to apply when listing runs.
-                Use with limit to paginate results.
-            limit (int, optional): The limit to apply when listing runs.
-                Use with offset to paginate results.
-        """
-        valid_resource_types = ["environment", "job", "user"]
-        if resource_type not in valid_resource_types:
-            raise ValueError(
-                f"{resource_type} is not a valid argument for resource_type.  Valid "
-                f'resource types include {", ".join(valid_resource_types)}.'
-            )
-
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/environment-variables/{resource_type}",  # noqa: E501
-            params={
-                "environment_id": environment_id,
-                "job_definition_id": job_id,
-                "name": name,
-                "type": type,
-                "state": state,
-                "offset": offset,
-                "limit": limit,
-                "user_id": user_id,
-            },
-        )
-
-    @v3
     def list_feature_flags(self, account_id: int) -> Dict:
         """List feature flags for a specific account
 
@@ -1010,15 +1764,6 @@ class _AdminClient(_Client):
             account_id (int): Numeric ID of the account to retrieve
         """
         return self._simple_request(f"accounts/{account_id}/feature-flag/")
-
-    @v3
-    def list_groups(self, account_id: int) -> Dict:
-        """List groups for a specific account and project
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-        """
-        return self._simple_request(f"accounts/{account_id}/groups/")
 
     @v2
     def list_invited_users(self, account_id: int) -> Dict:
@@ -1065,49 +1810,6 @@ class _AdminClient(_Client):
                 "limit": limit,
                 "order_by": order_by,
             },
-        )
-
-    @v3
-    def list_projects(
-        self,
-        account_id: int,
-        *,
-        project_id: Union[int, List[int]] = None,
-        state: int = None,
-        offset: int = None,
-        limit: int = None,
-    ) -> Dict:
-        """List projects for a specified account.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            project_id (int or list, optional): The project ID or IDs
-            state (int, optional): 1 = active, 2 = deleted
-            offset (int, optional): The offset to apply when listing runs.
-                Use with limit to paginate results.
-            limit (int, optional): The limit to apply when listing runs.
-                Use with offset to paginate results.
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects",
-            params={
-                "pk__in": json_listify(project_id),
-                "state": state,
-                "offset": offset,
-                "limit": limit,
-            },
-        )
-
-    @v3
-    def list_repositories(self, account_id: int, project_id: int) -> Dict:
-        """List repositories for a specific account and project
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            project_id (int): Numeric ID of the project to retrieve
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/repositories/"
         )
 
     @v2
@@ -1191,29 +1893,6 @@ class _AdminClient(_Client):
                 "status__in": status,
             },
         )
-
-    @v3
-    def list_service_token_permissions(
-        self, account_id: int, service_token_id: int
-    ) -> Dict:
-        """List service token permissions for a specific account.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-            service_token_id (int): Numeric ID of the service token to retrieve
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/service-tokens/{service_token_id}/permissions"
-        )
-
-    @v3
-    def list_service_tokens(self, account_id: int) -> Dict:
-        """List service tokens for a specific account.
-
-        Args:
-            account_id (int): Numeric ID of the account to retrieve
-        """
-        return self._simple_request(f"accounts/{account_id}/service-tokens/")
 
     @v3
     def list_users(
@@ -1559,60 +2238,6 @@ class _AdminClient(_Client):
         return run
 
     @v3
-    def update_connection(
-        self, account_id: int, project_id: int, connection_id: int, payload: Dict
-    ) -> Dict:
-        """Update a connection
-
-        Args:
-            account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
-            connection_id (int): Numeric ID of the connection to update
-            payload (dict): Dictionary representing the connection to update
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/connections/{connection_id}/",
-            method="post",
-            json=payload,
-        )
-
-    @v3
-    def update_credentials(
-        self, account_id: int, project_id: int, credentials_id: int, payload: Dict
-    ) -> Dict:
-        """Update credentials
-
-        Args:
-            account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
-            credentials_id (int): Numeric ID of the credentials to update
-            payload (dict): Dictionary representing the credentials to update
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",  # noqa: E50
-            method="post",
-            json=payload,
-        )
-
-    @v3
-    def update_environment(
-        self, account_id: int, project_id: int, environment_id: int, payload: Dict
-    ) -> Dict:
-        """Update a connection
-
-        Args:
-            account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
-            environment_id (int): Numeric ID of the environment to update
-            payload (dict): Dictionary representing the environment to update
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/environments/{environment_id}/",  # noqa: E501
-            method="post",
-            json=payload,
-        )
-
-    @v3
     def update_environment_variables(
         self, account_id: int, project_id: int, payload: Dict
     ):
@@ -1640,37 +2265,6 @@ class _AdminClient(_Client):
         """
         return self._simple_request(
             f"accounts/{account_id}/jobs/{job_id}/",
-            method="post",
-            json=payload,
-        )
-
-    @v3
-    def update_project(self, account_id: int, project_id: int, payload: Dict) -> Dict:
-        """Update project for a specified account
-
-        Args:
-            account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project to update
-            payload (dict): Dictionary representing the project to update
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/", method="POST", json=payload
-        )
-
-    @v3
-    def update_repository(
-        self, account_id: int, project_id: int, repository_id: int, payload: Dict
-    ) -> Dict:
-        """Update a connection
-
-        Args:
-            account_id (int): Numeric ID of the account
-            project_id (int): Numeric ID of the project
-            repository_id (int): Numeric ID of the repository to update
-            payload (dict): Dictionary representing the repository to update
-        """
-        return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/repositories/{repository_id}/",  # noqa: E501
             method="post",
             json=payload,
         )
