@@ -7,7 +7,7 @@ import requests
 # first party
 from dbtc.client.base import _Client
 
-QUERIES = {  # noqa: E501
+QUERIES = {
     "column_lineage": """
 query ColumnLineage($environmentId: BigInt!, $nodeUniqueId: String!, $filters: ColumnLineageFilter) {
   column(environmentId: $environmentId) {
@@ -28,7 +28,7 @@ query ColumnLineage($environmentId: BigInt!, $nodeUniqueId: String!, $filters: C
     }
   }
 }
-    """,
+    """,  # noqa: E501
     "mesh_projects": """
 query MeshProjects($accountId: BigInt!) {
   account(id: $accountId) {
@@ -89,7 +89,7 @@ query Performance($environmentId: BigInt!, $startDate: Date!, $endDate: Date!, $
     }
   }
 }
-    """,
+    """,  # noqa: E501
     "most_executed_models": """
 query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $limit: Int, $jobLimit: Int) {
   performance(environmentId: $environmentId) {
@@ -103,7 +103,7 @@ query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $limit: I
     }
   }
 }
-    """,
+    """,  # noqa: E501
     "longest_executed_models": """
 query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $limit: Int, $jobId: BigInt, $orderBy: SortAggregation, $jobLimit: Int) {
   performance(environmentId: $environmentId) {
@@ -119,7 +119,7 @@ query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $limit: I
     }
   }
 }
-    """,
+    """,  # noqa: E501
     "most_execution_failed_models": """
 query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $limit: Int) {
   performance(environmentId: $environmentId) {
@@ -153,7 +153,7 @@ query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $uniqueId
     }
   }
 }
-    """,
+    """,  # noqa: E501
     "recommendations": """
 query Recommendations($environmentId: BigInt!, $first: Int!, $after: String, $filter: RuleFilter) {
   recommendations(environmentId: $environmentId) {
@@ -181,7 +181,7 @@ query Recommendations($environmentId: BigInt!, $first: Int!, $after: String, $fi
     }
   }
 }
-    """,
+    """,  # noqa: E501
     "public_models": """
 query PublicModels($accountId: BigInt!) {
   account(id: $accountId) {
@@ -373,7 +373,7 @@ class _MetadataClient(_Client):
 
     def model_execution_history(
         self, environment_id: int, start_date: str, end_date: str, unique_id: str
-    ) -> Dict:
+    ):
         """Retrieve model execution history for a given environment.
 
         Args:
@@ -392,7 +392,7 @@ class _MetadataClient(_Client):
 
     def model_job_information(
         self, environment_id: int, start_date: str, end_date: str, unique_id: str
-    ) -> Dict:
+    ):
         """Retrieve model job information for a given environment.
 
         Args:
@@ -573,7 +573,13 @@ class _MetadataClient(_Client):
             first (int, optional): The max number of recommendations to return.
                 Defaults to 10.
             after (str, optional): The cursor to paginate after. Defaults to None.
-            filter (str, optional): The filter to apply to the recommendations.
+            severity (List[str], optional): The severity levels to filter by.
+                Defaults to None.
+            categories (List[str], optional): The categories to filter by.
+                Defaults to None.
+            rule_names (List[str], optional): The rule names to filter by.
+                Defaults to None.
+            unique_ids (List[str], optional): The unique ids to filter by.
                 Defaults to None.
         """
         variables = {
