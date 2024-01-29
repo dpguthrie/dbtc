@@ -136,7 +136,7 @@ The `cloud` property on the `dbtCloudClient` class contains methods that allow a
     Assuming that `DBT_CLOUD_ACCOUNT_ID` and `DBT_CLOUD_PROJECT_ID`
     environment variables have been set.
     ```bash
-    dbtc create-adapter --payload='{"id": null, "account_id": 1, "created_by_id": 1, "project_id": 1, "state": 1, "adapter_version": "databricks_spark_v0"}'
+    dbtc adapters create --payload='{"id": null, "account_id": 1, "created_by_id": 1, "project_id": 1, "state": 1, "adapter_version": "databricks_spark_v0"}'
     ```
 
 ### delete_adapter
