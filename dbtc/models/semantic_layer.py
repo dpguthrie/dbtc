@@ -96,7 +96,7 @@ class QueryPage(BaseModel):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    @computed_field  # type: ignore
+    @computed_field  # type: ignore[misc]
     @property
     def arrow_table(self) -> pa.Table:
         if self.arrowResult is not None:
