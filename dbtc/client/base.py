@@ -6,6 +6,7 @@ import uuid
 from typing import Callable, Optional
 
 # third party
+import requests
 import rudder_analytics
 
 # first party
@@ -19,25 +20,34 @@ rudder_analytics.data_plane_url = "https://dbtlabsdonqtb.dataplane.rudderstack.c
 class _Client(abc.ABC):
     def __init__(
         self,
+        session: requests.Session,
         *,
         api_key: str = None,
         service_token: str = None,
         host: str = None,
         do_not_track: bool = False,
+        environment_id: int = None,
+        use_beta_endpoint: bool = True,
     ):
-        self.api_key: Optional[str] = api_key or os.getenv('DBT_CLOUD_API_KEY', None)
+        self.api_key: Optional[str] = api_key or os.getenv("DBT_CLOUD_API_KEY", None)
         self.service_token: Optional[str] = service_token or os.getenv(
-            'DBT_CLOUD_SERVICE_TOKEN', None
+            "DBT_CLOUD_SERVICE_TOKEN", None
         )
         self._host: Optional[str] = host or os.getenv(
-            'DBT_CLOUD_HOST', self.DEFAULT_DOMAIN
+            "DBT_CLOUD_HOST", self.DEFAULT_DOMAIN
         )
+        self.environment_id = environment_id or os.getenv(
+            "DBT_CLOUD_ENVIRONMENT_ID", None
+        )
+        self._use_beta = use_beta_endpoint
         self.do_not_track: bool = do_not_track
         self._anonymous_id: str = str(uuid.uuid4())
         self._called_from: Optional[str] = None
         self.console = err_console
+        self.session = session
+        self.session.headers = self.headers
 
-    DEFAULT_DOMAIN = 'cloud.getdbt.com'
+    DEFAULT_DOMAIN = "cloud.getdbt.com"
 
     @property
     @abc.abstractmethod
@@ -51,29 +61,29 @@ class _Client(abc.ABC):
 
     @property
     def _base_url(self):
-        return f'https://{self._host}{self._path}'
+        return f"https://{self._host}{self._path}"
 
     @property
     def headers(self):
         return {
-            'Authorization': f'Token {getattr(self, self._header_property)}',
-            'Content-Type': 'application/json',
+            "Authorization": f"Bearer {getattr(self, self._header_property)}",
+            "Content-Type": "application/json",
         }
 
     def full_url(self, path: str = None):
         if path is not None:
-            return f'{self._base_url}{path}'
+            return f"{self._base_url}{path}"
 
         return self._base_url
 
     def _send_track(self, event_name: str, func: Callable, *args, **kwargs):
-        func_args = [a for a in inspect.getfullargspec(func).args if a != 'self']
+        func_args = [a for a in inspect.getfullargspec(func).args if a != "self"]
         properties = {
-            'method': func.__name__,
-            'dbtc_version': __version__,
-            'called_from': self._called_from,
+            "method": func.__name__,
+            "dbtc_version": __version__,
+            "called_from": self._called_from,
             **dict(zip(func_args, args)),
             **kwargs,
         }
-        properties = {k: v for k, v in properties.items() if not k.endswith('_id')}
+        properties = {k: v for k, v in properties.items() if not k.endswith("_id")}
         rudder_analytics.track(self._anonymous_id, event_name, properties)

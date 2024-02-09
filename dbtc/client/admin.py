@@ -67,10 +67,8 @@ v3 = partial(_version_decorator, version="v3")
 
 
 class _AdminClient(_Client):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.session = requests.Session()
-        self.session.headers = self.headers
+    def __init__(self, session, **kwargs):
+        super().__init__(session, **kwargs)
 
     _path = None
 
