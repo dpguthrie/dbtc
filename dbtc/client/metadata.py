@@ -1,19 +1,13 @@
 # stdlib
 from typing import Any, Dict, List, Union
 
-# third party
-import requests
-
 # first party
 from dbtc.client.base import _Client
 
 
 class _MetadataClient(_Client):
-    def __init__(self, **kwargs):
-        self._use_beta = kwargs.pop("use_beta_endpoint", True)
-        super().__init__(**kwargs)
-        self.session = requests.Session()
-        self.session.headers = self.headers
+    def __init__(self, session, **kwargs):
+        super().__init__(session, **kwargs)
 
     _header_property = "service_token"
 
