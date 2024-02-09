@@ -137,3 +137,61 @@ def test_arrow_output_format(dbtc_client):
     response = dbtc_client.sl.query(metrics=["total_revenue"], output_format="arrow")
     assert isinstance(response, QueryResponse)
     assert isinstance(response.result, pa.Table)
+
+
+def test_list_dimensions(dbtc_client):
+    response = dbtc_client.sl.list_dimensions(metrics=["total_revenue"])
+    assert isinstance(response, dict)
+    assert "data" in response
+    assert "dimensions" in response.get("data", {})
+
+
+def test_list_entities(dbtc_client):
+    response = dbtc_client.sl.list_entities(metrics=["total_revenue"])
+    assert isinstance(response, dict)
+    assert "data" in response
+    assert "entities" in response.get("data", {})
+
+
+def test_list_measures(dbtc_client):
+    response = dbtc_client.sl.list_measures(metrics=["total_revenue"])
+    assert isinstance(response, dict)
+    assert "data" in response
+    assert "measures" in response.get("data", {})
+
+
+def test_list_metrics(dbtc_client):
+    response = dbtc_client.sl.list_metrics()
+    assert isinstance(response, dict)
+    assert "data" in response
+    assert "metrics" in response.get("data", {})
+
+
+def test_metrics_for_dimensions(dbtc_client):
+    response = dbtc_client.sl.list_metrics_for_dimensions(
+        dimensions=["customer__nation"]
+    )
+    assert isinstance(response, dict)
+    assert "data" in response
+    assert "metricsForDimensions" in response.get("data", {})
+
+
+def test_queryable_granularities(dbtc_client):
+    response = dbtc_client.sl.list_queryable_granularities(["total_revenue"])
+    assert isinstance(response, dict)
+    assert "data" in response
+    assert "queryableGranularities" in response.get("data", {})
+
+
+def test_saved_queries(dbtc_client):
+    response = dbtc_client.sl.list_saved_queries()
+    assert isinstance(response, dict)
+    assert "data" in response
+    assert "savedQueries" in response.get("data", {})
+
+
+def test_dimension_values(dbtc_client):
+    response = dbtc_client.sl.list_dimension_values(group_by=["customer__region"])
+    assert isinstance(response, QueryResponse)
+    assert isinstance(response.result, pd.DataFrame)
+    assert "CUSTOMER__REGION" in response.result.columns
