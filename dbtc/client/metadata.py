@@ -4,6 +4,230 @@ from typing import Any, Dict, List, Union
 # first party
 from dbtc.client.base import _Client
 
+QUERIES = {
+    "column_lineage": """
+query ColumnLineage($environmentId: BigInt!, $nodeUniqueId: String!, $filters: ColumnLineageFilter) {
+  column(environmentId: $environmentId) {
+    lineage(nodeUniqueId: $nodeUniqueId, filters: $filters) {
+      accountId
+      projectId
+      environmentId
+      runId
+      nodeUniqueId
+      uniqueId
+      name
+      parentColumns
+      childColumns
+      relationship
+      isError
+      error
+      errorCategory
+    }
+  }
+}
+    """,  # noqa: E501
+    "mesh_projects": """
+query MeshProjects($accountId: BigInt!) {
+  account(id: $accountId) {
+    meshProjects {
+      dbtCoreProject
+      dbtCloudProject
+      projectId
+      defaultEnvironmentId
+      isProducer
+      isConsumer
+      projectSummary {
+        totalNodes
+        totalModels
+        publicModels
+        sources
+        metrics
+        semanticModels
+        tests
+        snapshots
+        exposures
+        macros
+        seeds
+      }
+      dependentProjects {
+        dbtCoreProject
+        dbtCloudProject
+        projectId
+        defaultEnvironmentId
+        isProducer
+        isConsumer
+      }
+    }
+  }
+}
+    """,
+    "model_execution_history": """
+query Performance($environmentId: BigInt!, $startDate: Date!, $endDate: Date!, $uniqueId: String!) {
+  performance(environmentId: $environmentId) {
+    modelExecutionHistory(startDate: $startDate, endDate: $endDate, uniqueId: $uniqueId) {
+      date
+      meanExecutionTime
+      executionTimes
+      executionsByJob {
+        jobId
+        meanExecutionTime
+        executionTimes
+        executions {
+          runId
+          runStartedAt
+          executionTime
+          status
+          isFullRefresh
+          executionStartedAt
+          adapter
+          queryId
+        }
+      }
+    }
+  }
+}
+    """,  # noqa: E501
+    "most_executed_models": """
+query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $limit: Int, $jobLimit: Int) {
+  performance(environmentId: $environmentId) {
+    mostExecutedModels(start: $start, end: $end, limit: $limit, jobLimit: $jobLimit) {
+      uniqueId
+      totalExecutions
+      byJob {
+        jobId
+        totalExecutions
+      }
+    }
+  }
+}
+    """,  # noqa: E501
+    "longest_executed_models": """
+query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $limit: Int, $jobId: BigInt, $orderBy: SortAggregation, $jobLimit: Int) {
+  performance(environmentId: $environmentId) {
+    longestExecutedModels(start: $start, end: $end, limit: $limit, jobId: $jobId, orderBy: $orderBy, jobLimit: $jobLimit) {
+      uniqueId
+      maxExecutionTime
+      averageExecutionTime
+      byJob {
+        jobId
+        maxExecutionTime
+        averageExecutionTime
+      }
+    }
+  }
+}
+    """,  # noqa: E501
+    "most_execution_failed_models": """
+query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $limit: Int) {
+  performance(environmentId: $environmentId) {
+    mostExecutionFailedModels(start: $start, end: $end, limit: $limit) {
+      uniqueId
+      failurePercentage
+      totalExecutions
+      totalFailedExecutions
+    }
+  }
+}
+    """,
+    "most_test_failed_models": """
+query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $limit: Int) {
+  performance(environmentId: $environmentId) {
+    mostTestFailedModels(start: $start, end: $end, limit: $limit) {
+      uniqueId
+      failurePercentage
+      totalRunsWithTests
+      totalRunsWithTestFailures
+    }
+  }
+}
+    """,
+    "model_job_information": """
+query Performance($environmentId: BigInt!, $start: Date!, $end: Date!, $uniqueId: String!) {
+  performance(environmentId: $environmentId) {
+    jobInformation(start: $start, end: $end, uniqueId: $uniqueId) {
+      jobId
+      name
+    }
+  }
+}
+    """,  # noqa: E501
+    "recommendations": """
+query Recommendations($environmentId: BigInt!, $first: Int!, $after: String, $filter: RuleFilter) {
+  recommendations(environmentId: $environmentId) {
+    metrics {
+      name
+      value
+    }
+    rules(first: $first, after: $after, filter: $filter) {
+      edges {
+        node {
+          name
+          category
+          severity
+          uniqueId
+          violationId
+          description
+        }
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+      }
+      totalCount
+    }
+  }
+}
+    """,  # noqa: E501
+    "public_models": """
+query PublicModels($accountId: BigInt!) {
+  account(id: $accountId) {
+    publicModels {
+      uniqueId
+      dbtCoreProject
+      projectId
+      environmentId
+      accountId
+      isDefaultEnv
+      name
+      packageName
+      latestVersion
+      relationName
+      database
+      schema
+      identifier
+      description
+      runGeneratedAt
+      deprecationDate
+      publicAncestors {
+        uniqueId
+        dbtCoreProject
+        projectId
+        environmentId
+        accountId
+        isDefaultEnv
+        name
+        packageName
+        latestVersion
+        relationName
+        database
+        schema
+        identifier
+        description
+        runGeneratedAt
+      }
+      dependentProjects {
+        dbtCoreProject
+        projectId
+        defaultEnvironmentId
+        dependentModelsCount
+      }
+    }
+  }
+}
+    """,
+}
+
 
 class _MetadataClient(_Client):
     def __init__(self, session, **kwargs):
@@ -65,12 +289,201 @@ class _MetadataClient(_Client):
 
         return None
 
+    def column_lineage(
+        self,
+        environment_id: int,
+        node_unique_id: str,
+        *,
+        max_depth: int = None,
+        column_name: str = None,
+        is_error: bool = False,
+    ):
+        """Retrieve column lineage for a given node.
+
+        Args:
+            environment_id (int): The environment id.
+            node_unique_id (str): The unique id of the node.
+            max_depth: (int): The max depth to traverse the lineage. Defaults to None.
+            column_name: (str): The column name to filter by. Defaults to None.
+            is_error: (bool): Whether to return only error nodes. Defaults to False.
+        """
+        variables = {
+            "environmentId": environment_id,
+            "nodeUniqueId": node_unique_id,
+            "filters": {
+                "maxDepth": max_depth,
+                "columnName": column_name,
+                "isError": is_error,
+            },
+        }
+        return self.query(QUERIES["column_lineage"], variables=variables)
+
+    def longest_executed_models(
+        self,
+        environment_id: int,
+        start_date: str,
+        end_date: str,
+        *,
+        limit: int = 5,
+        job_limit: int = 5,
+        job_id: int = None,
+        order_by: str = "MAX",
+    ):
+        """Retrieve the longest executed models for a given environment.
+
+        Args:
+            environment_id (int): The environment id.
+            start_date (str): The start date in the format YYYY-MM-DD.
+            end_date (str): The end date in the format YYYY-MM-DD.
+            limit (int, optional): The max number of models to return. Defaults to 5.
+            job_limit (int, optional): The max number of jobs to return for each model.
+                Defaults to 5.
+            job_id (int, optional): The job id to filter by. Defaults to None.
+            order_by (str, optional): The order by clause. One of "AVG" or "MAX".
+                Defaults to "MAX".
+        """
+        if order_by not in ["AVG", "MAX"]:
+            raise ValueError("order_by must be one of 'AVG' or 'MAX'")
+
+        variables = {
+            "environmentId": environment_id,
+            "start": start_date,
+            "end": end_date,
+            "limit": limit,
+            "jobLimit": job_limit,
+            "jobId": job_id,
+            "orderBy": order_by,
+        }
+        return self.query(QUERIES["longest_executed_models"], variables=variables)
+
+    def mesh_projects(self, account_id: int):
+        """Retrieve mesh projects for a given account.
+
+        Args:
+            account_id (int): The account id.
+        """
+        variables = {"accountId": account_id}
+        return self.query(QUERIES["mesh_projects"], variables=variables)
+
+    def model_execution_history(
+        self, environment_id: int, start_date: str, end_date: str, unique_id: str
+    ):
+        """Retrieve model execution history for a given environment.
+
+        Args:
+            environment_id (int): The environment id.
+            start_date (str): The start date in the format YYYY-MM-DD.
+            end_date (str): The end date in the format YYYY-MM-DD.
+            unique_id (str): The unique id of the model.
+        """
+        variables = {
+            "environmentId": environment_id,
+            "startDate": start_date,
+            "endDate": end_date,
+            "uniqueId": unique_id,
+        }
+        return self.query(QUERIES["model_execution_history"], variables=variables)
+
+    def model_job_information(
+        self, environment_id: int, start_date: str, end_date: str, unique_id: str
+    ):
+        """Retrieve model job information for a given environment.
+
+        Args:
+            environment_id (int): The environment id.
+            start_date (str): The start date in the format YYYY-MM-DD.
+            end_date (str): The end date in the format YYYY-MM-DD.
+            unique_id (str): The unique id of the model.
+        """
+        variables = {
+            "environmentId": environment_id,
+            "start": start_date,
+            "end": end_date,
+            "uniqueId": unique_id,
+        }
+        return self.query(QUERIES["model_job_information"], variables=variables)
+
+    def most_executed_models(
+        self,
+        environment_id: int,
+        start_date: str,
+        end_date: str,
+        *,
+        limit: int = 5,
+        job_limit: int = 5,
+    ):
+        """Retrieve the most executed models for a given environment.
+
+        Args:
+            environment_id (int): The environment id.
+            start_date (str): The start date in the format YYYY-MM-DD.
+            end_date (str): The end date in the format YYYY-MM-DD.
+            limit (int, optional): The max number of models to return. Defaults to 5.
+            job_limit (int, optional): The max number of jobs to return for each model.
+                Defaults to 5.
+        """
+        variables = {
+            "environmentId": environment_id,
+            "start": start_date,
+            "end": end_date,
+            "limit": limit,
+            "jobLimit": job_limit,
+        }
+        return self.query(QUERIES["most_executed_models"], variables=variables)
+
+    def most_failed_models(
+        self, environment_id: int, start_date: str, end_date: str, *, limit: int = 5
+    ):
+        """Retrieve the most failed models for a given environment.
+
+        Args:
+            environment_id (int): The environment id.
+            start_date (str): The start date in the format YYYY-MM-DD.
+            end_date (str): The end date in the format YYYY-MM-DD.
+            limit (int, optional): The max number of models to return. Defaults to 5.
+        """
+        variables = {
+            "environmentId": environment_id,
+            "start": start_date,
+            "end": end_date,
+            "limit": limit,
+        }
+        return self.query(QUERIES["most_execution_failed_models"], variables=variables)
+
+    def most_models_test_failures(
+        self, environment_id: int, start_date: str, end_date: str, *, limit: int = 5
+    ):
+        """Retrieve the most models with test failures for a given environment.
+
+        Args:
+            environment_id (int): The environment id.
+            start_date (str): The start date in the format YYYY-MM-DD.
+            end_date (str): The end date in the format YYYY-MM-DD.
+            limit (int, optional): The max number of models to return. Defaults to 5.
+        """
+        variables = {
+            "environmentId": environment_id,
+            "start": start_date,
+            "end": end_date,
+            "limit": limit,
+        }
+        return self.query(QUERIES["most_test_failed_models"], variables=variables)
+
+    def public_models(self, account_id: int):
+        """Retrieve public models for a given account.
+
+        Args:
+            account_id (int): The account id.
+        """
+        variables = {"accountId": account_id}
+        return self.query(QUERIES["public_models"], variables=variables)
+
     def query(
         self,
         query: str,
         variables: Dict = None,
         max_pages: int = None,
-        paginated_request_to_list: bool = True,
+        paginated_request_to_list: bool = False,
     ) -> Union[List[Dict], Dict]:
         """Query the Discovery API
 
@@ -90,6 +503,8 @@ class _MetadataClient(_Client):
         payload: Dict[str, Any] = {"query": query}
         if variables:
             payload.update({"variables": variables})
+            if "first" in payload["variables"] and payload["variables"]["first"] > 500:
+                raise ValueError("The maximum page size is 500.")
 
         # If we're not paginating, just make the request and return the results
         if "pageInfo" not in query:
@@ -134,3 +549,41 @@ class _MetadataClient(_Client):
             self.console.log(f"Fetching page {page} for query...")
 
         return all_results
+
+    def recommendations(
+        self,
+        environment_id: int,
+        *,
+        first: int = 500,
+        severity: List[str] = None,
+        categories: List[str] = None,
+        rule_names: List[str] = None,
+        unique_ids: List[str] = None,
+    ):
+        """Retrieve recommendations for a given environment.
+
+        Args:
+            environment_id (int): The environment id.
+            first (int, optional): The max number of recommendations to return.
+                Defaults to 10.
+            after (str, optional): The cursor to paginate after. Defaults to None.
+            severity (List[str], optional): The severity levels to filter by.
+                Defaults to None.
+            categories (List[str], optional): The categories to filter by.
+                Defaults to None.
+            rule_names (List[str], optional): The rule names to filter by.
+                Defaults to None.
+            unique_ids (List[str], optional): The unique ids to filter by.
+                Defaults to None.
+        """
+        variables = {
+            "environmentId": environment_id,
+            "first": first,
+            "filter": {
+                "severity": severity,
+                "categories": categories,
+                "ruleNames": rule_names,
+                "uniqueIds": unique_ids,
+            },
+        }
+        return self.query(QUERIES["recommendations"], variables=variables)

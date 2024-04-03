@@ -33,7 +33,7 @@ client = dbtCloudClient()
 ```
 
 !!! info
-    The `host` argument is only necessary for customers on single-tenant instances
+    The `host` argument is only necessary for customers using dbt Cloud outside of the North America multi-tenant instance (see more info on [dbt Cloud hosting](https://docs.getdbt.com/docs/cloud/about-cloud/regions-ip-addresses))
 
 ### Interfaces
 
