@@ -858,13 +858,19 @@ def delete_environment(
 def list_environments_old(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    project_id: str = typer.Option(
-        None, "--project-id", "-p", help="The project ID or IDs"
+    project_id: str = PROJECT_ID,
+    credentials_id: int = typer.Option(
+        None, "--credentials-id", help="Numeric ID of the credentials."
     ),
     dbt_version: str = typer.Option(
         None,
         "--dbt-version",
         help="The dbt version(s) used in the environment",
+    ),
+    deployment_type: str = typer.Option(
+        None,
+        "--deployment-type",
+        help="The deployment type of the environment",
     ),
     name: str = typer.Option(
         None,
@@ -886,13 +892,15 @@ def list_environments_old(
         ctx,
         account_id,
         project_id,
-        dbt_version,
-        name,
-        type,
-        state,
-        offset,
-        limit,
-        order_by,
+        credentials_id=credentials_id,
+        dbt_version=dbt_version,
+        deployment_type=deployment_type,
+        name=name,
+        type=type,
+        state=state,
+        offset=offset,
+        limit=limit,
+        order_by=order_by,
     )
 
 
@@ -900,13 +908,19 @@ def list_environments_old(
 def list_environments(
     ctx: typer.Context,
     account_id: int = ACCOUNT_ID,
-    project_id: str = typer.Option(
-        None, "--project-id", "-p", help="The project ID or IDs"
-    ),
+    project_id: str = PROJECT_ID,
     dbt_version: str = typer.Option(
         None,
         "--dbt-version",
         help="The dbt version(s) used in the environment",
+    ),
+    deployment_type: str = typer.Option(
+        None,
+        "--deployment-type",
+        help="The deployment type of the environment",
+    ),
+    credentials_id: int = typer.Option(
+        None, "--credentials-id", help="Numeric ID of the credentials."
     ),
     name: str = typer.Option(
         None,
@@ -929,12 +943,19 @@ def list_environments(
     except (ValueError, TypeError):
         pass
 
+    try:
+        deployment_type = json.loads(deployment_type)
+    except (ValueError, TypeError):
+        pass
+
     _dbt_cloud_request(
         ctx,
         "list_environments",
         account_id,
-        project_id=json.loads(project_id) if project_id else project_id,
+        project_id,
         dbt_version=dbt_version,
+        deployment_type=deployment_type,
+        credentials_id=credentials_id,
         name=name,
         type=type,
         state=state,
@@ -987,7 +1008,9 @@ def assign_group_permissions_old(
     group_id: int = GROUP_ID,
     payload: str = PAYLOAD,
 ):
-    """This will soon be deprecated! Use `dbtc user-groups assign-permissions` instead."""
+    """This will soon be deprecated! Use `dbtc user-groups assign-permissions`
+    instead.
+    """
     return assign_group_permissions(ctx, account_id, group_id, payload)
 
 
@@ -1771,7 +1794,9 @@ def get_most_recent_run_artifact_old(
         None, "--step", "-s", help="Index of the step in the run to retrieve"
     ),
 ):
-    """This will soon be deprecated! Use `dbtc runs get-most-recent-artifact` instead."""
+    """
+    This will soon be deprecated! Use `dbtc runs get-most-recent-artifact` instead.
+    """
     return get_most_recent_run_artifact(
         ctx,
         account_id,
@@ -2055,7 +2080,9 @@ def assign_service_token_permissions_old(
     service_token_id: int = SERVICE_TOKEN_ID,
     payload: str = PAYLOAD,
 ):
-    """This will soon be deprecated! Use `dbtc service-tokens assign-permissions` instead."""
+    """
+    This will soon be deprecated! Use `dbtc service-tokens assign-permissions` instead.
+    """
     return assign_service_token_permissions(ctx, account_id, service_token_id, payload)
 
 
@@ -2098,7 +2125,9 @@ def list_service_token_permissions_old(
     account_id: int = ACCOUNT_ID,
     service_token_id: int = SERVICE_TOKEN_ID,
 ):
-    """This will soon be deprecated! Use `dbtc service-tokens list-permissions` instead."""
+    """
+    This will soon be deprecated! Use `dbtc service-tokens list-permissions` instead.
+    """
     return list_service_token_permissions(ctx, account_id, service_token_id)
 
 
