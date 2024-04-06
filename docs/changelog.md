@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.11.2]
+
+### Fixed
+
+- The list_environments method and CLI invocations
+
+## [0.11.1]
+
+### Fixed
+
+- Versioning issue
+
+## [0.11.0]
+
+### Added
+
+- New command line groups (e.g. instead of `dbtc list-accounts`, you would use `dbtc accounts list`).  Older methods are still around but will be deprecated in future versions.
+- New discovery API convenience methods to retrieve performance, recommendations, and other information
+
+## [0.10.0] - 2024-02-08
+
+### Added
+
+- Semantic layer client.  This can be accessed with the `sl` property on the `dbtCloudClient` class (e.g. `client.sl.query`)
+
 ## [0.9.0] - 2024-01-11
 
 ### Removed
