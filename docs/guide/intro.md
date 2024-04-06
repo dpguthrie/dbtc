@@ -41,6 +41,7 @@ The `dbtCloudClient` class contains two properties:
 
 - `cloud` - instance of the `_AdminClient` class, which contains methods to create, read, update, and delete dbt Cloud resources
 - `metadata` - instance of the `_MetadataClient` class, which contains methods to retrieve metadata generated from a dbt Cloud job run
+- `sl` - instance of the `_SemanticLayerClient` class, which contains methods to interact with dbt Cloud's Semantic Layer via a GraphQL API
 
 **`cloud`**
 
@@ -91,6 +92,29 @@ nodes = data['data']['definition']['metrics']['edges']
 for node in nodes:
     # node is a dictionary
     node_name = node['name']
+    ...
+```
+
+**`sl`**
+
+```python
+from dbtc import dbtCloudClient
+
+client = dbtCloudClient(environment_id=1)
+
+query_result = client.sl.query(
+    metrics=['total_revenue', 'total_profit', 'total_customers'],
+    group_by=['customer__region', 'customer__nation', 'metric_time__quarter'],
+)
+
+# As a default the `result` attribute will be a pandas.DataFrame
+query_result.result
+
+# Also view the SQL
+query_result.sql
+
+# Or do something based on the status of the query
+if query_result.status == 'SUCCESSFUL':
     ...
 ```
 
