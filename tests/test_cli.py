@@ -83,6 +83,33 @@ def test_get_project():
 
 
 @pytest.mark.dependency(depends=["test_list_projects"])
+def test_list_environments_old():
+    _test_cloud_cli(
+        [
+            "list-environments",
+            "--account-id",
+            ACCOUNT_ID,
+            "--project-id",
+            PROJECT_ID,
+        ],
+    )
+
+
+@pytest.mark.dependency(depends=["test_list_projects"])
+def test_list_environments():
+    _test_cloud_cli(
+        [
+            "environments",
+            "list",
+            "--account-id",
+            ACCOUNT_ID,
+            "--project-id",
+            PROJECT_ID,
+        ],
+    )
+
+
+@pytest.mark.dependency(depends=["test_list_projects"])
 def test_list_jobs_old():
     _test_cloud_cli(
         [
