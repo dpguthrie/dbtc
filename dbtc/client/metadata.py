@@ -566,7 +566,6 @@ class _MetadataClient(_Client):
             environment_id (int): The environment id.
             first (int, optional): The max number of recommendations to return.
                 Defaults to 10.
-            after (str, optional): The cursor to paginate after. Defaults to None.
             severity (List[str], optional): The severity levels to filter by.
                 Defaults to None.
             categories (List[str], optional): The categories to filter by.
