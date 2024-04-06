@@ -495,7 +495,7 @@ class _MetadataClient(_Client):
                 Defaults to None.
             paginated_request_to_list (bool, optional): When paginating through a
                 request, the elements of the list within each request will be
-                combined into a single list of dictionaries. Defaults to True.
+                combined into a single list of dictionaries. Defaults to False.
 
         Returns:
             Union[List[Dict], Dict]: _description_
