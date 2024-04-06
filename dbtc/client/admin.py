@@ -629,7 +629,7 @@ class _AdminClient(_Client):
             dbt_version (str or list, optional): The version of dbt the environment
                 is using
             deployment_type (str or list, optional): The deployment type of the
-                environment. Valid values are "development", "staging", and "production"
+                environment. Valid values are "staging" and "production"
             credentials_id (int, optional): Numeric ID of the credentials to retrieve
             name (str, optional): Name of the environment to retrieve
             type (str, optional): Type of the environment (deployment or development)
