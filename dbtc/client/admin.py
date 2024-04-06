@@ -335,7 +335,7 @@ class _AdminClient(_Client):
             credentials_id (int): Numeric ID of the credentials to delete
         """
         return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",
+            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",  # noqa: E501
             method="delete",
         )
 
@@ -351,7 +351,7 @@ class _AdminClient(_Client):
             credentials_id (int): Numeric ID of the credentials to retrieve
         """
         return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",
+            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",  # noqa: E501
         )
 
     @v3
@@ -379,7 +379,7 @@ class _AdminClient(_Client):
             payload (dict): Dictionary representing the credentials to update
         """
         return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",
+            f"accounts/{account_id}/projects/{project_id}/credentials/{credentials_id}/",  # noqa: E501
             method="patch",
             json=payload,
         )
@@ -446,7 +446,7 @@ class _AdminClient(_Client):
             env_var_id (int): Numeric ID of the environment variable to delete
         """
         return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/environment-variables/{env_var_id}/",
+            f"accounts/{account_id}/projects/{project_id}/environment-variables/{env_var_id}/",  # noqa: E501
             method="delete",
         )
 
@@ -535,7 +535,7 @@ class _AdminClient(_Client):
             payload (dict): Dictionary representing the environment variables to update
         """
         return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/environment-variables/{env_var_id}/",
+            f"accounts/{account_id}/projects/{project_id}/environment-variables/{env_var_id}/",  # noqa: E501
             method="post",
             json=payload,
         )
@@ -609,9 +609,11 @@ class _AdminClient(_Client):
     def list_environments(
         self,
         account_id: int,
+        project_id: int,
         *,
-        project_id: Union[int, List[int]] = None,
         dbt_version: Union[str, List[str]] = None,
+        deployment_type: Union[str, List[str]] = None,
+        credentials_id: int = None,
         name: str = None,
         type: str = None,
         state: int = None,
@@ -619,13 +621,16 @@ class _AdminClient(_Client):
         limit: int = None,
         order_by: str = None,
     ) -> Dict:
-        """List environments for a specific account
+        """List environments for a specific account and project
 
         Args:
             account_id (int): Numeric ID of the account to retrieve
             project_id (int or list, optional): The project ID or IDs
             dbt_version (str or list, optional): The version of dbt the environment
                 is using
+            deployment_type (str or list, optional): The deployment type of the
+                environment. Valid values are "development", "staging", and "production"
+            credentials_id (int, optional): Numeric ID of the credentials to retrieve
             name (str, optional): Name of the environment to retrieve
             type (str, optional): Type of the environment (deployment or development)
             state (int, optional): 1 = active, 2 = deleted
@@ -636,10 +641,11 @@ class _AdminClient(_Client):
             order_by (str, optional): Field to order the result by.
         """
         return self._simple_request(
-            f"accounts/{account_id}/environments/",
+            f"accounts/{account_id}/projects/{project_id}/environments/",
             params={
-                "project_id__in": json_listify(project_id),
                 "dbt_version__in": json_listify(dbt_version),
+                "deployment_type__in": json_listify(deployment_type),
+                "credentials_id": credentials_id,
                 "name": name,
                 "type": type,
                 "state": state,
@@ -1143,10 +1149,11 @@ class _AdminClient(_Client):
         Args:
             account_id (int): Numeric ID of the account
             project_id (int): Numeric ID of the project
-            payload (dict): Dictionary representing the semantic layer configuration to create
+            payload (dict): Dictionary representing the semantic layer configuration to
+                create
         """
         return self._simple_request(
-            f"accounts/{account_id}/projects/{project_id}/semantic-layer-configurations",
+            f"accounts/{account_id}/projects/{project_id}/semantic-layer-configurations",  # noqa: E501
             method="post",
             json=payload,
         )
@@ -1176,7 +1183,8 @@ class _AdminClient(_Client):
         Args:
             account_id (int): Numeric ID of the account to retrieve
             project_id (int): Numeric ID of the project to retrieve
-            sl_config_id (int): Numeric ID of the semantic layer configuration to retrieve
+            sl_config_id (int): Numeric ID of the semantic layer configuration to
+                retrieve
         """
         return self._simple_request(
             f"accounts/{account_id}/projects/{project_id}/semantic-layer-configurations/{sl_config_id}"  # noqa: E501
@@ -1192,7 +1200,8 @@ class _AdminClient(_Client):
             account_id (int): Numeric ID of the account
             project_id (int): Numeric ID of the project
             sl_config_id (int): Numeric ID of the semantic layer configuration to update
-            payload (dict): Dictionary representing the semantic layer configuration to update
+            payload (dict): Dictionary representing the semantic layer configuration to
+                update
         """
         return self._simple_request(
             f"accounts/{account_id}/projects/{project_id}/semantic-layer-configurations/{sl_config_id}",  # noqa: E501
@@ -1209,7 +1218,8 @@ class _AdminClient(_Client):
         Args:
             account_id (int): Numeric ID of the account
             project_id (int): Numeric ID of the project
-            payload (dict): Dictionary representing the semantic layer credential to create
+            payload (dict): Dictionary representing the semantic layer credential to
+                create
         """
         return self._simple_request(
             f"accounts/{account_id}/projects/{project_id}/semantic-layer-credentials",
@@ -1256,7 +1266,8 @@ class _AdminClient(_Client):
             account_id (int): Numeric ID of the account
             project_id (int): Numeric ID of the project
             sl_creds_id (int): Numeric ID of the semantic layer credential to update
-            payload (dict): Dictionary representing the semantic layer credential to update
+            payload (dict): Dictionary representing the semantic layer credential to
+                update
         """
         return self._simple_request(
             f"accounts/{account_id}/projects/{project_id}/semantic-layer-credentials/{sl_creds_id}",  # noqa: E501
@@ -1274,7 +1285,8 @@ class _AdminClient(_Client):
             account_id (int): Numeric ID of the account
             project_id (int): Numeric ID of the project
             sl_creds_id (int): Numeric ID of the semantic layer credential to update
-            payload (dict): Dictionary representing the semantic layer credential to update
+            payload (dict): Dictionary representing the semantic layer credential to
+                update
         """
         return self._simple_request(
             f"accounts/{account_id}/projects/{project_id}/semantic-layer-credentials/{sl_creds_id}",  # noqa: E501
