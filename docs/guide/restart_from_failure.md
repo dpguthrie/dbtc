@@ -1,5 +1,8 @@
 # Restart From Failure
 
+!!! warning
+    This feature within this package is no longer required as it's all done in a native way through dbt Cloud's [user interface](https://docs.getdbt.com/docs/deploy/retry-jobs) or through the [administrative API](https://docs.getdbt.com/dbt-cloud/api-v2#/operations/Retry%20Failed%20Job)
+
 !!! tip "Thank You!"
 
     All credit, for both the words below as well as the code that enables this functionality, should be directed to [@matt-winkler](https://github.com/matt-winkler).  The initial work for this started with his incredible [gist](https://gist.github.com/matt-winkler/dcd3004e714648420e0e3bd550222a9d).

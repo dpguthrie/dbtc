@@ -101,6 +101,7 @@ nav:
     - guide/intro.md
     - guide/cloud.md
     - guide/metadata.md
+    - guide/semantic_layer.md
   - Advanced:
     - guide/autoscaling_ci.md
     - guide/restart_from_failure.md

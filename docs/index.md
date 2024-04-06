@@ -26,7 +26,7 @@
 
 **V2 Docs**: <a target="_blank" href="https://docs.getdbt.com/dbt-cloud/api-v2">https://docs.getdbt.com/dbt-cloud/api-v2</a>
 
-**V3 Docs (Unofficial)**: <a target="_blank" href="https://documenter.getpostman.com/view/14183654/UVsSNiXC">https://documenter.getpostman.com/view/14183654/UVsSNiXC</a>
+**V3 Docs**: <a target="_blank" href="https://docs.getdbt.com/dbt-cloud/api-v3#/operations/List%20Accounts">https://docs.getdbt.com/dbt-cloud/api-v3#/operations/List%20Accounts</a>
 
 ---
 

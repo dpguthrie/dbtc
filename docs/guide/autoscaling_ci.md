@@ -1,5 +1,8 @@
 # Autoscaling CI
 
+!!! warning
+    This feature within this package is no longer required as it's all done in a native way with [dbt Cloud's continuous integration](https://docs.getdbt.com/docs/deploy/continuous-integration) offering.
+
 !!! tip "Thank You!"
 
     As with the [restart from failure](/latest/guide/restart_from_failure) functionality, a lot of credit goes to [@matt-winkler](https://github.com/matt-winkler) for developing this feature.
