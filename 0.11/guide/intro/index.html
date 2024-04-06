@@ -739,6 +739,7 @@
 <ul>
 <li><code>cloud</code> - instance of the <code>_AdminClient</code> class, which contains methods to create, read, update, and delete dbt Cloud resources</li>
 <li><code>metadata</code> - instance of the <code>_MetadataClient</code> class, which contains methods to retrieve metadata generated from a dbt Cloud job run</li>
+<li><code>sl</code> - instance of the <code>_SemanticLayerClient</code> class, which contains methods to interact with dbt Cloud's Semantic Layer via a GraphQL API</li>
 </ul>
 <p><strong><code>cloud</code></strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dbtc</span> <span class="kn">import</span> <span class="n">dbtCloudClient</span>
@@ -784,6 +785,26 @@
 <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
     <span class="c1"># node is a dictionary</span>
     <span class="n">node_name</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p><strong><code>sl</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dbtc</span> <span class="kn">import</span> <span class="n">dbtCloudClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">dbtCloudClient</span><span class="p">(</span><span class="n">environment_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">query_result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">sl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;total_revenue&#39;</span><span class="p">,</span> <span class="s1">&#39;total_profit&#39;</span><span class="p">,</span> <span class="s1">&#39;total_customers&#39;</span><span class="p">],</span>
+    <span class="n">group_by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;customer__region&#39;</span><span class="p">,</span> <span class="s1">&#39;customer__nation&#39;</span><span class="p">,</span> <span class="s1">&#39;metric_time__quarter&#39;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># As a default the `result` attribute will be a pandas.DataFrame</span>
+<span class="n">query_result</span><span class="o">.</span><span class="n">result</span>
+
+<span class="c1"># Also view the SQL</span>
+<span class="n">query_result</span><span class="o">.</span><span class="n">sql</span>
+
+<span class="c1"># Or do something based on the status of the query</span>
+<span class="k">if</span> <span class="n">query_result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;SUCCESSFUL&#39;</span><span class="p">:</span>
     <span class="o">...</span>
 </code></pre></div>
 <h2 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h2>
