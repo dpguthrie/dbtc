@@ -85,7 +85,7 @@ def test_get_project():
 @pytest.mark.dependency(depends=["test_list_projects"])
 def test_list_environments_old():
     _test_cloud_cli(
-        "list_environments",
+        "list-environments",
         "--account-id",
         ACCOUNT_ID,
         "--project-id",
