@@ -128,7 +128,7 @@ client = dbtCloudClient(environment_id=1, host="emea.dbt.com")
     Assuming that `client` is an instance of `dbtCloudClient`
     ```py
     query_result = client.sl.query(
-        metrics=["]
+        metrics=["total_revenue", "total_profit"],
         group_by=["customer__region"],
     )
 

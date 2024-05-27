@@ -68,100 +68,101 @@ query GetSavedQueries($environmentId: BigInt!) {
 query GetMetrics($environmentId: BigInt!) {
     metrics(environmentId: $environmentId) {
         description
+        requiresMetricTime
         measures {
-        agg
-        aggTimeDimension
-        expr
-        name
+            agg
+            aggTimeDimension
+            expr
+            name
         }
         entities {
-        description
-        expr
-        name
-        role
-        type
+            description
+            expr
+            name
+            role
+            type
         }
         filter {
-        whereSqlTemplate
+            whereSqlTemplate
         }
         label
         name
         queryableGranularities
         type
         typeParams {
-        denominator {
-            alias
-            filter {
-            whereSqlTemplate
+            denominator {
+                alias
+                filter {
+                    whereSqlTemplate
+                }
+                name
+                offsetToGrain
+                offsetWindow {
+                    count
+                    granularity
+                }
             }
-            name
-            offsetToGrain
-            offsetWindow {
-            count
-            granularity
+            expr
+            grainToDate
+            inputMeasures {
+                alias
+                filter {
+                    whereSqlTemplate
+                }
+                name
             }
-        }
-        expr
-        grainToDate
-        inputMeasures {
-            alias
-            filter {
-            whereSqlTemplate
+            measure {
+                alias
+                filter {
+                    whereSqlTemplate
+                }
+                name
             }
-            name
-        }
-        measure {
-            alias
-            filter {
-            whereSqlTemplate
+            metrics {
+                alias
+                filter {
+                    whereSqlTemplate
+                }
+                name
+                offsetToGrain
+                offsetWindow {
+                    count
+                    granularity
+                }
             }
-            name
-        }
-        metrics {
-            alias
-            filter {
-            whereSqlTemplate
+            numerator {
+                alias
+                filter {
+                    whereSqlTemplate
+                }
+                name
+                offsetToGrain
+                offsetWindow {
+                    count
+                    granularity
+                }
             }
-            name
-            offsetToGrain
-            offsetWindow {
-            count
-            granularity
+            window {
+                count
+                granularity
             }
-        }
-        numerator {
-            alias
-            filter {
-            whereSqlTemplate
-            }
-            name
-            offsetToGrain
-            offsetWindow {
-            count
-            granularity
-            }
-        }
-        window {
-            count
-            granularity
-        }
         }
         dimensions {
-        description
-        expr
-        isPartition
-        label
-        name
-        qualifiedName
-        queryableGranularities
-        type
-        typeParams {
-            timeGranularity
-            validityParams {
-            isEnd
-            isStart
+            description
+            expr
+            isPartition
+            label
+            name
+            qualifiedName
+            queryableGranularities
+            type
+            typeParams {
+                timeGranularity
+                validityParams {
+                    isEnd
+                    isStart
+                }
             }
-        }
         }
     }
 }
