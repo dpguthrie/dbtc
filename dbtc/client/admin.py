@@ -1053,6 +1053,7 @@ class _AdminClient(_Client):
         return self._simple_request(
             f"accounts/{account_id}/projects/{project_id}/managed-repositories/",
             method="post",
+            json=payload,
         )
 
     @v3
