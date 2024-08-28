@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.3]
+
+### Fixed
+
+- Add payload parameter to create_managed_repository
+
 ## [0.11.2]
 
 ### Fixed
