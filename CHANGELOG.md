@@ -1,10 +1,16 @@
 # Changelog
 
-## [0.11.3]
+## [0.11.4]
 
 ### Fixed
 
 - Add payload parameter to create_managed_repository
+
+## [0.11.3]
+
+### Added
+
+- `requiresMetricTime` field to GetMetrics semantic layer query
 
 ## [0.11.2]
 
