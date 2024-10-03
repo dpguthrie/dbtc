@@ -41,6 +41,7 @@ dev-dependencies = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.ruff]
 line-length = 88
 indent-width = 4
 
