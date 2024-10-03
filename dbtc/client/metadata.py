@@ -226,7 +226,50 @@ query PublicModels($accountId: BigInt!) {
   }
 }
     """,
+    "search": """
+query Search($filter: SearchQueryFilter!, $environmentId: BigInt!, $after: String, $first: Int) {
+  environment(id: $environmentId) {
+    applied {
+      searchResults(filter: $filter, after: $after, first: $first) {
+        edges {
+          cursor
+          node {
+            highlight
+            hit {
+              accountId
+              description
+              environmentId
+              filePath
+              meta
+              name
+              projectId
+              resourceType
+              tags
+              uniqueId
+            }
+            matchedField
+          }
+        }
+      }
+    }
+  }
 }
+    """,  # noqa: E501
+}
+
+ACCESS_LEVELS = ["private", "protected", "public"]
+SEARCH_FIELD_TYPES = ["code", "column", "description", "name", "relation"]
+RESOURCE_TYPES = [
+    "Exposure",
+    "Macro",
+    "Metric",
+    "Model",
+    "Seed",
+    "SemanticModel",
+    "Snapshot",
+    "Source",
+    "Test",
+]
 
 
 class _MetadataClient(_Client):
@@ -586,3 +629,67 @@ class _MetadataClient(_Client):
             },
         }
         return self.query(QUERIES["recommendations"], variables=variables)
+
+    def search(
+        self,
+        environment_id: int,
+        search_query: str,
+        *,
+        gql_query: str = None,
+        first: int = 500,
+        access_level: str = None,
+        search_fields: List[str] = SEARCH_FIELD_TYPES,
+        materialization_type: str = None,
+        modeling_layer: str = None,
+        resource_type: str = None,
+        tags: str = None,
+    ):
+        """
+        Search for resources in the metadata service.
+
+        Args:
+            environment_id (int): The environment id.
+            search_query (str): The search query to filter by.
+            gql_query (str, optional): Override the default GraphQL query with your own.
+                Defaults to None and will use the default given by the package.
+            first (int, optional): The max number of search results to return.
+                Defaults to 500.
+            access_levels (str, optional): The access levels to filter by.
+                Defaults to None.
+            search_fields (List[str], optional): The fields to search by. Defaults to
+                ["code", "column", "description", "name", "relation"].
+            materialization_type (str, optional): The materialization type to filter by.
+                Defaults to None.
+            modeling_layer (str, optional): The modeling layer to filter by.
+                Defaults to None.
+            resource_type (str, optional): The resource type to filter by.
+                Defaults to None.
+            tags (str, optional): The tags to filter by.
+                Defaults to None.
+        """
+        query = gql_query or QUERIES["search"]
+        if access_level and access_level not in ACCESS_LEVELS:
+            raise ValueError(f"access_level must be one of {ACCESS_LEVELS}")
+
+        if resource_type and resource_type not in RESOURCE_TYPES:
+            raise ValueError(f"resource_type must be one of {RESOURCE_TYPES}")
+
+        if any([f not in SEARCH_FIELD_TYPES for f in search_fields]):
+            raise ValueError(
+                f"search_fields must be one of {', '.join(SEARCH_FIELD_TYPES)}"
+            )
+
+        variables = {
+            "filter": {
+                "query": search_query,
+                "accessLevels": access_level,
+                "fields": search_fields,
+                "materializationTypes": materialization_type,
+                "modelingLayers": modeling_layer,
+                "resourceTypes": resource_type,
+                "tags": tags,
+            },
+            "environmentId": environment_id,
+            "first": first,
+        }
+        return self.query(query, variables=variables)

@@ -1043,7 +1043,9 @@ class _AdminClient(_Client):
     # REPOS
 
     @v3
-    def create_managed_repository(self, account_id: int, project_id: int, payload: Dict) -> Dict:
+    def create_managed_repository(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
         """Create a new dbt Cloud managed repository
 
         Args:
