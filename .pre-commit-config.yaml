@@ -29,8 +29,6 @@ repos:
   - id: check-yaml
   - id: debug-statements
   - id: detect-private-key
-  - id: flake8
-    stages: [commit,push]
   - id: forbid-new-submodules
   - id: no-commit-to-branch
     stages: [commit,push]

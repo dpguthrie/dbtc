@@ -1,7 +1,6 @@
 # stdlib
 import abc
 import os
-import uuid
 from typing import Optional
 
 # third party
@@ -33,8 +32,6 @@ class _Client(abc.ABC):
             "DBT_CLOUD_ENVIRONMENT_ID", None
         )
         self._use_beta = use_beta_endpoint
-        self._anonymous_id: str = str(uuid.uuid4())
-        self._called_from: Optional[str] = None
         self.console = err_console
         self.session = session
         self.session.headers = self.headers
