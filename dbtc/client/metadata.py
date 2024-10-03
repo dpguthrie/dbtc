@@ -603,6 +603,7 @@ class _MetadataClient(_Client):
     ):
         """Retrieve recommendations for a given environment.
 
+
         Args:
             environment_id (int): The environment id.
             first (int, optional): The max number of recommendations to return.
