@@ -6,7 +6,8 @@ repos:
   rev: v0.6.3
   hooks:
     - id: ruff
-      args: [ --show-fixes ]
+      args: [ --fix --show-fixes ]
+    - id: ruff-format
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v2.1.0
   hooks:
