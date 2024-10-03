@@ -551,7 +551,6 @@ class _MetadataClient(_Client):
 
         # If we're not paginating, just make the request and return the results
         if "pageInfo" not in query:
-            self.console.log("No pageInfo found in query so making a single request.")
             return self._make_request(payload)
 
         # If we're paginating but the query isn't setup properly for paginating,
@@ -582,7 +581,6 @@ class _MetadataClient(_Client):
             page += 1
 
             if not cursor:
-                self.console.log("No more results to fetch.")
                 break
 
             if max_pages and page >= max_pages:
