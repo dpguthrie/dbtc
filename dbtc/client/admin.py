@@ -54,9 +54,6 @@ def _version_decorator(func, version):
     def wrapper(self, *args, **kwargs):
         self._path = f"/api/{version}/"
         result = func(self, *args, **kwargs)
-        if not self.do_not_track:
-            self._send_track("Admin API", func, *args, **kwargs)
-
         return result
 
     return wrapper

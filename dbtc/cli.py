@@ -94,7 +94,6 @@ API_KEY = typer.Option(
 CONNECTION_ID = typer.Option(
     ..., "--connection-id", "-c", help="Numeric ID of the connection."
 )
-DO_NOT_TRACK = typer.Option(False, "--do-not-track", help="Turn off tracking")
 END_DATE = typer.Option(..., "--end-date", help="Date to end retrieving data from")
 ENVIRONMENT_ID = typer.Option(
     ..., "--environment-id", "-e", help="Numeric ID of the connection."
@@ -215,7 +214,6 @@ def common(
     api_key: Optional[str] = API_KEY,
     service_token: Optional[str] = TOKEN,
     host: Optional[str] = HOST,
-    do_not_track: Optional[bool] = DO_NOT_TRACK,
     version: Optional[bool] = VERSION,
     output: Optional[str] = OUTPUT,
 ):
