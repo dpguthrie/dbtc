@@ -7,7 +7,7 @@ from typing import Callable, Optional
 
 # third party
 import requests
-import rudder_analytics
+import rudderstack.analytics as rudder_analytics
 
 # first party
 from dbtc import __version__
