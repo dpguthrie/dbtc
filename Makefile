@@ -7,7 +7,6 @@ install:
 	uv sync --no-dev
 
 lint:
-	uv run ruff check --select I --fix .
 	uv run ruff check
 
 test: lint

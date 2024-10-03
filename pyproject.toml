@@ -18,6 +18,7 @@ dependencies = [
     "pyarrow>=15.0.0",
     "pandas<2.2.0",
 ]
+extend-select = ["I"]
 
 [project.scripts]
 dbtc = "dbtc.cli:main"
