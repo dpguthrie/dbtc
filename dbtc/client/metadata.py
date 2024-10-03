@@ -180,47 +180,65 @@ query Recommendations($environmentId: BigInt!, $first: Int!, $after: String, $fi
 }
     """,  # noqa: E501
     "public_models": """
-query PublicModels($accountId: BigInt!) {
+query Node($accountId: BigInt!, $after: String, $filter: PublicModelsFilter, $first: Int) {
   account(id: $accountId) {
-    publicModels {
-      uniqueId
-      dbtCoreProject
-      projectId
-      environmentId
-      accountId
-      isDefaultEnv
-      name
-      packageName
-      latestVersion
-      relationName
-      database
-      schema
-      identifier
-      description
-      runGeneratedAt
-      deprecationDate
-      publicAncestors {
-        uniqueId
-        dbtCoreProject
-        projectId
-        environmentId
-        accountId
-        isDefaultEnv
-        name
-        packageName
-        latestVersion
-        relationName
-        database
-        schema
-        identifier
-        description
-        runGeneratedAt
-      }
-      dependentProjects {
-        dbtCoreProject
-        projectId
-        defaultEnvironmentId
-        dependentModelsCount
+    publicModels(after: $after, filter: $filter, first: $first) {
+      edges {
+        node {
+          accountId
+          columnCount
+          database
+          dbtCoreProject
+          dependentProjects {
+            dbtCoreProject
+            defaultEnvironmentId
+            dependentModelsCount
+            environmentId
+            projectId
+          }
+          deprecationDate
+          description
+          environmentDeploymentType
+          environmentId
+          fqn
+          group
+          healthIssues
+          identifier
+          isDefaultEnv
+          lastRunStatus
+          latestVersion
+          materializationType
+          name
+          packageName
+          projectId
+          publicAncestors {
+            accountId
+            database
+            dbtCoreProject
+            description
+            environmentDeploymentType
+            environmentId
+            fqn
+            group
+            healthIssues
+            identifier
+            isDefaultEnv
+            lastRunStatus
+            latestVersion
+            materializationType
+            name
+            packageName
+            projectId
+            relationName
+            runGeneratedAt
+            schema
+            uniqueId
+          }
+          relationName
+          runGeneratedAt
+          schema
+          uniqueId
+        }
       }
     }
   }
@@ -512,13 +530,34 @@ class _MetadataClient(_Client):
         }
         return self.query(QUERIES["most_test_failed_models"], variables=variables)
 
-    def public_models(self, account_id: int):
+    def public_models(
+        self,
+        account_id: int,
+        *,
+        project_name: str = None,
+        environment_ids: List[int] = None,
+        project_id: int = None,
+        unique_ids: List[str] = None,
+    ):
         """Retrieve public models for a given account.
 
         Args:
             account_id (int): The account id.
+            project_name (str, optional): The project name. Defaults to None.
+            environment_ids (list[int], optional): The environment ids.
+                Defaults to None.
+            project_id (int, optional): The project id. Defaults to None.
+            unique_ids (list[str], optional): The unique ids. Defaults to None.
         """
-        variables = {"accountId": account_id}
+        variables = {
+            "accountId": account_id,
+            "filter": {
+                "dbtCoreProjectName": project_name,
+                "environmentIds": environment_ids,
+                "projectId": project_id,
+                "uniqueIds": unique_ids,
+            },
+        }
         return self.query(QUERIES["public_models"], variables=variables)
 
     def query(
