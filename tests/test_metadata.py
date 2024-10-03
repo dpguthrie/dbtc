@@ -84,7 +84,7 @@ def test_pagination_without_combining_lists(dbtc_client):
 
 
 def test_pagination_with_max_pages(dbtc_client):
-    first = 25
+    first = 10
     max_pages = 2
     variables = {"environmentId": ENVIRONMENT_ID, "first": first, "after": None}
     data = dbtc_client.metadata.query(
