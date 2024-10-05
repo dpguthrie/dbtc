@@ -1,7 +1,7 @@
 # third party
 import requests
 from requests.adapters import HTTPAdapter
-from urllib3.util import Retry
+from urllib3.util.retry import Retry
 
 # first party
 from dbtc.client.admin import _AdminClient
