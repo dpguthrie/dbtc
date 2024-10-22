@@ -134,6 +134,8 @@ def test_list_runs(dbtc_client):
         "run_id",
         account_id=ACCOUNT_ID,
         job_definition_id=JOB_ID,
+        status="success",
+        order_by="-id",
     )
 
 
