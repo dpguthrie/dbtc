@@ -328,7 +328,7 @@ def test_get_run_artifact_old():
             "--run-id",
             pytest.run_id,
             "--path",
-            "run_results.json",
+            "manifest.json",
         ],
     )
 
@@ -344,7 +344,7 @@ def test_get_run_artifact():
             "--run-id",
             pytest.run_id,
             "--path",
-            "run_results.json",
+            "manifest.json",
         ],
     )
 
