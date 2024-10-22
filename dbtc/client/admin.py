@@ -1568,6 +1568,9 @@ class _AdminClient(_Client):
             runs["data"] = runs.get("data", [])[0]
         except IndexError:
             runs["data"] = {}
+        except TypeError:
+            return runs
+
         return runs
 
     @v2
@@ -1624,7 +1627,7 @@ class _AdminClient(_Client):
 
         try:
             run_id = runs.get("data", {})["id"]
-        except KeyError:
+        except (TypeError, KeyError):
             raise Exception("A run could not be found with the provided arguments.")
         else:
             return self.get_run_artifact(account_id, run_id, path, step=step)
