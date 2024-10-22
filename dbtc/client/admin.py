@@ -76,11 +76,7 @@ class _AdminClient(_Client):
     def _simple_request(self, path: str, *, method: str = "get", **kwargs) -> Dict:
         """Return json from response."""
         response = self._make_request(path, method=method, **kwargs)
-        try:
-            return response.json()
-        except ValueError:
-            print(response)
-            return response
+        return response.json()
 
     def _get_by_name(self, items: List, item_name: str, value: str = "name"):
         try:
