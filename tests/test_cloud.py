@@ -223,7 +223,9 @@ def test_get_most_recent_run_artifacts(dbtc_client):
 
 @pytest.mark.dependency(depends=["test_list_runs"])
 def test_get_most_recent_run_artifacts_bad(dbtc_client):
-    data = dbtc_client.cloud.get_most_recent_run_artifact(account_id=1)
+    data = dbtc_client.cloud.get_most_recent_run_artifact(
+        account_id=1, path="manifest.json"
+    )
     assert "data" in data
     assert data["data"] is None
 
