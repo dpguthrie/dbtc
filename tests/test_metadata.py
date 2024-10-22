@@ -184,3 +184,8 @@ def test_recommendations(dbtc_client):
     data = dbtc_client.metadata.query(QUERY, variables)
     assert isinstance(data[0], dict)
     assert "data" in data[0]
+
+
+def test_search(dbtc_client):
+    data = dbtc_client.metadata.search(ENVIRONMENT_ID, "orders")
+    assert "data" in data
