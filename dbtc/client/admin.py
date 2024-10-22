@@ -1628,7 +1628,7 @@ class _AdminClient(_Client):
         try:
             run_id = runs.get("data", {})["id"]
         except (TypeError, KeyError):
-            raise Exception("A run could not be found with the provided arguments.")
+            return runs
         else:
             return self.get_run_artifact(account_id, run_id, path, step=step)
 
