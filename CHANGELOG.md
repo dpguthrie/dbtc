@@ -5,6 +5,11 @@
 ### Added
 
 -   New `search` method in the metadata client for searching across dbt resources
+-   Retry logic to the common session object for the following status codes: 429, 500, 502, 503, 504
+
+### Removed
+
+- Rudderstack tracking code
 
 ## [0.11.4]
 
