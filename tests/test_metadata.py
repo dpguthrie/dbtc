@@ -2,6 +2,9 @@
 import datetime
 from datetime import timedelta
 
+# third party
+import pytest
+
 current_date = datetime.date.today()
 
 # VARIABLES
@@ -189,3 +192,22 @@ def test_recommendations(dbtc_client):
 def test_search(dbtc_client):
     data = dbtc_client.metadata.search(ENVIRONMENT_ID, "orders")
     assert "data" in data
+
+
+def test_bad_search_access_level(dbtc_client):
+    with pytest.raises(ValueError):
+        dbtc_client.metadata.search(
+            ENVIRONMENT_ID, "orders", access_level="super_private"
+        )
+
+
+def test_bad_search_resource_type(dbtc_client):
+    with pytest.raises(ValueError):
+        dbtc_client.metadata.search(ENVIRONMENT_ID, "orders", resource_type="modelino")
+
+
+def test_bad_search_search_fields(dbtc_client):
+    with pytest.raises(ValueError):
+        dbtc_client.metadata.search(
+            ENVIRONMENT_ID, "orders", search_fields=["secret_code"]
+        )
