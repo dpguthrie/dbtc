@@ -167,14 +167,24 @@ def test_get_job():
 def test_list_runs_old():
     _test_cloud_cli(
         ["list-runs", "--account-id", ACCOUNT_ID, "--job-id", JOB_ID],
-        "run_id",
     )
 
 
 @pytest.mark.dependency(depends=["test_list_jobs"])
 def test_list_runs():
     _test_cloud_cli(
-        ["runs", "list", "--account-id", ACCOUNT_ID, "--job-id", JOB_ID],
+        [
+            "runs",
+            "list",
+            "--account-id",
+            ACCOUNT_ID,
+            "--job-id",
+            JOB_ID,
+            "--status",
+            "success",
+            "--order-by",
+            "-id",
+        ],
         "run_id",
     )
 
@@ -328,7 +338,7 @@ def test_get_run_artifact_old():
             "--run-id",
             pytest.run_id,
             "--path",
-            "run_results.json",
+            "manifest.json",
         ],
     )
 
@@ -344,7 +354,7 @@ def test_get_run_artifact():
             "--run-id",
             pytest.run_id,
             "--path",
-            "run_results.json",
+            "manifest.json",
         ],
     )
 

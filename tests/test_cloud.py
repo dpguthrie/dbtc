@@ -134,6 +134,8 @@ def test_list_runs(dbtc_client):
         "run_id",
         account_id=ACCOUNT_ID,
         job_definition_id=JOB_ID,
+        status="success",
+        order_by="-id",
     )
 
 
@@ -177,6 +179,13 @@ def test_get_most_recent_run(dbtc_client):
     _test_cloud_method(dbtc_client, "get_most_recent_run")
 
 
+@pytest.mark.dependency(depends=["test_list_runs"])
+def test_get_most_recent_run_bad(dbtc_client):
+    data = dbtc_client.cloud.get_most_recent_run(account_id=1)
+    assert "data" in data
+    assert data["data"] is None
+
+
 @pytest.mark.dependency(dpeends=["test_list_runs"])
 def test_get_run_timing_details(dbtc_client):
     _test_cloud_method(
@@ -210,6 +219,15 @@ def test_get_most_recent_run_artifacts(dbtc_client):
         account_id=ACCOUNT_ID, path="manifest.json"
     )
     assert "nodes" in data.keys()
+
+
+@pytest.mark.dependency(depends=["test_list_runs"])
+def test_get_most_recent_run_artifacts_bad(dbtc_client):
+    data = dbtc_client.cloud.get_most_recent_run_artifact(
+        account_id=1, path="manifest.json"
+    )
+    assert "data" in data
+    assert data["data"] is None
 
 
 @pytest.mark.dependency(depends=["test_list_run_artifacts"])

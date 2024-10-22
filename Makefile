@@ -1,16 +1,13 @@
-PYTEST=poetry run pytest
+PYTEST=uv run pytest
 
 install_dev:
-	poetry install
+	uv sync
 
 install:
-	poetry install --no-dev
+	uv sync --no-dev
 
 lint:
-	poetry run black -S --check --diff .
-	poetry run isort --check-only --diff .
-	poetry run flake8 .
-	poetry run mypy . --ignore-missing-imports
+	uv run ruff check
 
 test: lint
 	$(PYTEST)

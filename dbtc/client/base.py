@@ -1,20 +1,13 @@
 # stdlib
 import abc
-import inspect
 import os
-import uuid
-from typing import Callable, Optional
+from typing import Optional
 
 # third party
 import requests
-import rudder_analytics
 
 # first party
-from dbtc import __version__
 from dbtc.console import err_console
-
-rudder_analytics.write_key = "2KbeK4vnN03rxKRcL8YNIDvk1pz"
-rudder_analytics.data_plane_url = "https://dbtlabsdonqtb.dataplane.rudderstack.com"
 
 
 class _Client(abc.ABC):
@@ -25,7 +18,6 @@ class _Client(abc.ABC):
         api_key: str = None,
         service_token: str = None,
         host: str = None,
-        do_not_track: bool = False,
         environment_id: int = None,
         use_beta_endpoint: bool = True,
     ):
@@ -40,9 +32,6 @@ class _Client(abc.ABC):
             "DBT_CLOUD_ENVIRONMENT_ID", None
         )
         self._use_beta = use_beta_endpoint
-        self.do_not_track: bool = do_not_track
-        self._anonymous_id: str = str(uuid.uuid4())
-        self._called_from: Optional[str] = None
         self.console = err_console
         self.session = session
         self.session.headers = self.headers
@@ -75,15 +64,3 @@ class _Client(abc.ABC):
             return f"{self._base_url}{path}"
 
         return self._base_url
-
-    def _send_track(self, event_name: str, func: Callable, *args, **kwargs):
-        func_args = [a for a in inspect.getfullargspec(func).args if a != "self"]
-        properties = {
-            "method": func.__name__,
-            "dbtc_version": __version__,
-            "called_from": self._called_from,
-            **dict(zip(func_args, args)),
-            **kwargs,
-        }
-        properties = {k: v for k, v in properties.items() if not k.endswith("_id")}
-        rudder_analytics.track(self._anonymous_id, event_name, properties)

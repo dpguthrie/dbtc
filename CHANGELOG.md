@@ -1,56 +1,71 @@
 # Changelog
 
+## [0.11.5]
+
+### Added
+
+-   New `search` method in the metadata client for searching across dbt resources
+-   Retry logic to the common session object for the following status codes: 429, 500, 502, 503, 504
+
+### Updated
+
+-   `public_models` method on the `metadata` property - now allows for argument-based filtering.
+
+### Removed
+
+- Rudderstack tracking code
+
 ## [0.11.4]
 
 ### Fixed
 
-- Add payload parameter to create_managed_repository
+-   Add payload parameter to create_managed_repository
 
 ## [0.11.3]
 
 ### Added
 
-- `requiresMetricTime` field to GetMetrics semantic layer query
+-   `requiresMetricTime` field to GetMetrics semantic layer query
 
 ## [0.11.2]
 
 ### Fixed
 
-- The list_environments method and CLI invocations
+-   The list_environments method and CLI invocations
 
 ## [0.11.1]
 
 ### Fixed
 
-- Versioning issue
+-   Versioning issue
 
 ## [0.11.0]
 
 ### Added
 
-- New command line groups (e.g. instead of `dbtc list-accounts`, you would use `dbtc accounts list`).  Older methods are still around but will be deprecated in future versions.
-- New discovery API convenience methods to retrieve performance, recommendations, and other information
+-   New command line groups (e.g. instead of `dbtc list-accounts`, you would use `dbtc accounts list`). Older methods are still around but will be deprecated in future versions.
+-   New discovery API convenience methods to retrieve performance, recommendations, and other information
 
 ## [0.10.0] - 2024-02-08
 
 ### Added
 
-- Semantic layer client.  This can be accessed with the `sl` property on the `dbtCloudClient` class (e.g. `client.sl.query`)
+-   Semantic layer client. This can be accessed with the `sl` property on the `dbtCloudClient` class (e.g. `client.sl.query`)
 
 ## [0.9.0] - 2024-01-11
 
 ### Removed
 
-- All of the methods in the `_MetadataClient` except for `query`.  The Discovery API no longer allows a user to specify every single field recursively, which is what the `sgqlc` package would do.
+-   All of the methods in the `_MetadataClient` except for `query`. The Discovery API no longer allows a user to specify every single field recursively, which is what the `sgqlc` package would do.
 
 ### Added
 
-- An optional keyword argument `use_beta_endpoint` to the `dbtCloudClient` class.  This will default to `True`, which means that the Discovery API will use the beta endpoint at https://metadata.<host>/beta/graphql instead of https://metadata.<host>/graphql.  This contains both the stable API resources (environment, models, tests, etc.) but also contains things for performance, recommendations, and lineage.
-- Ability to automatically paginate requests for the Discovery API.  If pagination is required/desired, ensure that your query is properly created with an `$after` variable and all of the fields within the `pageInfo` field.
+-   An optional keyword argument `use_beta_endpoint` to the `dbtCloudClient` class. This will default to `True`, which means that the Discovery API will use the beta endpoint at https://metadata.<host>/beta/graphql instead of https://metadata.<host>/graphql. This contains both the stable API resources (environment, models, tests, etc.) but also contains things for performance, recommendations, and lineage.
+-   Ability to automatically paginate requests for the Discovery API. If pagination is required/desired, ensure that your query is properly created with an `$after` variable and all of the fields within the `pageInfo` field.
 
 ### Updated
 
-- Loosen restrictions on Pydantic - ">=2.0,<3.0"
+-   Loosen restrictions on Pydantic - ">=2.0,<3.0"
 
 ## [0.8.0] - 2023-12-04
 

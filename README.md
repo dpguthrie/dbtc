@@ -36,23 +36,30 @@ dbtc is an unaffiliated python interface to various dbt Cloud API endpoints.
 
 This library acts as a convenient interface to two different APIs that dbt Cloud offers:
 
-- Cloud API:  This is a REST API that exposes endpoints that allow users to programatically create, read, update, and delete
-resources within their dbt Cloud Account.
-- Metadata API:  This is a GraphQL API that exposes metadata generated from a job run within dbt Cloud.
+-   Cloud API: This is a REST API that exposes endpoints that allow users to programatically create, read, update, and delete
+    resources within their dbt Cloud Account.
+-   Metadata API: This is a GraphQL API that exposes metadata generated from a job run within dbt Cloud.
 
 ## Requirements
 
-Python 3.7+
+Python 3.8+
 
-- [Requests](https://requests.readthedocs.io/en/master/) - The elegant and simple HTTP library for Python, built for human beings.
-- [sgqlc](https://github.com/profusion/sgqlc) - Simple GraphQL Client
-- [Typer](https://github.com/tiangolo/typer) - Library for building CLI applications
+-   [Requests](https://requests.readthedocs.io/en/master/) - The elegant and simple HTTP library for Python, built for human beings.
+-   [sgqlc](https://github.com/profusion/sgqlc) - Simple GraphQL Client
+-   [Typer](https://github.com/tiangolo/typer) - Library for building CLI applications
 
 ## Installation
 
 ```bash
 pip install dbtc
 ```
+
+Or better yet, use [uv](https://docs.astral.sh/uv/)
+
+```bash
+uv pip install dbtc
+```
+
 ## Basic Usage
 
 ### Python
@@ -125,7 +132,7 @@ for node in nodes:
     ...
 ```
 
-If you're unfamiliar either with the Schema to query or even how to write a GraphQL query, I highly recommend going to the [dbt Cloud Discovery API playground](https://metadata.cloud.getdbt.com/beta/graphql).  You'll be able to interactively explore the Schema while watching it write a GraphQL query for you!
+If you're unfamiliar either with the Schema to query or even how to write a GraphQL query, I highly recommend going to the [dbt Cloud Discovery API playground](https://metadata.cloud.getdbt.com/beta/graphql). You'll be able to interactively explore the Schema while watching it write a GraphQL query for you!
 
 ### CLI
 

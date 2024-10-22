@@ -31,32 +31,11 @@ PULL_REQUESTS = (
 )
 
 
-def set_called_from(func):
-    @wraps(func)
-    def wrapper(self, *args, **kwargs):
-        # Don't want to reset this when it already exists
-        if self._called_from is None:
-            self._called_from = func.__name__
-        try:
-            result = func(self, *args, **kwargs)
-        except Exception as e:
-            self._called_from = None
-            raise (e)
-
-        self._called_from = None
-        return result
-
-    return wrapper
-
-
 def _version_decorator(func, version):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         self._path = f"/api/{version}/"
         result = func(self, *args, **kwargs)
-        if not self.do_not_track:
-            self._send_track("Admin API", func, *args, **kwargs)
-
         return result
 
     return wrapper
@@ -960,7 +939,6 @@ class _AdminClient(_Client):
         """
         return self._simple_request(f"accounts/{account_id}/projects/{project_id}")
 
-    @set_called_from
     @v3
     def get_project_by_name(
         self, project_name: str, account_id: int = None, account_name: str = None
@@ -1043,7 +1021,9 @@ class _AdminClient(_Client):
     # REPOS
 
     @v3
-    def create_managed_repository(self, account_id: int, project_id: int, payload: Dict) -> Dict:
+    def create_managed_repository(
+        self, account_id: int, project_id: int, payload: Dict
+    ) -> Dict:
         """Create a new dbt Cloud managed repository
 
         Args:
@@ -1507,7 +1487,6 @@ class _AdminClient(_Client):
         """
         return self._simple_request(f"accounts/{account_id}")
 
-    @set_called_from
     @v2
     def get_account_by_name(self, account_name: str) -> Dict:
         """Get an account by its name.
@@ -1546,7 +1525,6 @@ class _AdminClient(_Client):
             params={"order_by": order_by},
         )
 
-    @set_called_from
     @v2
     def get_most_recent_run(
         self,
@@ -1590,9 +1568,11 @@ class _AdminClient(_Client):
             runs["data"] = runs.get("data", [])[0]
         except IndexError:
             runs["data"] = {}
+        except TypeError:
+            return runs
+
         return runs
 
-    @set_called_from
     @v2
     def get_most_recent_run_artifact(
         self,
@@ -1645,13 +1625,10 @@ class _AdminClient(_Client):
             status="success",
         )
 
-        # Reset called from after being set to None in get_most_recent_run
-        self._called_from = "get_most_recent_run_artifact"
-
         try:
             run_id = runs.get("data", {})["id"]
-        except KeyError:
-            raise Exception("A run could not be found with the provided arguments.")
+        except (TypeError, KeyError):
+            return runs
         else:
             return self.get_run_artifact(account_id, run_id, path, step=step)
 
@@ -2012,7 +1989,6 @@ class _AdminClient(_Client):
             f"View here: {url}"
         )
 
-    @set_called_from
     @v2
     def trigger_autoscaling_ci_job(
         self,
@@ -2161,13 +2137,10 @@ class _AdminClient(_Client):
             poll_interval=poll_interval,
         )
 
-        # This property was set to `None` in the trigger_job method, reset here
-        self._called_from = "trigger_autoscaling_ci_job"
         if cloned_job is not None and delete_cloned_job:
             self.delete_job(account_id, job_id)
         return run
 
-    @set_called_from
     @v2
     def trigger_job_from_failure(
         self,
@@ -2196,7 +2169,6 @@ class _AdminClient(_Client):
 
         return run
 
-    @set_called_from
     @v2
     def trigger_job(
         self,
