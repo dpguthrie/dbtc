@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.11.6]
+
+### Added
+
+-   `include_related` query parameter to the `get_job` method
+
+## [0.11.5]
+
+### Added
+
+-   New `search` method in the metadata client for searching across dbt resources
+-   Retry logic to the common session object for the following status codes: 429, 500, 502, 503, 504
+
+### Updated
+
+-   `public_models` method on the `metadata` property - now allows for argument-based filtering.
+
+### Removed
+
+- Rudderstack tracking code
+
+## [0.11.4]
+
+### Fixed
+
+-   Add payload parameter to create_managed_repository
+
+## [0.11.3]
+
+### Added
+
+-   `requiresMetricTime` field to GetMetrics semantic layer query
+
 ## [0.11.2]
 
 ### Fixed

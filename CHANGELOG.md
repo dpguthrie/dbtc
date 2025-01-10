@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.6]
+
+### Added
+
+-   `include_related` query parameter to the `get_job` method
+
 ## [0.11.5]
 
 ### Added

@@ -1,6 +1,6 @@
 [project]
 name = "dbtc"
-version = "0.11.5"
+version = "0.11.6"
 description = "An unaffiliated python wrapper for dbt Cloud APIs"
 authors = [
     {name = "Doug Guthrie", email = "douglas.p.guthrie@gmail.com"},
