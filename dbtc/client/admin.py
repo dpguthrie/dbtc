@@ -1511,7 +1511,14 @@ class _AdminClient(_Client):
         return self._simple_request(f"accounts/{account_id}/licenses")
 
     @v2
-    def get_job(self, account_id: int, job_id: int, *, order_by: str = None) -> Dict:
+    def get_job(
+        self,
+        account_id: int,
+        job_id: int,
+        *,
+        order_by: str = None,
+        include_related: List[str] = None,
+    ) -> Dict:
         """Get a job by its ID.
 
         Args:
@@ -1519,10 +1526,15 @@ class _AdminClient(_Client):
             job_id (int): Numeric ID of the job to retrieve
             order_by (str, optional): Field to order the result by.
                 Use - to indicate reverse order.
+            include_related (list, optional): List of related fields to pull with the
+                job. Valid values are `account`, `project`, and `environment`.
         """
         return self._simple_request(
             f"accounts/{account_id}/jobs/{job_id}/",
-            params={"order_by": order_by},
+            params={
+                "order_by": order_by,
+                "include_related": ",".join(include_related or []),
+            },
         )
 
     @v2

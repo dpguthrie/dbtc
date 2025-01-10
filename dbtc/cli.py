@@ -1141,9 +1141,10 @@ def get_job_old(
     account_id: int = ACCOUNT_ID,
     job_id: int = JOB_ID,
     order_by: str = ORDER_BY,
+    include_related: str = INCLUDE_RELATED,
 ):
     """This will soon be deprecated! Use `dbtc jobs get` instead."""
-    return get_job(ctx, account_id, job_id, order_by)
+    return get_job(ctx, account_id, job_id, order_by, include_related)
 
 
 @jobs_app.command("get")
@@ -1152,6 +1153,7 @@ def get_job(
     account_id: int = ACCOUNT_ID,
     job_id: int = JOB_ID,
     order_by: str = ORDER_BY,
+    include_related: str = INCLUDE_RELATED,
 ):
     """Return job details for a job on an account."""
     _dbt_cloud_request(
@@ -1160,6 +1162,7 @@ def get_job(
         account_id,
         job_id,
         order_by=order_by,
+        include_related=include_related,
     )
 
 
