@@ -126,6 +126,62 @@ def test_get_job(dbtc_client):
     _test_cloud_method(dbtc_client, "get_job", job_id=JOB_ID)
 
 
+@pytest.mark.dependency()
+def test_list_notifications(dbtc_client):
+    _test_cloud_method(dbtc_client, "list_notifications")
+
+
+@pytest.mark.dependency(depends=["test_list_users"])
+def test_create_notification(dbtc_client):
+    payload = {
+        "account_id": ACCOUNT_ID,
+        "user_id": pytest.user_id,
+        "type": 1,
+        "on_failure": [JOB_ID],
+        "state": 1,
+    }
+    _test_and_set(
+        dbtc_client,
+        "create_notification",
+        "notification_id",
+        account_id=ACCOUNT_ID,
+        payload=payload,
+    )
+
+
+@pytest.mark.dependency(depends=["test_create_notification"])
+def test_get_notification(dbtc_client):
+    _test_cloud_method(
+        dbtc_client,
+        "get_notification",
+        notification_id=pytest.notification_id,
+    )
+
+
+@pytest.mark.dependency(depends=["test_create_notification", "test_get_notification"])
+def test_update_notification(dbtc_client):
+    data = dbtc_client.cloud.get_notification(
+        account_id=ACCOUNT_ID, notification_id=pytest.notification_id
+    )
+    payload = data["data"]
+    payload["on_failure"] = []
+    _test_cloud_method(
+        dbtc_client,
+        "update_notification",
+        notification_id=pytest.notification_id,
+        payload=payload,
+    )
+
+
+@pytest.mark.dependency(depends=["test_create_notification"])
+def test_delete_notification(dbtc_client):
+    _test_cloud_method(
+        dbtc_client,
+        "delete_notification",
+        notification_id=pytest.notification_id,
+    )
+
+
 @pytest.mark.dependency(depends=["test_list_jobs"])
 def test_list_runs(dbtc_client):
     _test_and_set(

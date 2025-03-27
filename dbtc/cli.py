@@ -38,6 +38,7 @@ environments_app = typer.Typer()
 groups_app = typer.Typer()
 jobs_app = typer.Typer()
 metadata_app = typer.Typer()
+notifications_app = typer.Typer()
 projects_app = typer.Typer()
 repos_app = typer.Typer()
 runs_app = typer.Typer()
@@ -62,6 +63,11 @@ app.add_typer(
 app.add_typer(groups_app, name="groups", help="Manage user groups in dbt Cloud")
 app.add_typer(jobs_app, name="jobs", help="Manage jobs in dbt Cloud")
 app.add_typer(metadata_app, name="metadata", help="Retrieve metadata from dbt Cloud")
+app.add_typer(
+    notifications_app,
+    name="notifications",
+    help="Manage job notifications in dbt Cloud",
+)
 app.add_typer(projects_app, name="projects", help="Manage projects in dbt Cloud")
 app.add_typer(repos_app, name="repos", help="Manage repositories in dbt Cloud")
 app.add_typer(runs_app, name="runs", help="Manage runs in dbt Cloud")
@@ -118,6 +124,9 @@ JOB_ID = typer.Option(..., "--job-id", "-j", help="Numeric ID of job to retrieve
 LIMIT = typer.Option(
     None,
     help="Limit to apply when listing runs.  Use with `offset` to paginate results.",
+)
+NOTIFICATION_ID = typer.Option(
+    ..., "--notification-id", "-n", help="Numeric ID of the notification."
 )
 OFFSET = typer.Option(
     None,
@@ -1413,6 +1422,81 @@ def update_job(
         "update_job",
         account_id,
         job_id,
+        json.loads(payload),
+    )
+
+
+# endregion
+
+# region NOTIFICATIONS
+
+
+@notifications_app.command("create")
+def create_notification(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    payload: str = PAYLOAD,
+):
+    """Create a job notification."""
+    _dbt_cloud_request(ctx, "create_notification", account_id, json.loads(payload))
+
+
+@notifications_app.command("delete")
+def delete_notification(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    notification_id: int = NOTIFICATION_ID,
+):
+    """Delete a job notification."""
+    _dbt_cloud_request(ctx, "delete_notification", account_id, notification_id)
+
+
+@notifications_app.command("get")
+def get_notification(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    notification_id: int = NOTIFICATION_ID,
+):
+    """Get a job notification."""
+    _dbt_cloud_request(ctx, "get_notification", account_id, notification_id)
+
+
+@notifications_app.command("list")
+def list_notifications(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    external_email: str = typer.Option(
+        None,
+        "--external-email",
+        help="The external email address the job notifications are sent to",
+    ),
+    offset: int = OFFSET,
+    limit: int = LIMIT,
+):
+    """List job notifications."""
+    _dbt_cloud_request(
+        ctx,
+        "list_notifications",
+        account_id,
+        external_email=external_email,
+        offset=offset,
+        limit=limit,
+    )
+
+
+@notifications_app.command("update")
+def update_notification(
+    ctx: typer.Context,
+    account_id: int = ACCOUNT_ID,
+    notification_id: int = NOTIFICATION_ID,
+    payload: str = PAYLOAD,
+):
+    """Update a job notification."""
+    _dbt_cloud_request(
+        ctx,
+        "update_notification",
+        account_id,
+        notification_id,
         json.loads(payload),
     )
 

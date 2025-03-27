@@ -57,6 +57,19 @@ def test_list_projects():
 
 
 @pytest.mark.dependency(depends=["test_list_projects"])
+def test_list_users():
+    _test_cloud_cli(
+        [
+            "users",
+            "list",
+            "--account-id",
+            ACCOUNT_ID,
+        ],
+        "user_id",
+    )
+
+
+@pytest.mark.dependency(depends=["test_list_projects"])
 def test_get_project_old():
     _test_cloud_cli(
         [
@@ -159,6 +172,91 @@ def test_get_job():
             ACCOUNT_ID,
             "--job-id",
             JOB_ID,
+        ],
+    )
+
+
+@pytest.mark.dependency()
+def test_list_notifications():
+    _test_cloud_cli(
+        [
+            "notifications",
+            "list",
+            "--account-id",
+            ACCOUNT_ID,
+        ],
+    )
+
+
+@pytest.mark.dependency(depends=["test_list_users"])
+def test_create_notification():
+    _test_cloud_cli(
+        [
+            "notifications",
+            "create",
+            "--account-id",
+            ACCOUNT_ID,
+            "--payload",
+            f'{{"account_id": {ACCOUNT_ID}, "user_id": {pytest.user_id}, "type": 1, "on_failure": [{JOB_ID}], "state": 1}}',
+        ],
+        "notification_id",
+    )
+
+
+@pytest.mark.dependency(depends=["test_create_notification"])
+def test_get_notification():
+    _test_cloud_cli(
+        [
+            "notifications",
+            "get",
+            "--account-id",
+            ACCOUNT_ID,
+            "--notification-id",
+            pytest.notification_id,
+        ],
+    )
+
+
+@pytest.mark.dependency(depends=["test_create_notification", "test_get_notification"])
+def test_update_notification():
+    data = runner.invoke(
+        app,
+        [
+            "notifications",
+            "get",
+            "--account-id",
+            ACCOUNT_ID,
+            "--notification-id",
+            pytest.notification_id,
+        ],
+    )
+    data = json.loads(data.stdout)
+    payload = data["data"]
+    payload["on_failure"] = []
+    _test_cloud_cli(
+        [
+            "notifications",
+            "update",
+            "--account-id",
+            ACCOUNT_ID,
+            "--notification-id",
+            pytest.notification_id,
+            "--payload",
+            json.dumps(payload),
+        ],
+    )
+
+
+@pytest.mark.dependency(depends=["test_create_notification"])
+def test_delete_notification():
+    _test_cloud_cli(
+        [
+            "notifications",
+            "delete",
+            "--account-id",
+            ACCOUNT_ID,
+            "--notification-id",
+            pytest.notification_id,
         ],
     )
 

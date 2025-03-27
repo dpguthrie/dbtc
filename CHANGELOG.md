@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.12.0]
+
+### Added
+
+- List, create, get, update, and delete methods for job notifications, including related tests
+
 ## [0.11.6]
 
 ### Added
