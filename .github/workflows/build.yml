@@ -33,7 +33,6 @@ jobs:
       run: make test_cov
       env:
         DBT_CLOUD_SERVICE_TOKEN: ${{ secrets.DBT_CLOUD_SERVICE_TOKEN }}
-        DBT_CLOUD_API_KEY: ${{ secrets.DBT_CLOUD_API_KEY }}
         DBT_CLOUD_ACCOUNT_NAME: ${{ secrets.DBT_CLOUD_ACCOUNT_NAME }}
         DBT_CLOUD_PROJECT_NAME: ${{ secrets.DBT_CLOUD_PROJECT_NAME }}
 
