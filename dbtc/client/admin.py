@@ -891,6 +891,87 @@ class _AdminClient(_Client):
             json=payload,
         )
 
+    # NOTIFICATIONS
+
+    @v2
+    def create_notification(self, account_id: int, payload: Dict) -> Dict:
+        """Create a job notification
+
+        Args:
+            account_id (int): Numeric ID of the account
+            payload (dict): Dictionary representing the notification to create
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/notifications/",
+            method="post",
+            json=payload,
+        )
+
+    @v2
+    def delete_notification(self, account_id: int, notification_id: int) -> Dict:
+        """Delete a job notification
+
+        Args:
+            account_id (int): Numeric ID of the account
+            notification_id (int): Numeric ID of the job notification to delete
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/notifications/{notification_id}/",
+            method="delete",
+        )
+
+    @v2
+    def get_notification(self, account_id: int, notification_id: int) -> Dict:
+        """Get a job notification
+
+        Args:
+            account_id (int): Numeric ID of the account
+            notification_id (int): Numeric ID of the job notification to retrieve
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/notifications/{notification_id}/",
+        )
+
+    @v2
+    def list_notifications(
+        self,
+        account_id: int,
+        external_email: str = None,
+        offset: int = None,
+        limit: int = None,
+    ) -> Dict:
+        """List job notifications for a specific account
+
+        Args:
+            account_id (int): Numeric ID of the account to retrieve
+            external_email (str, optional): The external email address the job notifications are sent to
+            offset (int, optional): The offset to apply when listing notifications.
+                Use with limit to paginate results.
+            limit (int, optional): The limit to apply when listing notifications.
+                Use with offset to paginate results.
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/notifications/",
+            params={"external_email": external_email, "offset": offset, "limit": limit},
+        )
+
+    @v2
+    def update_notification(
+        self, account_id: int, notification_id: int, payload: Dict
+    ) -> Dict:
+        """Update a job notification
+
+        Args:
+            account_id (int): Numeric ID of the account
+            notification_id (int): Numeric ID of the job notification to update
+            payload (dict): Dictionary representing the notification to update
+        """
+        return self._simple_request(
+            f"accounts/{account_id}/notifications/{notification_id}/",
+            method="post",
+            json=payload,
+        )
+
     # PRIVATE LINK
 
     @v3
